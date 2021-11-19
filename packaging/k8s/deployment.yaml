@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubelet-csr-approver
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: kubelet-csr-approver
+
+  template:
+    metadata:
+      annotations:
+        prometheus.io/port: '8080'
+        prometheus.io/scrape: 'true'
+      labels:
+        app: kubelet-csr-approver
+
+    spec:
+      serviceAccountName: kubelet-csr-approver
+      containers:
+        - name: kubelet-csr-approver
+          image: pf/kubelet-csr-approver:0.1.0
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+
+          args:
+            - -metrics-bind-address
+            - ":8080"
+            - -health-probe-bind-address
+            - ":8081"
+
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+
+          env:
+            - name: PROVIDER_REGEX
+              value: ^[abcdef]\.test\.ch$
+
+      tolerations:
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/master
+          operator: Equal
+        - effect: NoSchedule
+          key: node-role.kubernetes.io/control-plane
+          operator: Equal
