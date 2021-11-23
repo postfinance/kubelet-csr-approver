@@ -21,4 +21,4 @@ jobs:
       - uses: imjasonh/setup-ko@v0.4
         env:
           KO_DOCKER_REPO: docker.io/postfinance
-      - run: ko publish ./
+      - run: ko publish cmd/approverd/main.go
