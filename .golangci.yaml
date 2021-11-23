@@ -1,0 +1,95 @@
+---
+run:
+  tests: false
+  skip-dirs:
+    - .github
+    - build
+    - web
+    - .go
+linters-settings:
+  dupl:
+    threshold: 100
+  funlen:
+    lines: 100
+    statements: 50
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - whyNoLint
+      - hugeParam
+  gocyclo:
+    min-complexity: 15
+  revive:
+    min-confidence: 0.8
+  govet:
+    check-shadowing: true
+  lll:
+    line-length: 140
+  misspell:
+    locale: US
+  nolintlint:
+    allow-leading-space: false
+    require-explanation: true
+    allow-no-explanation:
+      - gocognit
+      - funlen
+      - gocyclo
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - deadcode
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - funlen
+    - nolintlint
+    - gochecknoglobals
+    - gochecknoinits
+    - gocognit
+    - goconst
+    - gocritic
+    - gocyclo
+    - gofmt
+    - goimports
+    - revive
+    - goprintffuncname
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - nakedret
+    - prealloc
+    - rowserrcheck
+    - exportloopref
+    - staticcheck
+    - structcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - varcheck
+    - whitespace
+    - wsl
+
+issues:
+  exclude:
+    # Very commonly not checked.
+    - 'Error return value of .(l.Sync|.*Close|.*.Write|.*Flush|os\.Remove(All)?|os\.(Un)?Setenv). is not checked'
+    - 'G104:.*'
+    - 'exported method (.*\.MarshalJSON|.*\.UnmarshalJSON) should have comment or be unexported'
+    - 'shadow: declaration of "err" shadows declaration.*'
+  max-same-issues: 0
+  exclude-use-default: false
