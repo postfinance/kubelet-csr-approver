@@ -1,0 +1,24 @@
+name: ko publish
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17.x
+            
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: postfinance
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - uses: imjasonh/setup-ko@v0.4
+        env:
+          KO_DOCKER_REPO: docker.io/postfinance
+      - run: ko publish ./
