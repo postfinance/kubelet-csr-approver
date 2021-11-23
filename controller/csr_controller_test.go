@@ -34,7 +34,7 @@ func TestValidCsrApproved(t *testing.T) {
 	validCsr := createCsr(t, csrParams)
 
 	_, nodeClientSet, _ := createControlPlaneUser(t, validCsr.Spec.Username, []string{"system:masters"})
-	_, err = nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &validCsr, metav1.CreateOptions{})
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &validCsr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
 	approved, denied, err := waitCsrApprovalStatus(validCsr.Name)
@@ -53,7 +53,7 @@ func TestWrongSignerCsr(t *testing.T) {
 	csr.Spec.SignerName = "example.com/not-kubelet-serving"
 
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
-	_, err = nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
 	approved, denied, err := waitCsrApprovalStatus(csr.Name)
@@ -71,7 +71,7 @@ func TestNonMatchingCommonNameUsername(t *testing.T) {
 	csr := createCsr(t, csrParams)
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
 
-	_, err = nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
 	approved, denied, err := waitCsrApprovalStatus(csr.Name)
@@ -92,7 +92,7 @@ func TestInvalidDNSName(t *testing.T) {
 	csr := createCsr(t, csrParams)
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
 
-	_, err = nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
 	approved, denied, err := waitCsrApprovalStatus(csr.Name)
@@ -110,7 +110,7 @@ func TestUnresolvedDNSName(t *testing.T) {
 	csr := createCsr(t, csrParams)
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
 
-	_, err = nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
 	approved, denied, err := waitCsrApprovalStatus(csr.Name)
@@ -128,7 +128,7 @@ func TestMismatchedResolvedIpsSANIps(t *testing.T) {
 	csr := createCsr(t, csrParams)
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
 
-	_, err = nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
 	approved, denied, err := waitCsrApprovalStatus(csr.Name)
