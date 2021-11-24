@@ -6,3 +6,4 @@ builds:
   - CGO_ENABLED=0
   ldflags:
   - -X main.commit={{.Env.COMMIT}}
+  - -X main.ref={{.Env.REF}}
