@@ -7,3 +7,5 @@ builds:
   ldflags:
   - -X main.commit={{.Env.COMMIT}}
   - -X main.ref={{.Env.REF}}
+  
+

@@ -1,3 +1,4 @@
+[![Coverage Status](https://coveralls.io/repos/github/postfinance/kubelet-csr-approver/badge.svg?branch=main)](https://coveralls.io/github/postfinance/kubelet-csr-approver?branch=main)
 # kubelet-csr-approver
 
 Kubelet CSR approver is a Kubernetes controller whose sole purpose is to auto-approve [`kubelet-serving`
