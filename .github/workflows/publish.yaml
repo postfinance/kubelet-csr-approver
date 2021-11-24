@@ -12,7 +12,7 @@ jobs:
         go-version: 1.17
         stable: true
 
-    - name: Install golangci-lint
+    - name: Install and run golangci-lint
       uses: golangci/golangci-lint-action@v2.5.2
       with:
         version: v1.43.0
@@ -46,7 +46,7 @@ jobs:
           goveralls -coverprofile=profile.cov -service=github
 
 
-  release-tagged:
+  publish-tagged:
     if: "startsWith(github.ref, 'refs/tags/v')"
     needs:
     - lint
@@ -68,10 +68,10 @@ jobs:
         env:
           KO_DOCKER_REPO: docker.io/postfinance
       - run: |
-          tag=$(echo ${{ github.ref }} | cut -d "/" -f 3 - ) 
+          export COMMIT=$(git describe --abbrev=7 --always  --long --match "v*" main)
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --tags $tag
       
-  release-untagged:
+  publish-untagged:
     if: "!startsWith(github.ref, 'refs/tags/v')"
     needs:
     - lint
@@ -93,4 +93,7 @@ jobs:
         env:
           KO_DOCKER_REPO: docker.io/postfinance
       - run: |
+          export COMMIT=$(git describe --abbrev=7 --always  --long --match "v*" main)
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths 
+          
+          

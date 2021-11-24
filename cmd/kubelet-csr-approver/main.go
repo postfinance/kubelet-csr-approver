@@ -25,9 +25,7 @@ const ProviderRegexEnvvarName string = "PROVIDER_REGEX"
 
 //nolint:gochecknoglobals //this vars are set on build by goreleaser
 var (
-	version = "0.0.0"
-	commit  = "12345678"
-	date    = "2000-01-01T07:03:55+02:00"
+	commit = "12345678"
 )
 
 func main() {
@@ -50,7 +48,7 @@ func main() {
 	flashLogger.SetLevel(zapcore.Level(logLevel))
 	z := zapr.NewLogger(flashLogger.Desugar())
 
-	z.V(0).Info("Kubelet-CSR-Approver controller starting.", "version", version, "commit", commit, "compiled on", date)
+	z.V(0).Info("Kubelet-CSR-Approver controller starting.", "tag+commit", commit)
 
 	var regexEnvVar string
 	if regexEnvVar = os.Getenv(ProviderRegexEnvvarName); regexEnvVar == "" {

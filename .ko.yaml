@@ -1,0 +1,8 @@
+builds:
+- id: kubelet-csr-approver 
+  dir: .  
+  main: ./cmd/kubelet-csr-approver/
+  env:
+  - CGO_ENABLED=0
+  ldflags:
+  - -X main.commit={{.Env.COMMIT}}
