@@ -70,8 +70,9 @@ jobs:
           KO_DOCKER_REPO: docker.io/postfinance
       - name: Run ko publish
         run: |
+          export TAG=$(echo ${{ github.ref }} | cut -d "/" -f 3 - ) 
           export COMMIT=$(git describe --abbrev=7 --always  --long --match "v*" main)
-          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --tags $tag
+          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --tags $TAG
       
   publish-untagged:
     if: "!startsWith(github.ref, 'refs/tags/v')"
