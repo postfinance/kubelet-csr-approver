@@ -32,6 +32,7 @@ jobs:
           go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
           mkdir -p local/envtest-bin/
           setup-envtest use -p env 1.21.x --bin-dir local/envtest-bin > local/envtest-bin/env
+
       - name: Run Unit tests
         run: |
           source local/envtest-bin/env
@@ -72,7 +73,7 @@ jobs:
         run: |
           export TAG=$(echo ${{ github.ref }} | cut -d "/" -f 3 - ) 
           export COMMIT=$(git describe --abbrev=7 --always  --long --match "v*" main)
-          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --tags $TAG
+          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm --tags $TAG
       
   publish-untagged:
     if: "!startsWith(github.ref, 'refs/tags/v')"
@@ -99,6 +100,6 @@ jobs:
       - name: Run ko publish
         run: |
           export COMMIT=$(git describe --abbrev=7 --always  --long --match "v*" main)
-          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths 
+          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm
           
           
