@@ -65,9 +65,11 @@ jobs:
           username: postfinance
           password: ${{ secrets.DOCKER_TOKEN }}
       - uses: imjasonh/setup-ko@v0.4
+        name: Setup ko
         env:
           KO_DOCKER_REPO: docker.io/postfinance
-      - run: |
+      - name: Run ko publish
+        run: |
           export COMMIT=$(git describe --abbrev=7 --always  --long --match "v*" main)
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --tags $tag
       
@@ -90,9 +92,11 @@ jobs:
           username: postfinance
           password: ${{ secrets.DOCKER_TOKEN }}
       - uses: imjasonh/setup-ko@v0.4
+        name: Setup ko
         env:
           KO_DOCKER_REPO: docker.io/postfinance
-      - run: |
+      - name: Run ko publish
+        run: |
           export COMMIT=$(git describe --abbrev=7 --always  --long --match "v*" main)
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths 
           
