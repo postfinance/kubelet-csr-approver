@@ -97,6 +97,7 @@ jobs:
     needs:
     - lint
     - test
+    - test-helm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
