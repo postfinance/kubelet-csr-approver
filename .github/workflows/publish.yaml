@@ -95,7 +95,7 @@ jobs:
         run: ct install --target-branch=main --chart-dirs=deploy/charts
 
   publish-tagged:
-    if: "startsWith(github.ref, 'refs/tags/v')"
+    if: "startsWith(github.ref, 'refs/tags/v') && !github.event.pull_request.head.repo.fork"
     needs:
     - lint
     - test
@@ -132,7 +132,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
   publish-untagged:
-    if: "!startsWith(github.ref, 'refs/tags/v')"
+    if: "!startsWith(github.ref, 'refs/tags/v') && !github.event.pull_request.head.repo.fork"
     needs:
     - lint
     - test
