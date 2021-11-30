@@ -10,6 +10,9 @@ spec:
   containers:
     - name: wget
       image: busybox
-      command: ['wget']
-      args: ['-O-','-S','{{ include "kubelet-csr-approver.fullname" . }}:{{ .Values.metrics.port }}/metrics']
+      command:
+        - /bin/sh
+        - -c
+        - |
+          sleep 10 ; wget -O- -S {{ include "kubelet-csr-approver.fullname" . }}:{{ .Values.metrics.port }}/metrics
   restartPolicy: Never
