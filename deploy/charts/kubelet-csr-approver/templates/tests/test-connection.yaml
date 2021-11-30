@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "kubelet-csr-approver.fullname" . }}:{{ .Values.metrics.port }}/metrics']
+      args: ['-O-','-S','{{ include "kubelet-csr-approver.fullname" . }}:{{ .Values.metrics.port }}/metrics']
   restartPolicy: Never
