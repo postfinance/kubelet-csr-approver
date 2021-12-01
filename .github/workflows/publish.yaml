@@ -46,12 +46,60 @@ jobs:
           go install github.com/mattn/goveralls@v0.0.11
           goveralls -coverprofile=profile.cov -service=github
 
+  test-helm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.5.0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.0.1
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+          stable: true
+      - uses: imjasonh/setup-ko@v0.4
+        name: Setup ko
+        env:
+          KO_DOCKER_REPO: docker.io/postfinance
+      - name: Run ko publish
+        run: |
+          export REF=${{ github.ref}}
+          export COMMIT=${{ github.sha}}
+          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64 --local
+      - name: Run chart-testing (lint)
+        run: ct lint --target-branch=main --check-version-increment=false --chart-dirs=charts
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.2.0
+        with:
+          version: v0.11.1
+          cluster_name: kind
+      - name: Load image
+        run: kind load docker-image ko.local/kubelet-csr-approver:latest
+      - name: Update chart values
+        run: |
+          sed -i \
+            -e 's|repository:.*|repository: ko.local/kubelet-csr-approver|g' \
+            -e 's|tag:.*|tag: latest|g' \
+            -e 's|providerRegex:.*|providerRegex: ^.+$|g' \
+            charts/kubelet-csr-approver/values.yaml
+          cat charts/kubelet-csr-approver/values.yaml
+      - name: Run chart-testing (install)
+        run: ct install --target-branch=main --chart-dirs=charts
 
   publish-tagged:
-    if: "startsWith(github.ref, 'refs/tags/v')"
+    if: "startsWith(github.ref, 'refs/tags/v') && !github.event.pull_request.head.repo.fork"
     needs:
     - lint
     - test
+    - test-helm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -59,7 +107,10 @@ jobs:
         with:
           go-version: 1.17
           stable: true
-            
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.5.0
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
@@ -75,9 +126,13 @@ jobs:
           export COMMIT=${{ github.sha}}
           export TAG=$(echo ${{ github.ref }} | cut -d "/" -f 3 - ) 
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm --tags $TAG
-      
+      - name: Publish Helm charts
+        uses: stefanprodan/helm-gh-pages@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
   publish-untagged:
-    if: "!startsWith(github.ref, 'refs/tags/v')"
+    if: "!startsWith(github.ref, 'refs/tags/v') && !github.event.pull_request.head.repo.fork"
     needs:
     - lint
     - test
@@ -103,5 +158,3 @@ jobs:
           export REF=${{ github.ref}}
           export COMMIT=${{ github.sha}}
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm
-          
-          

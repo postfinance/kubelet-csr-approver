@@ -26,6 +26,16 @@ If this is an issue for you, please file an issue and I'll add a flag to disable
 
 ℹ have a look below in this README to understand which other validation mechanisms are put in place.
 
+## Helm Install
+
+Adjust `providerRegex` as needed.
+
+```sh
+helm repo add kubelet-csr-approver https://postfinance.github.io/kubelet-csr-approver
+helm install kubelet-csr-approver kubelet-csr-approver/kubelet-csr-approver -n kube-system \
+  --set providerRegex='^node-\w*\.int\.company\.ch$'
+```
+
 ## attacker model -- what could go wrong ?
 
 Shall our CSR auto-approver not be implemented correctly, it might permit an attacker to get forged CSRs to be 
