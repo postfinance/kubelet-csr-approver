@@ -99,7 +99,6 @@ jobs:
     needs:
     - lint
     - test
-    - test-helm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -122,14 +121,30 @@ jobs:
           export COMMIT=${{ github.sha}}
           export TAG=$(echo ${{ github.ref }} | cut -d "/" -f 3 - ) 
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm --tags $TAG
+
+  publish-helm-charts:
+    if: "!startsWith(github.ref, 'refs/tags/v') && !github.event.pull_request.head.repo.fork"
+    needs:
+    - lint
+    - test-helm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.17
+          stable: true
+
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
           version: v3.5.0
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.1
         env:
