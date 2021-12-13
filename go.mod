@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/foxcpp/go-mockdns v0.0.0-20210729171921-fb145fc6f897
-	github.com/go-logr/logr v0.4.0
+	github.com/go-logr/logr v1.2.1
 	github.com/go-logr/zapr v0.4.0
 	github.com/postfinance/flash v0.2.0
 	github.com/stretchr/testify v1.7.0
