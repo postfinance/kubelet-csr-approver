@@ -17,6 +17,7 @@ jobs:
       with:
         version: v1.43.0
         skip-go-installation: true
+        args: --timeout=3m
 
   test:
     runs-on: ubuntu-latest
