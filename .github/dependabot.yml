@@ -12,3 +12,4 @@ updates:
       - "dependencies"
     schedule:
       interval: "weekly"
+    target-branch: dev
