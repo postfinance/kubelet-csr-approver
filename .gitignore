@@ -39,3 +39,6 @@ local/
 coverage.*
 golang-tests.xml
 test.log
+
+.env
+.secrets
