@@ -6,6 +6,7 @@ import (
 	"net"
 	"os"
 	"regexp"
+	"strconv"
 
 	"go.uber.org/zap/zapcore"
 	clientset "k8s.io/client-go/kubernetes"
@@ -23,6 +24,9 @@ import (
 // ProviderRegexEnvvarName holds the name of the env variable containing the provider-spefic regex
 const ProviderRegexEnvvarName string = "PROVIDER_REGEX"
 
+// MaxExpirationSecEnvVarName holds the name of the env variable defining the maximum seconds a CSR can request
+const MaxExpirationSecEnvVarName string = "MAX_EXPIRATION_SEC"
+
 //nolint:gochecknoglobals //this vars are set on build by goreleaser
 var (
 	commit = "12345678"
@@ -38,7 +42,7 @@ func main() {
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
-	flag.IntVar(&logLevel, "level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
+	flag.IntVar(&logLevel, "level", 0, "level ranges from -5 (Fatal) to 10 (MAX_EXPIRATION_SEC)")
 	flag.Parse()
 
 	if logLevel < -5 || logLevel > 10 {
@@ -59,6 +63,27 @@ func main() {
 	}
 
 	providerRegexp := regexp.MustCompile(regexEnvVar)
+	maxExpirationSecEnvVar := os.Getenv(MaxExpirationSecEnvVarName)
+
+	var maxExpirationSeconds int32 = 367 * 24 * 3600
+
+	if maxExpirationSecEnvVar != "" {
+		parsedMaxSec, err := strconv.ParseInt(maxExpirationSecEnvVar, 10, 32)
+		parsedMaxSecInt32 := int32(parsedMaxSec)
+
+		if err != nil {
+			z.Error(err, "could not parse the MAX_EXPIRATION_SEC env var")
+			os.Exit(1)
+		}
+
+		if parsedMaxSecInt32 > maxExpirationSeconds {
+			err := fmt.Errorf("the maximum expiration seconds env variable cannot be greater than 367 days (= %d seconds)", maxExpirationSeconds)
+			z.Error(err, "reduce the maxExpirationSec value")
+			os.Exit(1)
+		}
+
+		maxExpirationSeconds = parsedMaxSecInt32
+	}
 
 	ctrl.SetLogger(z)
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
@@ -72,11 +97,12 @@ func main() {
 	}
 
 	csrController := controller.CertificateSigningRequestReconciler{
-		ClientSet:      clientset.NewForConfigOrDie(mgr.GetConfig()),
-		Client:         mgr.GetClient(),
-		Scheme:         mgr.GetScheme(),
-		ProviderRegexp: providerRegexp.MatchString,
-		Resolver:       net.DefaultResolver,
+		ClientSet:            clientset.NewForConfigOrDie(mgr.GetConfig()),
+		Client:               mgr.GetClient(),
+		Scheme:               mgr.GetScheme(),
+		ProviderRegexp:       providerRegexp.MatchString,
+		MaxExpirationSeconds: maxExpirationSeconds,
+		Resolver:             net.DefaultResolver,
 	}
 
 	if err = csrController.SetupWithManager(mgr); err != nil {

@@ -137,3 +137,22 @@ func TestMismatchedResolvedIpsSANIps(t *testing.T) {
 	assert.False(t, approved)
 
 }
+
+func TestExpirationSecondsTooLarge(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:           "expiration-seconds",
+		expirationSeconds: 368 * 24 * 3600,
+		nodeName:          testNodeName,
+	}
+	csr := createCsr(t, csrParams)
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.True(t, denied)
+	assert.False(t, approved)
+
+}
