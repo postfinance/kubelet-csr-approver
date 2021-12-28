@@ -42,7 +42,7 @@ func main() {
 
 	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
 	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
-	flag.IntVar(&logLevel, "level", 0, "level ranges from -5 (Fatal) to 10 (MAX_EXPIRATION_SEC)")
+	flag.IntVar(&logLevel, "level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
 	flag.Parse()
 
 	if logLevel < -5 || logLevel > 10 {
