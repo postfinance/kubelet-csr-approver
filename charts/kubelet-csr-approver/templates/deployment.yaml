@@ -44,7 +44,7 @@ spec:
           {{- if .Values.maxExpirationSeconds}}
           env:
             - name: MAX_EXPIRATION_SECONDS
-              value: {{ .Values.maxExpirationSeconds }}
+              value: {{ .Values.maxExpirationSeconds | quote }}
           {{- end }}
           {{- if .Values.metrics.enable }}
           ports:
