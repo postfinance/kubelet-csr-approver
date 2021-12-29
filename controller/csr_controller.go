@@ -45,9 +45,10 @@ type HostResolver interface {
 type CertificateSigningRequestReconciler struct {
 	ClientSet *clientset.Clientset
 	client.Client
-	Scheme         *runtime.Scheme
-	ProviderRegexp func(string) bool
-	Resolver       HostResolver
+	Scheme               *runtime.Scheme
+	ProviderRegexp       func(string) bool
+	MaxExpirationSeconds int32
+	Resolver             HostResolver
 }
 
 //+kubebuilder:rbac:groups=certificates.k8s.io,resources=certificatesigningrequests,verbs=get;watch;list
@@ -80,7 +81,12 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 		return
 	}
 
-	if !strings.HasPrefix(csr.Spec.Username, "system:node:") {
+	if csr.Spec.ExpirationSeconds != nil && *csr.Spec.ExpirationSeconds > r.MaxExpirationSeconds {
+		reason := "CSR spec.expirationSeconds is longer than the maximum allowed expiration second"
+		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
+
+		appendCondition(&csr, false, reason)
+	} else if !strings.HasPrefix(csr.Spec.Username, "system:node:") {
 		reason := "CSR Spec.Username is not prefixed with system:node:"
 		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
 

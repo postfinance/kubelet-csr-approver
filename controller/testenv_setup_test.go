@@ -71,11 +71,12 @@ func waitCsrApprovalStatus(csrName string) (approved, denied bool, err error) {
 }
 
 type CsrParams struct {
-	csrName     string
-	commonName  string
-	dnsName     string
-	nodeName    string
-	ipAddresses []net.IP
+	csrName           string
+	commonName        string
+	dnsName           string
+	nodeName          string
+	ipAddresses       []net.IP
+	expirationSeconds int32
 }
 
 var (
@@ -112,6 +113,11 @@ func createCsr(t *testing.T, params CsrParams) certificates_v1.CertificateSignin
 	if len(params.commonName) == 0 {
 		params.commonName = csr.Spec.Username
 	}
+
+	if params.expirationSeconds > 0 {
+		csr.Spec.ExpirationSeconds = &params.expirationSeconds
+	}
+
 	_, priv, _ := ed25519.GenerateKey(rand.Reader)
 	x509RequestTemplate := x509.CertificateRequest{
 		Subject: pkix.Name{
@@ -183,11 +189,12 @@ func packageSetup() {
 
 	adminClientset = clientset.NewForConfigOrDie(cfg)
 	csrController := controller.CertificateSigningRequestReconciler{
-		ClientSet:      adminClientset,
-		Client:         mgr.GetClient(),
-		Scheme:         mgr.GetScheme(),
-		ProviderRegexp: provRegexp.MatchString,
-		Resolver:       &dnsResolver,
+		ClientSet:            adminClientset,
+		Client:               mgr.GetClient(),
+		Scheme:               mgr.GetScheme(),
+		ProviderRegexp:       provRegexp.MatchString,
+		Resolver:             &dnsResolver,
+		MaxExpirationSeconds: 367 * 24 * 3600,
 	}
 	csrController.SetupWithManager(mgr)
 
