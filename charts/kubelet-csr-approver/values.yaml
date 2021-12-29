@@ -1,7 +1,9 @@
 # Required configuration item
 providerRegex: ""
+#optional, specified as a string (enclosed with ""). if left empty, defaults to 367 days
+maxExpirationSeconds: ""
 
-namespace: ''
+namespace: ""
 
 image:
   repository: postfinance/kubelet-csr-approver

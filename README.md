@@ -35,7 +35,7 @@ need to be changed are:
   `^node-\w*\.int\.company\.ch$`
 * `MAX_EXPIRATION_SEC` permits to specify the maximum `expirationSeconds`
   the kubelet can ask for.\
-  Per default it is hardcoded to a maximum of 368 days, and changing this environment
+  Per default it is hardcoded to a maximum of 367 days, and changing this environment
   permits to reduce this value
 
 It is important to understand that the node DNS name needs to be
@@ -47,12 +47,13 @@ mechanisms are put in place.
 
 ## Helm Install
 
-Adjust `providerRegex` as needed.
+Adjust `providerRegex` and `maxExpirationSeconds` as needed.
 
 ```bash
 helm repo add kubelet-csr-approver https://postfinance.github.io/kubelet-csr-approver
 helm install kubelet-csr-approver kubelet-csr-approver/kubelet-csr-approver -n kube-system \
-  --set providerRegex='^node-\w*\.int\.company\.ch$'
+  --set providerRegex='^node-\w*\.int\.company\.ch$' \
+  --set maxExpirationSeconds='86400'
 ```
 
 ## attacker model -- what could go wrong ?
@@ -83,7 +84,7 @@ we check the following criteria:
 
 * `CSR.Spec.SignerName` must be `"kubernetes.io/kubelet-serving"`
 * `CSR.Spec.ExpirationSeconds`, if specified, must be smaller than `MAX_EXPIRATION_SEC`\
-  (the default value and hard-coded maximum for this controller is 368 days)
+  (the default value and hard-coded maximum for this controller is 367 days)
 * `CSR.Spec.Username` must be prefixed with `system:node:` (i.e. we only
   want to treat CSRs originating from the nodes themselves)
 * x509 CR `CommonName` must be equal to the `CSR.Spec.Username`

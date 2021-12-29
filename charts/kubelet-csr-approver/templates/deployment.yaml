@@ -41,6 +41,11 @@ spec:
             - name: PROVIDER_REGEX
               value: {{ .Values.providerRegex }}
           {{- end }}
+          {{- if .Values.maxExpirationSeconds}}
+          env:
+            - name: MAX_EXPIRATION_SECONDS
+              value: {{ .Values.maxExpirationSeconds }}
+          {{- end }}
           {{- if .Values.metrics.enable }}
           ports:
             - name: metrics

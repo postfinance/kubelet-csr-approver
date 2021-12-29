@@ -101,6 +101,7 @@ jobs:
             -e 's|repository:.*|repository: ko.local/kubelet-csr-approver|g' \
             -e 's|tag:.*|tag: latest|g' \
             -e 's|providerRegex:.*|providerRegex: ^.+$|g' \
+            -e 's|maxExpirationSeconds:.*|maxExpirationSeconds: 86400|g' \
             charts/kubelet-csr-approver/values.yaml
           cat charts/kubelet-csr-approver/values.yaml
       - name: Run chart-testing (install)

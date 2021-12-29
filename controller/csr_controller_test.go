@@ -141,7 +141,7 @@ func TestMismatchedResolvedIpsSANIps(t *testing.T) {
 func TestExpirationSecondsTooLarge(t *testing.T) {
 	csrParams := CsrParams{
 		csrName:           "expiration-seconds",
-		expirationSeconds: 368 * 24 * 3600,
+		expirationSeconds: 368 * 24 * 3600, // one day more than the maximum of 367
 		nodeName:          testNodeName,
 	}
 	csr := createCsr(t, csrParams)
