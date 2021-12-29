@@ -36,13 +36,12 @@ spec:
             - ":{{ .Values.metrics.port }}"
             - -health-probe-bind-address
             - ":8081"
-          {{- if .Values.providerRegex }}
           env:
+          {{- if .Values.providerRegex }}
             - name: PROVIDER_REGEX
               value: {{ .Values.providerRegex }}
           {{- end }}
           {{- if .Values.maxExpirationSeconds}}
-          env:
             - name: MAX_EXPIRATION_SECONDS
               value: {{ .Values.maxExpirationSeconds | quote }}
           {{- end }}
