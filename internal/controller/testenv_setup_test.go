@@ -32,7 +32,8 @@ import (
 	"log"
 
 	mockdns "github.com/foxcpp/go-mockdns"
-	"github.com/postfinance/kubelet-csr-approver/controller"
+	"github.com/postfinance/kubelet-csr-approver/internal/controller"
+
 	"github.com/thanhpk/randstr"
 	certificates_v1 "k8s.io/api/certificates/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
