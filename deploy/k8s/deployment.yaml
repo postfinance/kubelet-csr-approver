@@ -40,6 +40,8 @@ spec:
           env:
             - name: PROVIDER_REGEX
               value: ^[abcdef]\.test\.ch$
+            - name: MAX_EXPIRATION_SECONDS
+              value: "31622400" # 366 days
 
       tolerations:
         - effect: NoSchedule
