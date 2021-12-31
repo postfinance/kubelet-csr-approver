@@ -14,7 +14,6 @@ import (
 	"github.com/go-logr/zapr"
 	"github.com/peterbourgon/ff/v3"
 	"github.com/postfinance/flash"
-	_ "k8s.io/client-go/plugin/pkg/client/auth" //TODO: remove when used in-cluster
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 

@@ -131,3 +131,13 @@ approver would make it quite hard for an attacker to start forging CSRs.
 For sure, this simply requires modifying the `ProviderChecks(csr , x509csr))`
 function to implement additional checks (such as validating the node identity
 in an external inventory)
+
+# build and development
+
+when building locally to run the csr approver on an actual cluster with e.g. the
+`oidc` authentication provider, you need to use the tag `debug` to import all
+authentication providers. you will then build as follows:
+
+```bash
+go build -tags debug ./cmd/kubelet-csr-approver/
+```
