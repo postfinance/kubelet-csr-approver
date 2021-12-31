@@ -10,6 +10,7 @@ import (
 
 	"go.uber.org/zap/zapcore"
 	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 
 	"github.com/go-logr/zapr"
 	"github.com/peterbourgon/ff/v3"
@@ -32,10 +33,102 @@ var (
 	ref    = "refs/refname"
 )
 
-// Run encapsulates all settings related to kubelet-csr-approver
-func Run() int {
-	flashLogger := flash.New()
+// Config stores all parameters needed to configure a controller-manager
+type Config struct {
+	logLevel    int
+	metricsAddr string
+	probeAddr   string
+	RegexStr    string
+	MaxSec      int
+	K8sConfig   *rest.Config
+	DNSResolver controller.HostResolver
+}
 
+// Run will start the controller with the default settings
+func Run() int {
+	config := prepareCmdlineConfig()
+	mgr, errorCode := CreateControllerManager(config)
+
+	if errorCode != 0 {
+		return errorCode
+	}
+
+	z := mgr.GetLogger()
+	z.V(1).Info("starting controller-runtime manager")
+
+	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
+		z.Error(err, "problem running manager")
+		return 1
+	}
+
+	return 0
+}
+
+// CreateControllerManager permits creation/customization of the controller-manager
+func CreateControllerManager(config *Config) (mgr ctrl.Manager, code int) {
+	mgr = nil
+
+	// logger initialization
+	flashLogger := flash.New()
+	if config.logLevel < -5 || config.logLevel > 10 {
+		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
+	}
+
+	config.logLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
+	flashLogger.SetLevel(zapcore.Level(config.logLevel))
+	z := zapr.NewLogger(flashLogger.Desugar())
+
+	z.V(0).Info("Kubelet-CSR-Approver controller starting.", "commit", commit, "ref", ref)
+
+	if config.RegexStr == "" {
+		z.V(-5).Info("the provider-spefic regex must be specified, exiting")
+
+		return mgr, 10
+	}
+
+	providerRegexp := regexp.MustCompile(config.RegexStr)
+
+	if config.MaxSec < 0 || config.MaxSec > 367*24*3600 {
+		err := fmt.Errorf("the maximum expiration seconds env variable cannot be lower than 0 nor greater than 367 days")
+		z.Error(err, "reduce the maxExpirationSec value")
+
+		return mgr, 10
+	}
+
+	ctrl.SetLogger(z)
+	mgr, err := ctrl.NewManager(config.K8sConfig, ctrl.Options{
+		MetricsBindAddress:     config.metricsAddr,
+		HealthProbeBindAddress: config.probeAddr,
+	})
+
+	if err != nil {
+		z.Error(err, "unable to start manager")
+		return mgr, 10
+	}
+
+	csrController := controller.CertificateSigningRequestReconciler{
+		ClientSet:            clientset.NewForConfigOrDie(config.K8sConfig),
+		Client:               mgr.GetClient(),
+		Scheme:               mgr.GetScheme(),
+		ProviderRegexp:       providerRegexp.MatchString,
+		MaxExpirationSeconds: int32(config.MaxSec),
+		Resolver:             config.DNSResolver,
+	}
+
+	if err = csrController.SetupWithManager(mgr); err != nil {
+		z.Error(err, "unable to create controller", "controller", "CertificateSigningRequest")
+		return mgr, 10
+	}
+
+	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
+		z.Error(err, "unable to set up health check")
+		return mgr, 10
+	}
+
+	return mgr, 0
+}
+
+func prepareCmdlineConfig() *Config {
 	fs := flag.NewFlagSet("kubelet-csr-approver", flag.ExitOnError)
 
 	var (
@@ -49,70 +142,20 @@ func Run() int {
 	err := ff.Parse(fs, os.Args[1:], ff.WithEnvVarNoPrefix())
 	if err != nil {
 		fmt.Printf("unable to parse args/envs, exiting. error message: %v", err)
-		return 2
+
+		os.Exit(2)
 	}
 
-	// logger initialization
-	if *logLevel < -5 || *logLevel > 10 {
-		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
+	config := Config{
+		logLevel:    *logLevel,
+		metricsAddr: *metricsAddr,
+		probeAddr:   *probeAddr,
+		RegexStr:    *regexStr,
+		MaxSec:      *maxSec,
 	}
 
-	*logLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
-	flashLogger.SetLevel(zapcore.Level(*logLevel))
-	z := zapr.NewLogger(flashLogger.Desugar())
+	config.DNSResolver = net.DefaultResolver
+	config.K8sConfig = ctrl.GetConfigOrDie()
 
-	z.V(0).Info("Kubelet-CSR-Approver controller starting.", "commit", commit, "ref", ref)
-
-	if *regexStr == "" {
-		z.V(-5).Info("the provider-spefic regex must be specified, exiting")
-		return 10
-	}
-
-	providerRegexp := regexp.MustCompile(*regexStr)
-
-	if *maxSec < 0 || *maxSec > 367*24*3600 {
-		err := fmt.Errorf("the maximum expiration seconds env variable cannot be lower than 0 nor greater than 367 days")
-		z.Error(err, "reduce the maxExpirationSec value")
-
-		return 10
-	}
-
-	ctrl.SetLogger(z)
-	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		MetricsBindAddress:     *metricsAddr,
-		HealthProbeBindAddress: *probeAddr,
-	})
-
-	if err != nil {
-		z.Error(err, "unable to start manager")
-		return 1
-	}
-
-	csrController := controller.CertificateSigningRequestReconciler{
-		ClientSet:            clientset.NewForConfigOrDie(mgr.GetConfig()),
-		Client:               mgr.GetClient(),
-		Scheme:               mgr.GetScheme(),
-		ProviderRegexp:       providerRegexp.MatchString,
-		MaxExpirationSeconds: int32(*maxSec),
-		Resolver:             net.DefaultResolver,
-	}
-
-	if err = csrController.SetupWithManager(mgr); err != nil {
-		z.Error(err, "unable to create controller", "controller", "CertificateSigningRequest")
-		return 1
-	}
-
-	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
-		z.Error(err, "unable to set up health check")
-		return 1
-	}
-
-	z.V(1).Info("starting controller-runtime manager")
-
-	if err := mgr.Start(ctrl.SetupSignalHandler()); err != nil {
-		z.Error(err, "problem running manager")
-		return 1
-	}
-
-	return 0
+	return &config
 }

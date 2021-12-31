@@ -21,7 +21,6 @@ import (
 	"encoding/pem"
 	"net"
 	"os"
-	"regexp"
 	"testing"
 	"time"
 
@@ -32,6 +31,7 @@ import (
 	"log"
 
 	mockdns "github.com/foxcpp/go-mockdns"
+	"github.com/postfinance/kubelet-csr-approver/internal/cmd"
 	"github.com/postfinance/kubelet-csr-approver/internal/controller"
 
 	"github.com/thanhpk/randstr"
@@ -40,7 +40,6 @@ import (
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/kubernetes/scheme"
 	"k8s.io/client-go/rest"
-	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/envtest"
 )
@@ -153,13 +152,6 @@ func createControlPlaneUser(t *testing.T, username string, groups []string) (*re
 }
 
 func packageSetup() {
-
-	testNodeIps := []string{"192.168.14.34"}
-	for _, ip := range testNodeIps {
-		testNodeIpAddresses = append(testNodeIpAddresses, net.ParseIP(ip))
-	}
-	testNodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz") + ".test.ch"
-
 	testContext, testContextCancel = context.WithCancel(context.Background())
 	log.Println("Setting up the testing K8s Control plane -- envtest")
 	testEnv = &envtest.Environment{}
@@ -173,13 +165,13 @@ func packageSetup() {
 	if err != nil {
 		log.Fatalf("Could not create a k8sClient, exiting. Error output:\n %v", err)
 	}
+	adminClientset = clientset.NewForConfigOrDie(cfg)
 
-	mgr, err := ctrl.NewManager(cfg, ctrl.Options{})
-	if err != nil {
-		log.Fatalf("unable to create controller-runtime manager. Error:\n%v", err)
+	testNodeIps := []string{"192.168.14.34"}
+	for _, ip := range testNodeIps {
+		testNodeIpAddresses = append(testNodeIpAddresses, net.ParseIP(ip))
 	}
-
-	provRegexp := regexp.MustCompile(`^\w*\.test\.ch$`)
+	testNodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz") + ".test.ch"
 	dnsResolver = mockdns.Resolver{
 		Zones: map[string]mockdns.Zone{
 			testNodeName + ".": {
@@ -188,16 +180,17 @@ func packageSetup() {
 		},
 	}
 
-	adminClientset = clientset.NewForConfigOrDie(cfg)
-	csrController := controller.CertificateSigningRequestReconciler{
-		ClientSet:            adminClientset,
-		Client:               mgr.GetClient(),
-		Scheme:               mgr.GetScheme(),
-		ProviderRegexp:       provRegexp.MatchString,
-		Resolver:             &dnsResolver,
-		MaxExpirationSeconds: 367 * 24 * 3600,
+	testingConfig := cmd.Config{
+		RegexStr:    `^\w*\.test\.ch$`,
+		MaxSec:      367 * 24 * 3600,
+		K8sConfig:   cfg,
+		DNSResolver: &dnsResolver,
 	}
-	csrController.SetupWithManager(mgr)
+
+	mgr, errorCode := cmd.CreateControllerManager(&testingConfig)
+	if errorCode != 0 {
+		log.Fatalf("unable to create controller-runtime manager. Error:\n%v", errorCode)
+	}
 
 	go mgr.Start(testContext)
 }
