@@ -7,15 +7,14 @@ import (
 	"net"
 	"os"
 	"regexp"
-	"strconv"
 
 	"go.uber.org/zap/zapcore"
 	clientset "k8s.io/client-go/kubernetes"
 
-	_ "k8s.io/client-go/plugin/pkg/client/auth" //TODO: remove when used in-cluster
-
 	"github.com/go-logr/zapr"
+	"github.com/peterbourgon/ff/v3"
 	"github.com/postfinance/flash"
+	_ "k8s.io/client-go/plugin/pkg/client/auth" //TODO: remove when used in-cluster
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 
@@ -38,61 +37,51 @@ var (
 func Run() int {
 	flashLogger := flash.New()
 
-	var metricsAddr, probeAddr string
+	fs := flag.NewFlagSet("kubelet-csr-approver", flag.ExitOnError)
 
-	var logLevel int
+	var (
+		logLevel    = fs.Int("level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
+		metricsAddr = fs.String("metrics-bind-address", ":8080", "address the metric endpoint binds to.")
+		probeAddr   = fs.String("health-probe-bind-address", ":8081", "address the probe endpoint binds to.")
+		regexStr    = fs.String("provider-regex", "", "provider-specified regex to validate CSR SAN names against")
+		maxSec      = fs.Int("max-expiration-sec", 367*24*3600, "maximum seconds a CSR can request a cerficate for. defaults to 367 days")
+	)
 
-	flag.StringVar(&metricsAddr, "metrics-bind-address", ":8080", "The address the metric endpoint binds to.")
-	flag.StringVar(&probeAddr, "health-probe-bind-address", ":8081", "The address the probe endpoint binds to.")
-	flag.IntVar(&logLevel, "level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
-	flag.Parse()
+	err := ff.Parse(fs, os.Args[1:], ff.WithEnvVarNoPrefix())
+	if err != nil {
+		fmt.Printf("unable to parse args/envs, exiting. error message: %v", err)
+		return 2
+	}
 
-	if logLevel < -5 || logLevel > 10 {
+	// logger initialization
+	if *logLevel < -5 || *logLevel > 10 {
 		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
 	}
 
-	logLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
-	flashLogger.SetLevel(zapcore.Level(logLevel))
+	*logLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
+	flashLogger.SetLevel(zapcore.Level(*logLevel))
 	z := zapr.NewLogger(flashLogger.Desugar())
 
 	z.V(0).Info("Kubelet-CSR-Approver controller starting.", "commit", commit, "ref", ref)
 
-	var regexEnvVar string
-	if regexEnvVar = os.Getenv(ProviderRegexEnvvarName); regexEnvVar == "" {
-		err := fmt.Errorf("the provider-spefic regex must be specified in the %s env variable", ProviderRegexEnvvarName)
-		z.Error(err, ProviderRegexEnvvarName+" not set")
-
-		return 1
+	if *regexStr == "" {
+		z.V(-5).Info("the provider-spefic regex must be specified, exiting")
+		return 10
 	}
 
-	providerRegexp := regexp.MustCompile(regexEnvVar)
-	maxExpirationSecEnvVar := os.Getenv(MaxExpirationSecEnvVarName)
+	providerRegexp := regexp.MustCompile(*regexStr)
 
-	var maxExpirationSeconds int32 = 367 * 24 * 3600
+	if *maxSec < 0 || *maxSec > 367*24*3600 {
+		err := fmt.Errorf("the maximum expiration seconds env variable cannot be lower than 0 nor greater than 367 days")
+		z.Error(err, "reduce the maxExpirationSec value")
 
-	if maxExpirationSecEnvVar != "" {
-		parsedMaxSec, err := strconv.ParseInt(maxExpirationSecEnvVar, 10, 32)
-		parsedMaxSecInt32 := int32(parsedMaxSec)
-
-		if err != nil {
-			z.Error(err, "could not parse the MAX_EXPIRATION_SEC env var")
-			return 1
-		}
-
-		if parsedMaxSecInt32 > maxExpirationSeconds {
-			err := fmt.Errorf("the maximum expiration seconds env variable cannot be greater than 367 days (= %d seconds)", maxExpirationSeconds)
-			z.Error(err, "reduce the maxExpirationSec value")
-
-			return 1
-		}
-
-		maxExpirationSeconds = parsedMaxSecInt32
+		return 10
 	}
 
 	ctrl.SetLogger(z)
 	mgr, err := ctrl.NewManager(ctrl.GetConfigOrDie(), ctrl.Options{
-		MetricsBindAddress:     metricsAddr,
-		HealthProbeBindAddress: probeAddr,
+		MetricsBindAddress:     *metricsAddr,
+		HealthProbeBindAddress: *probeAddr,
 	})
 
 	if err != nil {
@@ -105,7 +94,7 @@ func Run() int {
 		Client:               mgr.GetClient(),
 		Scheme:               mgr.GetScheme(),
 		ProviderRegexp:       providerRegexp.MatchString,
-		MaxExpirationSeconds: maxExpirationSeconds,
+		MaxExpirationSeconds: int32(*maxSec),
 		Resolver:             net.DefaultResolver,
 	}
 
