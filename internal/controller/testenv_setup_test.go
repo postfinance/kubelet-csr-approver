@@ -95,11 +95,11 @@ func createCsr(t *testing.T, params CsrParams) certificates_v1.CertificateSignin
 	}
 
 	if len(params.nodeName) == 0 {
-		params.nodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz") + ".test.ch"
+		params.nodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz")
 	}
 
 	if len(params.dnsName) == 0 {
-		params.dnsName = params.nodeName
+		params.dnsName = params.nodeName + ".test.ch"
 	}
 
 	csr.Spec.SignerName = certificates_v1.KubeletServingSignerName
@@ -171,10 +171,10 @@ func packageSetup() {
 	for _, ip := range testNodeIps {
 		testNodeIpAddresses = append(testNodeIpAddresses, net.ParseIP(ip))
 	}
-	testNodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz") + ".test.ch"
+	testNodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz")
 	dnsResolver = mockdns.Resolver{
 		Zones: map[string]mockdns.Zone{
-			testNodeName + ".": {
+			testNodeName + ".test.ch.": {
 				A: testNodeIps,
 			},
 		},
