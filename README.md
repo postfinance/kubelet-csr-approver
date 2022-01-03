@@ -26,17 +26,18 @@ Certificates.
 
 ### parameters
 
-The most important parameters (configurable through environment variables) that
-need to be changed are:
+The most important parameters (configurable through either flags or environment
+variables) are:
 
-* `PROVIDER_REGEX` lets you decide which hostnames can be approved or not\
+* `--provider-regex` or `PROVIDER_REGEX` lets you decide which hostnames can be
+  approved or not\
   e.g. if all your nodes follow a naming convention (say
   `node-randomstr1234.int.company.ch`), your regex could look like
   `^node-\w*\.int\.company\.ch$`
-* `MAX_EXPIRATION_SEC` permits to specify the maximum `expirationSeconds`
-  the kubelet can ask for.\
-  Per default it is hardcoded to a maximum of 367 days, and changing this environment
-  permits to reduce this value
+* `--max-expiration-sec` or `MAX_EXPIRATION_SEC` permits to specify the maximum
+  `expirationSeconds` the kubelet can ask for.\
+  Per default it is hardcoded to a maximum of 367 days, and can be reduced with
+  this parameter.
 
 It is important to understand that the node DNS name needs to be
 resolvable for the `kubelet-csr-approver` to work properly. If this is an issue
