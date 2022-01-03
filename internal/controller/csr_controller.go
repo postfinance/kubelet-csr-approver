@@ -22,8 +22,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/go-logr/logr"
-
 	certificatesv1 "k8s.io/api/certificates/v1"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -48,6 +46,7 @@ type CertificateSigningRequestReconciler struct {
 	Scheme               *runtime.Scheme
 	ProviderRegexp       func(string) bool
 	MaxExpirationSeconds int32
+	BypassDNSResolution  bool
 	Resolver             HostResolver
 }
 
@@ -56,6 +55,7 @@ type CertificateSigningRequestReconciler struct {
 //+kubebuilder:rbac:groups=certificates.k8s.io,resources=signers,resourceNames="kubernetes.io/kubelet-serving",verbs=approve
 
 // Reconcile will perform a series of checks before deciding whether the CSR should be approved or denied
+//nolint: gocyclo // cyclomatic complexity is high (over 15), but this improves readibility for the programmer, therefore we ignore the linting error
 func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (res ctrl.Result, returnErr error) {
 	l := log.FromContext(ctx)
 
@@ -71,18 +71,31 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 		return
 	}
 
-	if passed := baselineCsrChecks(l, &csr); !passed {
+	// baseline CSR checks - triage to ignore CSR we should process
+	if csr.Spec.SignerName != certificatesv1.KubeletServingSignerName {
+		l.V(4).Info("Ignoring non-kubelet-serving CSR.")
 		return
 	}
 
+	if approved, denied := GetCertApprovalCondition(&csr.Status); approved || denied {
+		l.V(3).Info("The CSR is already approved|denied. Ignoring", "approved", approved, "denied", denied)
+		return
+	}
+
+	if len(csr.Status.Certificate) > 0 {
+		l.V(3).Info("The CSR is already signed. No need to do anything else.")
+		return
+	}
+
+	// actual CSR and x509 CR checks
 	x509cr, err := ParseCSR(csr.Spec.Request)
 	if err != nil {
 		l.Error(err, fmt.Sprintf("unable to parse csr %q", csr.Name))
 		return
 	}
 
-	if csr.Spec.ExpirationSeconds != nil && *csr.Spec.ExpirationSeconds > r.MaxExpirationSeconds {
-		reason := "CSR spec.expirationSeconds is longer than the maximum allowed expiration second"
+	if len(x509cr.DNSNames)+len(x509cr.IPAddresses) == 0 {
+		reason := "The x509 Cert Request SAN contains neither an IP address nor a DNS name"
 		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
 
 		appendCondition(&csr, false, reason)
@@ -97,12 +110,17 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 			"commonName", x509cr.Subject.CommonName, "specUsername", csr.Spec.Username)
 
 		appendCondition(&csr, false, reason)
-	} else if valid, reason, err := r.RegexIPChecks(ctx, &csr, x509cr); !valid {
+	} else if valid, reason, err := r.DNSCheck(ctx, &csr, x509cr); !valid {
 		if err != nil {
 			l.V(0).Error(err, reason)
 			return res, err // returning a non-nil error to make this request be processed again in the reconcile function
 		}
-		l.V(0).Info("Denying kubelet-serving CSR. Regex/IP checks failed. Reason:" + reason)
+		l.V(0).Info("Denying kubelet-serving CSR. DNS checks failed. Reason:" + reason)
+
+		appendCondition(&csr, false, reason)
+	} else if csr.Spec.ExpirationSeconds != nil && *csr.Spec.ExpirationSeconds > r.MaxExpirationSeconds {
+		reason := "CSR spec.expirationSeconds is longer than the maximum allowed expiration second"
+		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
 
 		appendCondition(&csr, false, reason)
 	} else if valid, reason := ProviderChecks(&csr, x509cr); !valid {
@@ -125,27 +143,6 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 	}
 
 	return res, nil
-}
-
-func baselineCsrChecks(l logr.Logger, csr *certificatesv1.CertificateSigningRequest) (passed bool) {
-	passed = false
-
-	if csr.Spec.SignerName != certificatesv1.KubeletServingSignerName {
-		l.V(4).Info("Ignoring non-kubelet-serving CSR.")
-		return
-	}
-
-	if approved, denied := GetCertApprovalCondition(&csr.Status); approved || denied {
-		l.V(3).Info("The CSR is already approved|denied. Ignoring", "approved", approved, "denied", denied)
-		return
-	}
-
-	if len(csr.Status.Certificate) > 0 {
-		l.V(3).Info("The CSR is already signed. No need to do anything else.")
-		return
-	}
-
-	return true
 }
 
 func appendCondition(csr *certificatesv1.CertificateSigningRequest, approved bool, reason string) {
