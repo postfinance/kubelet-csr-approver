@@ -14,7 +14,7 @@ Inspired by existing projects (such as
 implements additional verifications to prevent an attacker from forging
 Certificates.
 
-## quick start
+## Quick start
 
 1. deploy `kubelet-csr-approver` on your k8s cluster using the manifests
    present in [`deploy/k8s`](deploy/k8s)
@@ -24,7 +24,7 @@ Certificates.
    `kubelet-csr-approver` will approve (or deny) depending on the deployment
    parameters you have set.
 
-### parameters
+### Parameters
 
 The most important parameters (configurable through either flags or environment
 variables) are:
@@ -38,7 +38,7 @@ variables) are:
   `expirationSeconds` the kubelet can ask for.\
   Per default it is hardcoded to a maximum of 367 days, and can be reduced with
   this parameter.
-* `--bypass-dns-resolution` or `BYPASS_DNS_RESOLUTION` permits to bypbass DNS resolution
+* `--bypass-dns-resolution` or `BYPASS_DNS_RESOLUTION` permits to bypass DNS resolution
   check. the default value of the boolean is false, and you can enable it by
   setting it to `true` (or any other option listed in GoLang's
   [`ParseBool`](https://github.com/golang/go/blob/master/src/strconv/atob.go#L10)
@@ -62,7 +62,7 @@ helm install kubelet-csr-approver kubelet-csr-approver/kubelet-csr-approver -n k
   --set maxExpirationSeconds='86400'
 ```
 
-## attacker model -- what could go wrong ?
+## Attacker model -- what could go wrong ?
 
 Shall our CSR auto-approver not be implemented correctly, it might permit an
 attacker to get forged CSRs to be approved and later on signed by the K8s
@@ -82,7 +82,7 @@ and the attacker would have a very valid certificate to make use of. (and
 depending on the `ca.key` used on your cluster, this could have a measurable
 impact)
 
-## which verifications do we put in place ?
+## Which verifications do we put in place ?
 
 Taking inspiration from [Kubernetes built-in CSR
 approver](https://github.com/kubernetes/kubernetes/blob/v1.22.2/pkg/controller/certificates/approver/sarapprove.go),
@@ -126,23 +126,23 @@ get a forged hostname to be signed, it would indeed require:
   CSR, and with full node access, the attacker could retrieve the controller's
   ServiceAccount and approve the CSR as well.
 
-## is this CSR approver safe ?
+## Is this CSR approver safe ?
 
 Provided that the provider-specific regex is strict, that the IP ranges set is
 correctly specified, that the DNS system is not compromised, this automatic CSR
 approver would make it quite hard for an attacker to start forging CSRs.
 
-### could this CSR approver be safer ?
+### Could this CSR approver be safer ?
 
 For sure, this simply requires modifying the `ProviderChecks(csr , x509csr))`
 function to implement additional checks (such as validating the node identity
 in an external inventory)
 
-# build and development
+# Build and development
 
-when building locally to run the csr approver on an actual cluster with e.g. the
+When building locally to run the CSR approver on an actual cluster with e.g. the
 `oidc` authentication provider, you need to use the tag `debug` to import all
-authentication providers. you will then build as follows:
+authentication providers. You will then build as follows:
 
 ```bash
 go build -tags debug ./cmd/kubelet-csr-approver/
