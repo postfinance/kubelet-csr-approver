@@ -38,7 +38,7 @@ variables) are:
   `expirationSeconds` the kubelet can ask for.\
   Per default it is hardcoded to a maximum of 367 days, and can be reduced with
   this parameter.
-* `--bypass-dns-resolution` or `BYPASS_DNS_RESOLUTION` permits to bypbass DNS resolution
+* `--bypass-dns-resolution` or `BYPASS_DNS_RESOLUTION` permits to bypass DNS resolution
   check. the default value of the boolean is false, and you can enable it by
   setting it to `true` (or any other option listed in GoLang's
   [`ParseBool`](https://github.com/golang/go/blob/master/src/strconv/atob.go#L10)
