@@ -48,7 +48,7 @@ type Config struct {
 // Run will start the controller with the default settings
 func Run() int {
 	config := prepareCmdlineConfig()
-	mgr, errorCode := CreateControllerManager(config)
+	_, mgr, errorCode := CreateControllerManager(config)
 
 	if errorCode != 0 {
 		return errorCode
@@ -66,9 +66,11 @@ func Run() int {
 }
 
 // CreateControllerManager permits creation/customization of the controller-manager
-func CreateControllerManager(config *Config) (mgr ctrl.Manager, code int) {
-	mgr = nil
-
+func CreateControllerManager(config *Config) (
+	csrController *controller.CertificateSigningRequestReconciler,
+	mgr ctrl.Manager,
+	code int,
+) {
 	// logger initialization
 	flashLogger := flash.New()
 	if config.logLevel < -5 || config.logLevel > 10 {
@@ -84,7 +86,7 @@ func CreateControllerManager(config *Config) (mgr ctrl.Manager, code int) {
 	if config.RegexStr == "" {
 		z.V(-5).Info("the provider-spefic regex must be specified, exiting")
 
-		return mgr, 10
+		return nil, nil, 10
 	}
 
 	providerRegexp := regexp.MustCompile(config.RegexStr)
@@ -93,7 +95,7 @@ func CreateControllerManager(config *Config) (mgr ctrl.Manager, code int) {
 		err := fmt.Errorf("the maximum expiration seconds env variable cannot be lower than 0 nor greater than 367 days")
 		z.Error(err, "reduce the maxExpirationSec value")
 
-		return mgr, 10
+		return nil, nil, 10
 	}
 
 	ctrl.SetLogger(z)
@@ -104,10 +106,11 @@ func CreateControllerManager(config *Config) (mgr ctrl.Manager, code int) {
 
 	if err != nil {
 		z.Error(err, "unable to start manager")
-		return mgr, 10
+
+		return nil, nil, 10
 	}
 
-	csrController := controller.CertificateSigningRequestReconciler{
+	csrController = &controller.CertificateSigningRequestReconciler{
 		ClientSet:            clientset.NewForConfigOrDie(config.K8sConfig),
 		Client:               mgr.GetClient(),
 		Scheme:               mgr.GetScheme(),
@@ -119,15 +122,17 @@ func CreateControllerManager(config *Config) (mgr ctrl.Manager, code int) {
 
 	if err = csrController.SetupWithManager(mgr); err != nil {
 		z.Error(err, "unable to create controller", "controller", "CertificateSigningRequest")
-		return mgr, 10
+
+		return nil, nil, 10
 	}
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
 		z.Error(err, "unable to set up health check")
-		return mgr, 10
+
+		return nil, nil, 10
 	}
 
-	return mgr, 0
+	return csrController, mgr, 0
 }
 
 func prepareCmdlineConfig() *Config {

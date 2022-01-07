@@ -174,5 +174,26 @@ func TestExpirationSecondsTooLarge(t *testing.T) {
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.True(t, denied)
 	assert.False(t, approved)
+}
 
+func TestBypassDNSResolution(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:  "dns-bypass",
+		nodeName: testNodeName,
+		dnsName:  testNodeName + "-unresolved.test.ch",
+	}
+	csr := createCsr(t, csrParams)
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+
+	csrController.BypassDNSResolution = true
+	defer func() { csrController.BypassDNSResolution = false }()
+
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(
+		testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.True(t, approved)
+	assert.False(t, denied)
 }

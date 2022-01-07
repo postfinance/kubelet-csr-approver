@@ -49,6 +49,7 @@ var cfg *rest.Config
 var k8sClient client.Client
 var adminClientset *clientset.Clientset
 var dnsResolver mockdns.Resolver
+var csrController *controller.CertificateSigningRequestReconciler
 
 var testContext context.Context
 var testContextCancel context.CancelFunc
@@ -181,13 +182,14 @@ func packageSetup() {
 	}
 
 	testingConfig := cmd.Config{
-		RegexStr:    `^\w*\.test\.ch$`,
+		RegexStr:    `^[\w-]*\.test\.ch$`,
 		MaxSec:      367 * 24 * 3600,
 		K8sConfig:   cfg,
 		DNSResolver: &dnsResolver,
 	}
 
-	mgr, errorCode := cmd.CreateControllerManager(&testingConfig)
+	csrCtrl, mgr, errorCode := cmd.CreateControllerManager(&testingConfig)
+	csrController = csrCtrl
 	if errorCode != 0 {
 		log.Fatalf("unable to create controller-runtime manager. Error:\n%v", errorCode)
 	}
