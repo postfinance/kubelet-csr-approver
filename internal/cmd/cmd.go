@@ -21,12 +21,6 @@ import (
 	"github.com/postfinance/kubelet-csr-approver/internal/controller"
 )
 
-// ProviderRegexEnvvarName holds the name of the env variable containing the provider-spefic regex
-const ProviderRegexEnvvarName string = "PROVIDER_REGEX"
-
-// MaxExpirationSecEnvVarName holds the name of the env variable defining the maximum seconds a CSR can request
-const MaxExpirationSecEnvVarName string = "MAX_EXPIRATION_SEC"
-
 //nolint:gochecknoglobals //this vars are set on build by goreleaser
 var (
 	commit = "12345678"
