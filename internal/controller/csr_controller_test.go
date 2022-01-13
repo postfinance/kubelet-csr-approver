@@ -101,6 +101,26 @@ func TestInvalidDNSName(t *testing.T) {
 	assert.False(t, approved)
 }
 
+func TestInvalidRegexName(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:  "csr-invalid-regexName",
+		nodeName: testNodeName,
+		dnsName:  testNodeName + ".phishingTemptative.ch",
+	}
+	dnsResolver.Zones[csrParams.dnsName+"."] = mockdns.Zone{
+		A: []string{"1.2.3.14"},
+	} // we mock the dns zone of this test, as we really only want the invalid dns name to make it fail
+	csr := createCsr(t, csrParams)
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.True(t, denied)
+	assert.False(t, approved)
+}
 func TestUnresolvedDNSName(t *testing.T) {
 	csrParams := CsrParams{
 		csrName:  "csr-unresolved-dnsName",
@@ -136,4 +156,44 @@ func TestMismatchedResolvedIpsSANIps(t *testing.T) {
 	assert.True(t, denied)
 	assert.False(t, approved)
 
+}
+
+func TestExpirationSecondsTooLarge(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:           "expiration-seconds",
+		expirationSeconds: 368 * 24 * 3600, // one day more than the maximum of 367
+		nodeName:          testNodeName,
+	}
+	csr := createCsr(t, csrParams)
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.True(t, denied)
+	assert.False(t, approved)
+}
+
+func TestBypassDNSResolution(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:  "dns-bypass",
+		nodeName: testNodeName,
+		dnsName:  testNodeName + "-unresolved.test.ch",
+	}
+	csr := createCsr(t, csrParams)
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+
+	csrController.BypassDNSResolution = true
+	defer func() { csrController.BypassDNSResolution = false }()
+
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(
+		testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.True(t, approved)
+	assert.False(t, denied)
 }

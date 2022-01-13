@@ -3,6 +3,17 @@ name: Test and publish
 on: [push, pull_request]
 
 jobs:
+  check-gh-token:
+    runs-on: ubuntu-latest
+    outputs:
+        gh-token: ${{ steps.gh-token.outputs.defined }}
+    steps:
+        - id: gh-token
+          env:
+              MY_KEY: ${{ secrets.GITHUB_TOKEN }}
+          if: "${{ env.MY_KEY != '' }}"
+          run: echo "::set-output name=defined::true"
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -12,7 +23,7 @@ jobs:
         go-version: 1.17
         stable: true
 
-    - name: Install and run golangci-lint
+    - name: install and run golangci-lint
       uses: golangci/golangci-lint-action@v2.5.2
       with:
         version: v1.43.0
@@ -32,13 +43,13 @@ jobs:
         run: |
           go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
           mkdir -p local/envtest-bin/
-          setup-envtest use -p env 1.21.x --bin-dir local/envtest-bin > local/envtest-bin/env
+          setup-envtest use -p env 1.22.x --bin-dir local/envtest-bin > local/envtest-bin/env
 
       - name: Run Unit tests
         run: |
           source local/envtest-bin/env
           export KUBEBUILDER_ASSETS=$(pwd)/$KUBEBUILDER_ASSETS
-          go test -covermode atomic -coverprofile=profile.cov ./...
+          go test -race -covermode atomic -coverprofile=profile.cov ./...
 
       - name: Send coverage
         env:
@@ -90,16 +101,21 @@ jobs:
             -e 's|repository:.*|repository: ko.local/kubelet-csr-approver|g' \
             -e 's|tag:.*|tag: latest|g' \
             -e 's|providerRegex:.*|providerRegex: ^.+$|g' \
+            -e 's|maxExpirationSeconds:.*|maxExpirationSeconds: "86400"|g' \
             charts/kubelet-csr-approver/values.yaml
           cat charts/kubelet-csr-approver/values.yaml
       - name: Run chart-testing (install)
         run: ct install --target-branch=main --chart-dirs=charts
 
   publish-tagged:
-    if: "startsWith(github.ref, 'refs/tags/v') && !github.event.pull_request.head.repo.fork"
     needs:
     - lint
     - test
+    - check-gh-token
+    if: |
+      startsWith(github.ref, 'refs/tags/v') &&
+      !github.event.pull_request.head.repo.fork &&
+      needs.check-gh-token.outputs.gh-token == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -124,10 +140,14 @@ jobs:
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm --tags $TAG
 
   publish-helm-charts:
-    if: "startsWith(github.ref, 'refs/tags/v') && !github.event.pull_request.head.repo.fork"
     needs:
     - lint
     - test-helm
+    - check-gh-token
+    if: |
+      startsWith(github.ref, 'refs/tags/v') &&
+      !github.event.pull_request.head.repo.fork &&
+      needs.check-gh-token.outputs.gh-token == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -152,10 +172,14 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
   publish-untagged:
-    if: "!startsWith(github.ref, 'refs/tags/v') && !github.event.pull_request.head.repo.fork"
     needs:
     - lint
     - test
+    - check-gh-token
+    if: |
+      !startsWith(github.ref, 'refs/tags/v') &&
+      !github.event.pull_request.head.repo.fork &&
+      needs.check-gh-token.outputs.gh-token == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
