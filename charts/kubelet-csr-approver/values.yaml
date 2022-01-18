@@ -2,6 +2,8 @@
 providerRegex: ""
 # optional, specified as a string (enclosed with ""). if left empty, defaults to 367 days
 maxExpirationSeconds: ""
+# optional, permits to bypass dns resolution checks. default: false
+bypassDnsResolution: false
 
 namespace: ""
 

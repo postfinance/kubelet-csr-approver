@@ -45,6 +45,10 @@ spec:
             - name: MAX_EXPIRATION_SECONDS
               value: {{ .Values.maxExpirationSeconds | quote }}
           {{- end }}
+          {{- if .Values.bypassDnsResolution}}
+            - name: BYPASS_DNS_RESOLUTION
+              value: {{ .Values.bypassDnsResolution | quote }}
+          {{- end }}
           {{- if .Values.metrics.enable }}
           ports:
             - name: metrics
