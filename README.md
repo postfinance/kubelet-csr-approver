@@ -60,6 +60,7 @@ helm repo add kubelet-csr-approver https://postfinance.github.io/kubelet-csr-app
 helm install kubelet-csr-approver kubelet-csr-approver/kubelet-csr-approver -n kube-system \
   --set providerRegex='^node-\w*\.int\.company\.ch$' \
   --set maxExpirationSeconds='86400'
+  --set bypassDnsResolution='false'
 ```
 
 ## Attacker model -- what could go wrong ?
