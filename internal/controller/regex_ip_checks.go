@@ -83,3 +83,25 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 
 	return valid, reason, nil
 }
+
+// WhitelistedIPCheck verifies that the x509cr IP Addresses are contained in the
+// set of ProviderSpecified IP addresses
+func (r *CertificateSigningRequestReconciler) WhitelistedIPCheck(csr *certificatesv1.CertificateSigningRequest, x509cr *x509.CertificateRequest) (valid bool, reason string, err error) {
+	sanIPAddrs := x509cr.IPAddresses
+	for _, ip := range sanIPAddrs {
+		ipa, ok := netaddr.FromStdIP(ip)
+		if !ok {
+			return false, fmt.Sprintf("Error while parsing x509 CR IP address %s, denying the CSR", ip), nil
+		}
+
+		if !r.ProviderIPSet.Contains(ipa) {
+			return false,
+				fmt.Sprintf(
+					"One of the SAN IP addresses, %s, is not part"+
+						"of the allowed IP Prefixes/Subnets, denying the CSR.", ipa),
+				nil
+		}
+	}
+
+	return valid, reason, nil
+}

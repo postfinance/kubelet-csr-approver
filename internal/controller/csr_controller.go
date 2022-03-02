@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	"inet.af/netaddr"
 	certificatesv1 "k8s.io/api/certificates/v1"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -45,6 +46,7 @@ type CertificateSigningRequestReconciler struct {
 	client.Client
 	Scheme               *runtime.Scheme
 	ProviderRegexp       func(string) bool
+	ProviderIPSet        *netaddr.IPSet
 	MaxExpirationSeconds int32
 	BypassDNSResolution  bool
 	Resolver             HostResolver
@@ -55,7 +57,8 @@ type CertificateSigningRequestReconciler struct {
 //+kubebuilder:rbac:groups=certificates.k8s.io,resources=signers,resourceNames="kubernetes.io/kubelet-serving",verbs=approve
 
 // Reconcile will perform a series of checks before deciding whether the CSR should be approved or denied
-//nolint: gocyclo // cyclomatic complexity is high (over 15), but this improves readibility for the programmer, therefore we ignore the linting error
+// readibility for the programmer, therefore we ignore the linting error
+//nolint: gocyclo // cyclomatic complexity is high (over 15), but this improves
 func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (res ctrl.Result, returnErr error) {
 	l := log.FromContext(ctx)
 
