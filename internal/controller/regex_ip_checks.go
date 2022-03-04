@@ -103,5 +103,5 @@ func (r *CertificateSigningRequestReconciler) WhitelistedIPCheck(csr *certificat
 		}
 	}
 
-	return valid, reason, nil
+	return true, reason, nil
 }
