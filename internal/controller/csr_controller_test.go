@@ -197,3 +197,27 @@ func TestBypassDNSResolution(t *testing.T) {
 	assert.True(t, approved)
 	assert.False(t, denied)
 }
+
+func TestIPNotWhitelisted(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:     "ip-non-whitelisted",
+		nodeName:    testNodeName,
+		ipAddresses: []net.IP{{9, 9, 9, 9}},
+		dnsName:     testNodeName + "-non-whitelisted.test.ch",
+	}
+	dnsResolver.Zones[csrParams.dnsName+"."] = mockdns.Zone{
+		A: []string{"9.9.9.9"},
+	}
+
+	csr := createCsr(t, csrParams)
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(
+		testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.False(t, approved)
+	assert.True(t, denied)
+}
