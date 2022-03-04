@@ -182,10 +182,11 @@ func packageSetup() {
 	}
 
 	testingConfig := cmd.Config{
-		RegexStr:    `^[\w-]*\.test\.ch$`,
-		MaxSec:      367 * 24 * 3600,
-		K8sConfig:   cfg,
-		DNSResolver: &dnsResolver,
+		RegexStr:      `^[\w-]*\.test\.ch$`,
+		MaxSec:        367 * 24 * 3600,
+		K8sConfig:     cfg,
+		DNSResolver:   &dnsResolver,
+		IPPrefixesStr: "192.168.0.0/16",
 	}
 
 	csrCtrl, mgr, errorCode := cmd.CreateControllerManager(&testingConfig)

@@ -7,8 +7,10 @@ import (
 	"net"
 	"os"
 	"regexp"
+	"strings"
 
 	"go.uber.org/zap/zapcore"
+	"inet.af/netaddr"
 	clientset "k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 
@@ -33,6 +35,7 @@ type Config struct {
 	metricsAddr         string
 	probeAddr           string
 	RegexStr            string
+	IPPrefixesStr       string
 	MaxSec              int
 	K8sConfig           *rest.Config
 	DNSResolver         controller.HostResolver
@@ -85,6 +88,27 @@ func CreateControllerManager(config *Config) (
 
 	providerRegexp := regexp.MustCompile(config.RegexStr)
 
+	// IP Prefixes parsing and IPSet construction
+	var setBuilder netaddr.IPSetBuilder
+
+	for _, ipPrefix := range strings.Split(config.IPPrefixesStr, ",") {
+		ipPref, err := netaddr.ParseIPPrefix(ipPrefix)
+		if err != nil {
+			z.V(-5).Info(fmt.Sprintf("Unable to parse IP prefix: %s, exiting", ipPrefix))
+
+			return nil, nil, 10
+		}
+
+		setBuilder.AddPrefix(ipPref)
+	}
+
+	providerIPSet, err := setBuilder.IPSet()
+	if err != nil {
+		z.V(-5).Info("Unable to build the Set of valid IP addresses, exiting")
+
+		return nil, nil, 10
+	}
+
 	if config.MaxSec < 0 || config.MaxSec > 367*24*3600 {
 		err := fmt.Errorf("the maximum expiration seconds env variable cannot be lower than 0 nor greater than 367 days")
 		z.Error(err, "reduce the maxExpirationSec value")
@@ -93,7 +117,7 @@ func CreateControllerManager(config *Config) (
 	}
 
 	ctrl.SetLogger(z)
-	mgr, err := ctrl.NewManager(config.K8sConfig, ctrl.Options{
+	mgr, err = ctrl.NewManager(config.K8sConfig, ctrl.Options{
 		MetricsBindAddress:     config.metricsAddr,
 		HealthProbeBindAddress: config.probeAddr,
 	})
@@ -109,6 +133,7 @@ func CreateControllerManager(config *Config) (
 		Client:               mgr.GetClient(),
 		Scheme:               mgr.GetScheme(),
 		ProviderRegexp:       providerRegexp.MatchString,
+		ProviderIPSet:        providerIPSet,
 		MaxExpirationSeconds: int32(config.MaxSec),
 		Resolver:             config.DNSResolver,
 		BypassDNSResolution:  config.BypassDNSResolution,
@@ -136,9 +161,14 @@ func prepareCmdlineConfig() *Config {
 		logLevel            = fs.Int("level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
 		metricsAddr         = fs.String("metrics-bind-address", ":8080", "address the metric endpoint binds to.")
 		probeAddr           = fs.String("health-probe-bind-address", ":8081", "address the probe endpoint binds to.")
-		regexStr            = fs.String("provider-regex", "", "provider-specified regex to validate CSR SAN names against")
+		regexStr            = fs.String("provider-regex", ".*", "provider-specified regex to validate CSR SAN names against. accepts everything unless specified")
 		maxSec              = fs.Int("max-expiration-sec", 367*24*3600, "maximum seconds a CSR can request a cerficate for. defaults to 367 days")
 		bypassDNSResolution = fs.Bool("bypass-dns-resolution", false, "set this parameter to true to bypass DNS resolution checks")
+		ipPrefixesStr       = fs.String("provider-ip-prefixes", "0.0.0.0/0,::/0",
+			`provider-specified, comma separated ip prefixes that CSR IP addresses shall fall into.
+			left unspecified, all IPv4/v6 are allowed. example prefix definition:
+			192.168.0.0/16,fc00/7`,
+		)
 	)
 
 	err := ff.Parse(fs, os.Args[1:], ff.WithEnvVarNoPrefix())
@@ -153,6 +183,7 @@ func prepareCmdlineConfig() *Config {
 		metricsAddr:         *metricsAddr,
 		probeAddr:           *probeAddr,
 		RegexStr:            *regexStr,
+		IPPrefixesStr:       *ipPrefixesStr,
 		BypassDNSResolution: *bypassDNSResolution,
 		MaxSec:              *maxSec,
 	}
