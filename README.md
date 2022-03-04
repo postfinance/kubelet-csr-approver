@@ -43,6 +43,11 @@ variables) are:
   setting it to `true` (or any other option listed in GoLang's
   [`ParseBool`](https://github.com/golang/go/blob/master/src/strconv/atob.go#L10)
   function)
+* `--provider-ip-prefixes`  or `PROVIDER_IP_PREFIXES` permits to specify a
+  comma-separated list of IP (v4 or/and v6) subnets/prefixes, that CSR IP
+  addresses shall fall into. left unspecified, all IP addresses are allowed. \
+  you can for example set it to `192.168.0.0/16,fc00/7` if this reflects your
+  local network IP ranges.
 
 It is important to understand that the node DNS name needs to be
 resolvable for the `kubelet-csr-approver` to work properly. If this is an issue
@@ -106,7 +111,7 @@ we check the following criteria:
   from the SAN DNS Name
 * ⚠ the CSR SAN DNS Name (if specified) must resolve to IP address(es) that
   fall within the set of provider-specified IP ranges.
-* ⚠ the CSR SAN IP Address(es) must fall within a set of provider-specified IP
+* the CSR SAN IP Address(es) must fall within a set of provider-specified IP
   ranges
 
 ⚠ == not yet implemented
