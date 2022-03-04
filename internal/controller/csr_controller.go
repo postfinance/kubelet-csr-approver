@@ -127,6 +127,7 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 			return res, err // returning a non-nil error to make this request be processed again in the reconcile function
 		}
 		l.V(0).Info("Denying kubelet-serving CSR. IP whitelist check failed. Reason:" + reason)
+		appendCondition(&csr, false, reason)
 	} else if csr.Spec.ExpirationSeconds != nil && *csr.Spec.ExpirationSeconds > r.MaxExpirationSeconds {
 		reason := "CSR spec.expirationSeconds is longer than the maximum allowed expiration second"
 		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
