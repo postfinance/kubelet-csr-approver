@@ -186,7 +186,7 @@ func packageSetup() {
 		MaxSec:        367 * 24 * 3600,
 		K8sConfig:     cfg,
 		DNSResolver:   &dnsResolver,
-		IPPrefixesStr: "192.168.0.0/16",
+		IPPrefixesStr: "192.168.0.0/16,fc00::/7",
 	}
 
 	csrCtrl, mgr, errorCode := cmd.CreateControllerManager(&testingConfig)

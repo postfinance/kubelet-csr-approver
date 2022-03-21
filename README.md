@@ -46,7 +46,7 @@ variables) are:
 * `--provider-ip-prefixes`  or `PROVIDER_IP_PREFIXES` permits to specify a
   comma-separated list of IP (v4 or/and v6) subnets/prefixes, that CSR IP
   addresses shall fall into. left unspecified, all IP addresses are allowed. \
-  you can for example set it to `192.168.0.0/16,fc00/7` if this reflects your
+  you can for example set it to `192.168.0.0/16,fc00::/7` if this reflects your
   local network IP ranges.
 
 It is important to understand that the node DNS name needs to be
