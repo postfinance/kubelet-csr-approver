@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/foxcpp/go-mockdns v1.0.0
 	github.com/go-logr/zapr v1.2.3
-	github.com/postfinance/flash v0.2.0
+	github.com/postfinance/flash v0.3.0
 	github.com/stretchr/testify v1.7.1
 	github.com/thanhpk/randstr v1.0.4
 	github.com/tj/assert v0.0.3
@@ -15,6 +15,8 @@ require (
 	k8s.io/client-go v0.23.5
 	sigs.k8s.io/controller-runtime v0.11.1
 )
+
+require gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 
 require (
 	cloud.google.com/go v0.81.0 // indirect
