@@ -10,9 +10,9 @@ require (
 	github.com/thanhpk/randstr v1.0.4
 	github.com/tj/assert v0.0.3
 	go.uber.org/zap v1.21.0
-	k8s.io/api v0.23.4
-	k8s.io/apimachinery v0.23.4
-	k8s.io/client-go v0.23.4
+	k8s.io/api v0.23.5
+	k8s.io/apimachinery v0.23.5
+	k8s.io/client-go v0.23.5
 	sigs.k8s.io/controller-runtime v0.11.1
 )
 
