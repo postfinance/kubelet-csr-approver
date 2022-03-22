@@ -233,8 +233,8 @@ jobs:
         env:
           KO_DOCKER_REPO: docker.io/postfinance
       - name: Run ko publish
-        # TODO: make the tag correspond to the branch name
         run: |
           export REF=${{ github.ref}}
           export COMMIT=${{ github.sha}}
-          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm -t feat
+          export FEAT=$(echo $REF  | awk -F 'feat/' '{print $2}')
+          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm -t $FEAT
