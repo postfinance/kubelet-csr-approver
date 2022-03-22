@@ -82,7 +82,6 @@ type CsrParams struct {
 
 var (
 	testNodeName        string
-	testNodeIps         []string
 	testNodeIpAddresses []net.IP
 )
 
@@ -168,15 +167,20 @@ func packageSetup() {
 	}
 	adminClientset = clientset.NewForConfigOrDie(cfg)
 
-	testNodeIps := []string{"192.168.14.34"}
-	for _, ip := range testNodeIps {
+	testNodeIpv4 := []string{"192.168.14.34"}
+	testNodeIpv6 := []string{"fc00:1291:feed::cafe"}
+	for _, ip := range testNodeIpv4 {
+		testNodeIpAddresses = append(testNodeIpAddresses, net.ParseIP(ip))
+	}
+	for _, ip := range testNodeIpv6 {
 		testNodeIpAddresses = append(testNodeIpAddresses, net.ParseIP(ip))
 	}
 	testNodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz")
 	dnsResolver = mockdns.Resolver{
 		Zones: map[string]mockdns.Zone{
 			testNodeName + ".test.ch.": {
-				A: testNodeIps,
+				A:    testNodeIpv4,
+				AAAA: testNodeIpv6,
 			},
 		},
 	}

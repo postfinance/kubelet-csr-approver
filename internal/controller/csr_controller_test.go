@@ -64,10 +64,10 @@ func TestWrongSignerCsr(t *testing.T) {
 
 func TestNonMatchingCommonNameUsername(t *testing.T) {
 	csrParams := CsrParams{
-		csrName:    "csr-non-matching",
-		commonName: "funny-common-name",
-
-		ipAddresses: testNodeIpAddresses, nodeName: testNodeName}
+		csrName:     "csr-non-matching",
+		commonName:  "funny-common-name",
+		ipAddresses: testNodeIpAddresses,
+		nodeName:    testNodeName}
 	csr := createCsr(t, csrParams)
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
 
