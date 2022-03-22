@@ -98,10 +98,6 @@ func createCsr(t *testing.T, params CsrParams) certificates_v1.CertificateSignin
 		params.nodeName = randstr.String(4, "0123456789abcdefghijklmnopqrstuvwxyz")
 	}
 
-	if len(params.dnsName) == 0 {
-		params.dnsName = params.nodeName + ".test.ch"
-	}
-
 	csr.Spec.SignerName = certificates_v1.KubeletServingSignerName
 	csr.Spec.Usages = append(csr.Spec.Usages,
 		certificates_v1.UsageDigitalSignature,
@@ -124,9 +120,12 @@ func createCsr(t *testing.T, params CsrParams) certificates_v1.CertificateSignin
 			Organization: []string{"system:nodes"},
 			CommonName:   params.commonName,
 		},
-		DNSNames:    []string{params.dnsName},
 		IPAddresses: params.ipAddresses,
 	}
+	if len(params.dnsName) > 0 {
+		x509RequestTemplate.DNSNames = []string{params.dnsName}
+	}
+
 	x509Request, _ := x509.CreateCertificateRequest(rand.Reader, &x509RequestTemplate, priv)
 	pemRequest := pem.EncodeToMemory(&pem.Block{
 		Type:  "CERTIFICATE REQUEST",
