@@ -65,6 +65,12 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 		}
 
 		setBuilder.Add(ipa)
+
+		if !r.ProviderIPSet.Contains(ipa) {
+			return false, fmt.Sprintf("One of the resolved IP addresses, %s,"+
+				"isn't part of the provider-specified set of whitelisted IP. denying the certificate",
+				ipa), nil
+		}
 	}
 
 	resolvedIPSet, _ := setBuilder.IPSet()
@@ -77,14 +83,15 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 		}
 
 		if !resolvedIPSet.Contains(ipa) {
-			return false, fmt.Sprintf("One of the SAN IP addresses, %s, is not contained in the set of resolved IP addresses, denying the CSR.", ipa), nil
+			return false, fmt.Sprintf("One of the SAN IP addresses, %s, "+
+				"is not contained in the set of resolved IP addresses, denying the CSR.", ipa), nil
 		}
 	}
 
 	return valid, reason, nil
 }
 
-// WhitelistedIPCheck verifies that the x509cr IP Addresses are contained in the
+// WhitelistedIPCheck verifies that the x509cr SAN IP Addresses are contained in the
 // set of ProviderSpecified IP addresses
 func (r *CertificateSigningRequestReconciler) WhitelistedIPCheck(csr *certificatesv1.CertificateSigningRequest, x509cr *x509.CertificateRequest) (valid bool, reason string, err error) {
 	sanIPAddrs := x509cr.IPAddresses

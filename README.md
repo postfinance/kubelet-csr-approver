@@ -109,12 +109,10 @@ we check the following criteria:
   `system:node:` prefix)
 * CSR SAN IP Addresses must all be part of the set of IP addresses resolved
   from the SAN DNS Name
-* ⚠ the CSR SAN DNS Name (if specified) must resolve to IP address(es) that
+* the CSR SAN DNS Name (if specified) must resolve to IP address(es) that
   fall within the set of provider-specified IP ranges.
 * the CSR SAN IP Address(es) must fall within a set of provider-specified IP
   ranges
-
-⚠ == not yet implemented
 
 With those verifications in place, it makes it quite hard for an attacker to
 get a forged hostname to be signed, it would indeed require:

@@ -30,6 +30,7 @@ func TestValidCsrApproved(t *testing.T) {
 	csrParams := CsrParams{
 		ipAddresses: testNodeIpAddresses,
 		nodeName:    testNodeName,
+		dnsName:     testNodeName + ".test.ch",
 	}
 	validCsr := createCsr(t, csrParams)
 
@@ -48,6 +49,7 @@ func TestWrongSignerCsr(t *testing.T) {
 		csrName:     "csr-wrong-signer",
 		ipAddresses: testNodeIpAddresses,
 		nodeName:    testNodeName,
+		dnsName:     testNodeName + ".test.ch",
 	}
 	csr := createCsr(t, csrParams)
 	csr.Spec.SignerName = "example.com/not-kubelet-serving"
@@ -67,7 +69,9 @@ func TestNonMatchingCommonNameUsername(t *testing.T) {
 		csrName:     "csr-non-matching",
 		commonName:  "funny-common-name",
 		ipAddresses: testNodeIpAddresses,
-		nodeName:    testNodeName}
+		nodeName:    testNodeName,
+		dnsName:     testNodeName + ".test.ch",
+	}
 	csr := createCsr(t, csrParams)
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
 
@@ -143,6 +147,7 @@ func TestMismatchedResolvedIpsSANIps(t *testing.T) {
 	csrParams := CsrParams{
 		csrName:     "mismatched-san-ip-resolved-dns-ip",
 		nodeName:    testNodeName,
+		dnsName:     testNodeName + ".test.ch",
 		ipAddresses: []net.IP{{9, 9, 9, 9}},
 	}
 	csr := createCsr(t, csrParams)
@@ -163,6 +168,7 @@ func TestExpirationSecondsTooLarge(t *testing.T) {
 		csrName:           "expiration-seconds",
 		expirationSeconds: 368 * 24 * 3600, // one day more than the maximum of 367
 		nodeName:          testNodeName,
+		dnsName:           testNodeName + ".test.ch",
 	}
 	csr := createCsr(t, csrParams)
 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
@@ -228,6 +234,29 @@ func TestIPv6NotWhitelisted(t *testing.T) {
 		nodeName:    testNodeName,
 		ipAddresses: []net.IP{{0x20, 0x01, 0xc0, 0xfe, 0xbe, 0xef, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x14}},
 		dnsName:     testNodeName + "-v6-non-whitelisted.test.ch",
+	}
+	dnsResolver.Zones[csrParams.dnsName+"."] = mockdns.Zone{
+		AAAA: []string{"2001:c0fe:beef::14"},
+	}
+
+	csr := createCsr(t, csrParams)
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(
+		testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.False(t, approved)
+	assert.True(t, denied)
+}
+
+func TestIPv6WithoutDNSNotWhitelisted(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:     "ipv6-noDNS-non-whitelisted",
+		nodeName:    testNodeName,
+		ipAddresses: []net.IP{{0x20, 0x01, 0xc0, 0xfe, 0xbe, 0xef, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x14}},
 	}
 	dnsResolver.Zones[csrParams.dnsName+"."] = mockdns.Zone{
 		AAAA: []string{"2001:c0fe:beef::14"},
