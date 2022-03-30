@@ -41,6 +41,10 @@ spec:
             - name: PROVIDER_REGEX
               value: {{ .Values.providerRegex }}
           {{- end }}
+          {{- if .Values.providerIpPrefixes }}
+            - name: PROVIDER_IP_PREFIXES
+              value: "{{ join "," .Values.providerIpPrefixes }}"
+          {{- end }}
           {{- if .Values.maxExpirationSeconds}}
             - name: MAX_EXPIRATION_SECONDS
               value: {{ .Values.maxExpirationSeconds | quote }}
@@ -48,6 +52,9 @@ spec:
           {{- if .Values.bypassDnsResolution}}
             - name: BYPASS_DNS_RESOLUTION
               value: {{ .Values.bypassDnsResolution | quote }}
+          {{- end }}
+          {{- with .Values.env }}
+            {{ toYaml . | nindent 12 }}
           {{- end }}
           {{- if .Values.metrics.enable }}
           ports:

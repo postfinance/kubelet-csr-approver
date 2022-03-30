@@ -20,7 +20,7 @@ spec:
       serviceAccountName: kubelet-csr-approver
       containers:
         - name: kubelet-csr-approver
-          image: postfinance/kubelet-csr-approver:v0.1.1
+          image: postfinance/kubelet-csr-approver:v0.2.0
           resources:
             limits:
               memory: "128Mi"
@@ -40,6 +40,8 @@ spec:
           env:
             - name: PROVIDER_REGEX
               value: ^[abcdef]\.test\.ch$
+            - name: PROVIDER_IP_PREFIXES
+              value: "0.0.0.0/0,::/0"
             - name: MAX_EXPIRATION_SECONDS
               value: "31622400" # 366 days
 
