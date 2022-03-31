@@ -103,6 +103,7 @@ jobs:
             -e 's|providerRegex:.*|providerRegex: ^.+$|g' \
             -e 's|maxExpirationSeconds:.*|maxExpirationSeconds: "86400"|g' \
             -e 's|bypassDnsResolution:.*|bypassDnsResolution: true|g' \
+            -e 's|providerIpPrefixes:.*|providerIpPrefixes: [ '192.168.8.0/22', 'fc00::/7' ]|g' \
             charts/kubelet-csr-approver/values.yaml
           cat charts/kubelet-csr-approver/values.yaml
       - name: Run chart-testing (install)
