@@ -140,6 +140,7 @@ jobs:
           export COMMIT=${{ github.sha}}
           export TAG=$(echo ${{ github.ref }} | cut -d "/" -f 3 - )
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm --tags $TAG
+          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm
 
   publish-helm-charts:
     needs:
@@ -204,7 +205,7 @@ jobs:
         run: |
           export REF=${{ github.ref}}
           export COMMIT=${{ github.sha}}
-          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm
+          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm -t dev
 
   publish-feature:
     needs:
