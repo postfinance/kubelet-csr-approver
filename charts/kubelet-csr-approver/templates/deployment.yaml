@@ -18,6 +18,9 @@ spec:
       labels:
         {{- include "kubelet-csr-approver.selectorLabels" . | nindent 8 }}
     spec:
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy | quote }}
+      {{- end }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
