@@ -159,18 +159,13 @@ jobs:
           go-version: 1.17
           stable: true
 
-      - name: Configure Git
-        run: |
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-
       - name: Install Helm
         uses: azure/setup-helm@v1
         with:
           version: v3.5.0
 
       - name: Run chart-releaser
-        uses: stefanprodan/helm-gh-pages@v1.4.1
+        uses: stefanprodan/helm-gh-pages@b43a8719cc63fdb3aa943cc57359ab19118eab3f #v1.5.0
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -180,7 +175,6 @@ jobs:
     - test
     - check-gh-token
     if: |
-      !startsWith(github.ref, 'refs/tags/v') &&
       github.ref == 'refs/heads/main' &&
       !github.event.pull_request.head.repo.fork &&
       needs.check-gh-token.outputs.gh-token == 'true'
@@ -214,7 +208,6 @@ jobs:
     - check-gh-token
     if: |
       startsWith(github.ref, 'refs/heads/feat') &&
-      !startsWith(github.ref, 'refs/tags/v') &&
       !github.event.pull_request.head.repo.fork &&
       needs.check-gh-token.outputs.gh-token == 'true'
     runs-on: ubuntu-latest
