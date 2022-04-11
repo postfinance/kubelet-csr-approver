@@ -20,7 +20,7 @@ spec:
       serviceAccountName: kubelet-csr-approver
       containers:
         - name: kubelet-csr-approver
-          image: postfinance/kubelet-csr-approver:v0.2.0
+          image: postfinance/kubelet-csr-approver:v0.2.2
           resources:
             limits:
               memory: "128Mi"
