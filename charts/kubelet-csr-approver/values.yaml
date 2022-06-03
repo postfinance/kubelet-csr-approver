@@ -9,6 +9,9 @@ providerIpPrefixes: []
 #   - 192.168.8.0/22
 #   - fc00::/7
 
+# logging level ranges from -5 (Fatal) to 10 (Verbose). default level is 0
+loggingLevel: 0
+
 namespace: ""
 
 image:

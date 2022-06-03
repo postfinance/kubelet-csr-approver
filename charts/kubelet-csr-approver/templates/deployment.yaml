@@ -39,6 +39,10 @@ spec:
             - ":{{ .Values.metrics.port }}"
             - -health-probe-bind-address
             - ":8081"
+          {{- if .Values.loggingLevel }}
+            - -level
+            - {{ .Values.loggingLevel | quote }}
+          {{- end }}
           env:
           {{- if .Values.providerRegex }}
             - name: PROVIDER_REGEX
