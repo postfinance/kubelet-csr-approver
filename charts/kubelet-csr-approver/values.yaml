@@ -4,6 +4,8 @@ providerRegex: ""
 maxExpirationSeconds: ""
 # optional, permits to bypass dns resolution checks. default: false
 bypassDnsResolution: false
+# optional, permits ignoring CSRs with another Username than `system:node:...`
+ignoreNonSystemNode: false
 # optional, list of IP (IPv4, IPv6) subnets that are allowed to submit CSRs
 providerIpPrefixes: []
 #   - 192.168.8.0/22

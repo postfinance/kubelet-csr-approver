@@ -39,7 +39,8 @@ variables) are:
   Per default it is hardcoded to a maximum of 367 days, and can be reduced with
   this parameter.
 * `--bypass-dns-resolution` or `BYPASS_DNS_RESOLUTION` permits to bypass DNS resolution
-  check. the default value of the boolean is false, and you can enable it by
+  check. \
+  the default value of the boolean is false, and you can enable it by
   setting it to `true` (or any other option listed in GoLang's
   [`ParseBool`](https://github.com/golang/go/blob/master/src/strconv/atob.go#L10)
   function)
@@ -48,6 +49,10 @@ variables) are:
   addresses shall fall into. left unspecified, all IP addresses are allowed. \
   you can for example set it to `192.168.0.0/16,fc00::/7` if this reflects your
   local network IP ranges.
+* `--ignore-non-system-node` or `IGNORE_NON_SYSTEM_NODE` permits ignoring CSRs
+  with a _Username_ different than `system:node:......`. \
+  the default value of the boolean is false, and if you want to use this feature
+  you need to set this flag to `true`
 
 It is important to understand that the node DNS name needs to be
 resolvable for the `kubelet-csr-approver` to work properly. If this is an issue
