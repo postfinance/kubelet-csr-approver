@@ -31,15 +31,16 @@ var (
 
 // Config stores all parameters needed to configure a controller-manager
 type Config struct {
-	logLevel            int
-	metricsAddr         string
-	probeAddr           string
-	RegexStr            string
-	IPPrefixesStr       string
-	MaxSec              int
-	K8sConfig           *rest.Config
-	DNSResolver         controller.HostResolver
-	BypassDNSResolution bool
+	logLevel               int
+	metricsAddr            string
+	probeAddr              string
+	RegexStr               string
+	IPPrefixesStr          string
+	MaxSec                 int
+	K8sConfig              *rest.Config
+	DNSResolver            controller.HostResolver
+	BypassDNSResolution    bool
+	IgnoreNonSystemNodeCsr bool
 }
 
 // Run will start the controller with the default settings
@@ -129,14 +130,15 @@ func CreateControllerManager(config *Config) (
 	}
 
 	csrController = &controller.CertificateSigningRequestReconciler{
-		ClientSet:            clientset.NewForConfigOrDie(config.K8sConfig),
-		Client:               mgr.GetClient(),
-		Scheme:               mgr.GetScheme(),
-		ProviderRegexp:       providerRegexp.MatchString,
-		ProviderIPSet:        providerIPSet,
-		MaxExpirationSeconds: int32(config.MaxSec),
-		Resolver:             config.DNSResolver,
-		BypassDNSResolution:  config.BypassDNSResolution,
+		ClientSet:              clientset.NewForConfigOrDie(config.K8sConfig),
+		Client:                 mgr.GetClient(),
+		Scheme:                 mgr.GetScheme(),
+		ProviderRegexp:         providerRegexp.MatchString,
+		ProviderIPSet:          providerIPSet,
+		MaxExpirationSeconds:   int32(config.MaxSec),
+		Resolver:               config.DNSResolver,
+		BypassDNSResolution:    config.BypassDNSResolution,
+		IgnoreNonSystemNodeCsr: config.IgnoreNonSystemNodeCsr,
 	}
 
 	if err = csrController.SetupWithManager(mgr); err != nil {
@@ -158,13 +160,14 @@ func prepareCmdlineConfig() *Config {
 	fs := flag.NewFlagSet("kubelet-csr-approver", flag.ExitOnError)
 
 	var (
-		logLevel            = fs.Int("level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
-		metricsAddr         = fs.String("metrics-bind-address", ":8080", "address the metric endpoint binds to.")
-		probeAddr           = fs.String("health-probe-bind-address", ":8081", "address the probe endpoint binds to.")
-		regexStr            = fs.String("provider-regex", ".*", "provider-specified regex to validate CSR SAN names against. accepts everything unless specified")
-		maxSec              = fs.Int("max-expiration-sec", 367*24*3600, "maximum seconds a CSR can request a cerficate for. defaults to 367 days")
-		bypassDNSResolution = fs.Bool("bypass-dns-resolution", false, "set this parameter to true to bypass DNS resolution checks")
-		ipPrefixesStr       = fs.String("provider-ip-prefixes", "0.0.0.0/0,::/0",
+		logLevel               = fs.Int("level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
+		metricsAddr            = fs.String("metrics-bind-address", ":8080", "address the metric endpoint binds to.")
+		probeAddr              = fs.String("health-probe-bind-address", ":8081", "address the probe endpoint binds to.")
+		regexStr               = fs.String("provider-regex", ".*", "provider-specified regex to validate CSR SAN names against. accepts everything unless specified")
+		maxSec                 = fs.Int("max-expiration-sec", 367*24*3600, "maximum seconds a CSR can request a cerficate for. defaults to 367 days")
+		bypassDNSResolution    = fs.Bool("bypass-dns-resolution", false, "set this parameter to true to bypass DNS resolution checks")
+		ignoreNonSystemNodeCsr = fs.Bool("ignore-non-system-node", false, "set this parameter to true to ignore CSR for subjects different than system:node")
+		ipPrefixesStr          = fs.String("provider-ip-prefixes", "0.0.0.0/0,::/0",
 			`provider-specified, comma separated ip prefixes that CSR IP addresses shall fall into.
 			left unspecified, all IPv4/v6 are allowed. example prefix definition:
 			192.168.0.0/16,fc00/7`,
@@ -179,13 +182,14 @@ func prepareCmdlineConfig() *Config {
 	}
 
 	config := Config{
-		logLevel:            *logLevel,
-		metricsAddr:         *metricsAddr,
-		probeAddr:           *probeAddr,
-		RegexStr:            *regexStr,
-		IPPrefixesStr:       *ipPrefixesStr,
-		BypassDNSResolution: *bypassDNSResolution,
-		MaxSec:              *maxSec,
+		logLevel:               *logLevel,
+		metricsAddr:            *metricsAddr,
+		probeAddr:              *probeAddr,
+		RegexStr:               *regexStr,
+		IPPrefixesStr:          *ipPrefixesStr,
+		BypassDNSResolution:    *bypassDNSResolution,
+		IgnoreNonSystemNodeCsr: *ignoreNonSystemNodeCsr,
+		MaxSec:                 *maxSec,
 	}
 
 	config.DNSResolver = net.DefaultResolver
