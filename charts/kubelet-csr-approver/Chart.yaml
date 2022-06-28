@@ -2,7 +2,7 @@ apiVersion: v2
 name: kubelet-csr-approver
 description: Kubelet CSR Approver
 type: application
-version: 0.2.2
+version: 0.2.3
 appVersion: v0.2.2
 maintainers:
   - name: clementnuss

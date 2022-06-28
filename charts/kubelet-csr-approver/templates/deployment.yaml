@@ -60,6 +60,10 @@ spec:
             - name: BYPASS_DNS_RESOLUTION
               value: {{ .Values.bypassDnsResolution | quote }}
           {{- end }}
+          {{- if .Values.ignoreNonSystemNode}}
+            - name: IGNORE_NON_SYSTEM_NODE
+              value: {{ .Values.ignoreNonSystemNode | quote }}
+          {{- end }}
           {{- with .Values.env }}
             {{ toYaml . | nindent 12 }}
           {{- end }}
