@@ -76,6 +76,7 @@ type CsrParams struct {
 	commonName        string
 	dnsName           string
 	nodeName          string
+	username          string
 	ipAddresses       []net.IP
 	expirationSeconds int32
 }
@@ -104,7 +105,12 @@ func createCsr(t *testing.T, params CsrParams) certificates_v1.CertificateSignin
 		certificates_v1.UsageKeyEncipherment,
 		certificates_v1.UsageServerAuth,
 	)
-	csr.Spec.Username = "system:node:" + params.nodeName
+
+	if len(params.username) == 0 {
+		csr.Spec.Username = "system:node:" + params.nodeName
+	} else {
+		csr.Spec.Username = params.username
+	}
 
 	if len(params.commonName) == 0 {
 		params.commonName = csr.Spec.Username
@@ -185,11 +191,12 @@ func packageSetup() {
 	}
 
 	testingConfig := cmd.Config{
-		RegexStr:      `^[\w-]*\.test\.ch$`,
-		MaxSec:        367 * 24 * 3600,
-		K8sConfig:     cfg,
-		DNSResolver:   &dnsResolver,
-		IPPrefixesStr: "192.168.0.0/16,fc00::/7",
+		RegexStr:               `^[\w-]*\.test\.ch$`,
+		MaxSec:                 367 * 24 * 3600,
+		K8sConfig:              cfg,
+		IgnoreNonSystemNodeCsr: true,
+		DNSResolver:            &dnsResolver,
+		IPPrefixesStr:          "192.168.0.0/16,fc00::/7",
 	}
 
 	csrCtrl, mgr, errorCode := cmd.CreateControllerManager(&testingConfig)

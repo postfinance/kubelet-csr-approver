@@ -44,12 +44,13 @@ type HostResolver interface {
 type CertificateSigningRequestReconciler struct {
 	ClientSet *clientset.Clientset
 	client.Client
-	Scheme               *runtime.Scheme
-	ProviderRegexp       func(string) bool
-	ProviderIPSet        *netaddr.IPSet
-	MaxExpirationSeconds int32
-	BypassDNSResolution  bool
-	Resolver             HostResolver
+	Scheme                 *runtime.Scheme
+	ProviderRegexp         func(string) bool
+	ProviderIPSet          *netaddr.IPSet
+	MaxExpirationSeconds   int32
+	BypassDNSResolution    bool
+	IgnoreNonSystemNodeCsr bool
+	Resolver               HostResolver
 }
 
 //+kubebuilder:rbac:groups=certificates.k8s.io,resources=certificatesigningrequests,verbs=get;watch;list
@@ -57,8 +58,9 @@ type CertificateSigningRequestReconciler struct {
 //+kubebuilder:rbac:groups=certificates.k8s.io,resources=signers,resourceNames="kubernetes.io/kubelet-serving",verbs=approve
 
 // Reconcile will perform a series of checks before deciding whether the CSR should be approved or denied
+// cyclomatic complexity is high (over 15), but this improves
 // readibility for the programmer, therefore we ignore the linting error
-//nolint: gocyclo // cyclomatic complexity is high (over 15), but this improves
+//nolint: gocyclo
 func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (res ctrl.Result, returnErr error) {
 	l := log.FromContext(ctx)
 
@@ -97,13 +99,18 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 		return
 	}
 
-	if len(x509cr.DNSNames)+len(x509cr.IPAddresses) == 0 {
-		reason := "The x509 Cert Request SAN contains neither an IP address nor a DNS name"
+	if !strings.HasPrefix(csr.Spec.Username, "system:node:") {
+		if r.IgnoreNonSystemNodeCsr {
+			l.V(0).Info("Ignoring a CSR with username different than system:node:")
+			return
+		}
+
+		reason := "CSR Spec.Username is not prefixed with system:node:"
 		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
 
 		appendCondition(&csr, false, reason)
-	} else if !strings.HasPrefix(csr.Spec.Username, "system:node:") {
-		reason := "CSR Spec.Username is not prefixed with system:node:"
+	} else if len(x509cr.DNSNames)+len(x509cr.IPAddresses) == 0 {
+		reason := "The x509 Cert Request SAN contains neither an IP address nor a DNS name"
 		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
 
 		appendCondition(&csr, false, reason)
