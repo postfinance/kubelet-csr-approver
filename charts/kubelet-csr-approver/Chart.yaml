@@ -3,7 +3,7 @@ name: kubelet-csr-approver
 description: Kubelet CSR Approver
 type: application
 version: 0.2.3
-appVersion: v0.2.2
+appVersion: v0.2.3
 maintainers:
   - name: clementnuss
   - name: treydock
