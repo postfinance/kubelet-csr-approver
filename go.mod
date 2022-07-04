@@ -6,7 +6,7 @@ require (
 	github.com/foxcpp/go-mockdns v1.0.0
 	github.com/go-logr/zapr v1.2.3
 	github.com/postfinance/flash v0.3.0
-	github.com/stretchr/testify v1.7.5
+	github.com/stretchr/testify v1.8.0
 	github.com/thanhpk/randstr v1.0.4
 	github.com/tj/assert v0.0.3
 	go.uber.org/zap v1.21.0
