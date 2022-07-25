@@ -12,7 +12,6 @@ import (
 	"go.uber.org/zap/zapcore"
 	"inet.af/netaddr"
 	clientset "k8s.io/client-go/kubernetes"
-	"k8s.io/client-go/rest"
 
 	"github.com/go-logr/zapr"
 	"github.com/peterbourgon/ff/v3"
@@ -28,20 +27,6 @@ var (
 	commit = "12345678"
 	ref    = "refs/refname"
 )
-
-// Config stores all parameters needed to configure a controller-manager
-type Config struct {
-	logLevel               int
-	metricsAddr            string
-	probeAddr              string
-	RegexStr               string
-	IPPrefixesStr          string
-	MaxSec                 int
-	K8sConfig              *rest.Config
-	DNSResolver            controller.HostResolver
-	BypassDNSResolution    bool
-	IgnoreNonSystemNodeCsr bool
-}
 
 // Run will start the controller with the default settings
 func Run() int {
@@ -64,19 +49,23 @@ func Run() int {
 }
 
 // CreateControllerManager permits creation/customization of the controller-manager
-func CreateControllerManager(config *Config) (
+func CreateControllerManager(config *controller.Config) (
 	csrController *controller.CertificateSigningRequestReconciler,
 	mgr ctrl.Manager,
 	code int,
 ) {
 	// logger initialization
 	flashLogger := flash.New()
-	if config.logLevel < -5 || config.logLevel > 10 {
+	if config.LogLevel < -5 || config.LogLevel > 10 {
 		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
 	}
 
-	config.logLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
-	flashLogger.SetLevel(zapcore.Level(config.logLevel))
+	csrController = &controller.CertificateSigningRequestReconciler{
+		Config: *config,
+	}
+
+	config.LogLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
+	flashLogger.SetLevel(zapcore.Level(config.LogLevel))
 	z := zapr.NewLogger(flashLogger.Desugar())
 
 	z.V(0).Info("Kubelet-CSR-Approver controller starting.", "commit", commit, "ref", ref)
@@ -87,7 +76,7 @@ func CreateControllerManager(config *Config) (
 		return nil, nil, 10
 	}
 
-	providerRegexp := regexp.MustCompile(config.RegexStr)
+	csrController.ProviderRegexp = regexp.MustCompile(config.RegexStr).MatchString
 
 	// IP Prefixes parsing and IPSet construction
 	var setBuilder netaddr.IPSetBuilder
@@ -103,7 +92,9 @@ func CreateControllerManager(config *Config) (
 		setBuilder.AddPrefix(ipPref)
 	}
 
-	providerIPSet, err := setBuilder.IPSet()
+	var err error
+	csrController.ProviderIPSet, err = setBuilder.IPSet()
+
 	if err != nil {
 		z.V(-5).Info("Unable to build the Set of valid IP addresses, exiting")
 
@@ -117,10 +108,12 @@ func CreateControllerManager(config *Config) (
 		return nil, nil, 10
 	}
 
+	csrController.MaxExpirationSeconds = int32(config.MaxSec)
+
 	ctrl.SetLogger(z)
 	mgr, err = ctrl.NewManager(config.K8sConfig, ctrl.Options{
-		MetricsBindAddress:     config.metricsAddr,
-		HealthProbeBindAddress: config.probeAddr,
+		MetricsBindAddress:     config.MetricsAddr,
+		HealthProbeBindAddress: config.ProbeAddr,
 	})
 
 	if err != nil {
@@ -129,17 +122,9 @@ func CreateControllerManager(config *Config) (
 		return nil, nil, 10
 	}
 
-	csrController = &controller.CertificateSigningRequestReconciler{
-		ClientSet:              clientset.NewForConfigOrDie(config.K8sConfig),
-		Client:                 mgr.GetClient(),
-		Scheme:                 mgr.GetScheme(),
-		ProviderRegexp:         providerRegexp.MatchString,
-		ProviderIPSet:          providerIPSet,
-		MaxExpirationSeconds:   int32(config.MaxSec),
-		Resolver:               config.DNSResolver,
-		BypassDNSResolution:    config.BypassDNSResolution,
-		IgnoreNonSystemNodeCsr: config.IgnoreNonSystemNodeCsr,
-	}
+	csrController.ClientSet = clientset.NewForConfigOrDie(config.K8sConfig)
+	csrController.Client = mgr.GetClient()
+	csrController.Scheme = mgr.GetScheme()
 
 	if err = csrController.SetupWithManager(mgr); err != nil {
 		z.Error(err, "unable to create controller", "controller", "CertificateSigningRequest")
@@ -156,7 +141,7 @@ func CreateControllerManager(config *Config) (
 	return csrController, mgr, 0
 }
 
-func prepareCmdlineConfig() *Config {
+func prepareCmdlineConfig() *controller.Config {
 	fs := flag.NewFlagSet("kubelet-csr-approver", flag.ExitOnError)
 
 	var (
@@ -181,10 +166,10 @@ func prepareCmdlineConfig() *Config {
 		os.Exit(2)
 	}
 
-	config := Config{
-		logLevel:               *logLevel,
-		metricsAddr:            *metricsAddr,
-		probeAddr:              *probeAddr,
+	config := controller.Config{
+		LogLevel:               *logLevel,
+		MetricsAddr:            *metricsAddr,
+		ProbeAddr:              *probeAddr,
 		RegexStr:               *regexStr,
 		IPPrefixesStr:          *ipPrefixesStr,
 		BypassDNSResolution:    *bypassDNSResolution,

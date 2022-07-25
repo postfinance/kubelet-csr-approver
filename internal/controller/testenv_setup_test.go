@@ -190,7 +190,7 @@ func packageSetup() {
 		},
 	}
 
-	testingConfig := cmd.Config{
+	testingConfig := controller.Config{
 		RegexStr:               `^[\w-]*\.test\.ch$`,
 		MaxSec:                 367 * 24 * 3600,
 		K8sConfig:              cfg,

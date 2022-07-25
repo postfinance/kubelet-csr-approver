@@ -28,6 +28,7 @@ import (
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientset "k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
@@ -40,17 +41,29 @@ type HostResolver interface {
 	LookupHost(context.Context, string) ([]string, error)
 }
 
+// Config holds all variables needed to configure the controller
+type Config struct {
+	LogLevel               int
+	MetricsAddr            string
+	ProbeAddr              string
+	RegexStr               string
+	ProviderRegexp         func(string) bool
+	IPPrefixesStr          string
+	ProviderIPSet          *netaddr.IPSet
+	MaxExpirationSeconds   int32
+	MaxSec                 int
+	K8sConfig              *rest.Config
+	DNSResolver            HostResolver
+	BypassDNSResolution    bool
+	IgnoreNonSystemNodeCsr bool
+}
+
 // CertificateSigningRequestReconciler reconciles a CertificateSigningRequest object
 type CertificateSigningRequestReconciler struct {
 	ClientSet *clientset.Clientset
 	client.Client
-	Scheme                 *runtime.Scheme
-	ProviderRegexp         func(string) bool
-	ProviderIPSet          *netaddr.IPSet
-	MaxExpirationSeconds   int32
-	BypassDNSResolution    bool
-	IgnoreNonSystemNodeCsr bool
-	Resolver               HostResolver
+	Scheme *runtime.Scheme
+	Config
 }
 
 //+kubebuilder:rbac:groups=certificates.k8s.io,resources=certificatesigningrequests,verbs=get;watch;list

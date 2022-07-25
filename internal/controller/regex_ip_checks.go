@@ -50,7 +50,7 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 	defer dnsCtxCancel()
 
 	var resolvedAddrs []string
-	resolvedAddrs, err = r.Resolver.LookupHost(dnsCtx, sanDNSName)
+	resolvedAddrs, err = r.DNSResolver.LookupHost(dnsCtx, sanDNSName)
 
 	if err != nil || len(resolvedAddrs) == 0 {
 		return false, "The SAN DNS Name could not be resolved, denying the CSR", nil
