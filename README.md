@@ -53,6 +53,8 @@ variables) are:
   with a _Username_ different than `system:node:......`. \
   the default value of the boolean is false, and if you want to use this feature
   you need to set this flag to `true`
+* `--allowed-dns-names` or `ALLOWED_DNS_NAMES` permits allowing more than one
+  DNS name in the certificate request. the default value is set to 1.
 
 It is important to understand that the node DNS name needs to be
 resolvable for the `kubelet-csr-approver` to work properly. If this is an issue
