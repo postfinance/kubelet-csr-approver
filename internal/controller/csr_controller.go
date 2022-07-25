@@ -51,11 +51,11 @@ type Config struct {
 	IPPrefixesStr          string
 	ProviderIPSet          *netaddr.IPSet
 	MaxExpirationSeconds   int32
-	MaxSec                 int
 	K8sConfig              *rest.Config
 	DNSResolver            HostResolver
 	BypassDNSResolution    bool
 	IgnoreNonSystemNodeCsr bool
+	AllowedDNSNames        int
 }
 
 // CertificateSigningRequestReconciler reconciles a CertificateSigningRequest object

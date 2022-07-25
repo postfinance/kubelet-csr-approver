@@ -192,7 +192,8 @@ func packageSetup() {
 
 	testingConfig := controller.Config{
 		RegexStr:               `^[\w-]*\.test\.ch$`,
-		MaxSec:                 367 * 24 * 3600,
+		MaxExpirationSeconds:   367 * 24 * 3600,
+		AllowedDNSNames:        3,
 		K8sConfig:              cfg,
 		IgnoreNonSystemNodeCsr: true,
 		DNSResolver:            &dnsResolver,
