@@ -16,8 +16,8 @@ import (
 // complies with the provider-specific regex
 // is resolvable (this check can be opted out with a parameter)
 func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr *certificatesv1.CertificateSigningRequest, x509cr *x509.CertificateRequest) (valid bool, reason string, err error) {
-	if valid = (len(x509cr.DNSNames) <= 1); !valid {
-		reason = "The x509 Cert Request contains more than 1 DNS name"
+	if valid = (len(x509cr.DNSNames) <= r.AllowedDNSNames); !valid {
+		reason = "The x509 Cert Request contains more DNS names than allowed through the config flag"
 		return
 	}
 
@@ -25,19 +25,6 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 	if len(x509cr.DNSNames) == 0 {
 		valid = true
 		return valid, reason, nil
-	}
-
-	sanDNSName := x509cr.DNSNames[0]
-	hostname := strings.TrimPrefix(csr.Spec.Username, "system:node:")
-
-	if valid = strings.HasPrefix(sanDNSName, hostname); !valid {
-		reason = "The SAN DNS Name in the x509 CSR is not prefixed by the node name (hostname)"
-		return
-	}
-
-	if valid = r.ProviderRegexp(sanDNSName); !valid {
-		reason = "The SAN DNS name in the x509 CR is not allowed by the Cloud provider regex"
-		return
 	}
 
 	// bypassing DNS reslution - DNS check is approved
@@ -49,27 +36,44 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 	dnsCtx, dnsCtxCancel := context.WithDeadline(ctx, time.Now().Add(time.Second)) // 1 second timeout for the dns request
 	defer dnsCtxCancel()
 
-	var resolvedAddrs []string
-	resolvedAddrs, err = r.DNSResolver.LookupHost(dnsCtx, sanDNSName)
+	var allResolvedAddrs []string
 
-	if err != nil || len(resolvedAddrs) == 0 {
-		return false, "The SAN DNS Name could not be resolved, denying the CSR", nil
+	for _, sanDNSName := range x509cr.DNSNames {
+		hostname := strings.TrimPrefix(csr.Spec.Username, "system:node:")
+
+		if valid = strings.HasPrefix(sanDNSName, hostname); !valid {
+			reason = "The SAN DNS Name in the x509 CSR is not prefixed by the node name (hostname)"
+			return
+		}
+
+		if valid = r.ProviderRegexp(sanDNSName); !valid {
+			reason = "The SAN DNS name in the x509 CR is not allowed by the Cloud provider regex"
+			return
+		}
+
+		resolvedAddrs, err := r.DNSResolver.LookupHost(dnsCtx, sanDNSName)
+
+		if err != nil || len(resolvedAddrs) == 0 {
+			return false, "The SAN DNS Name could not be resolved, denying the CSR", nil
+		}
+
+		allResolvedAddrs = append(allResolvedAddrs, resolvedAddrs...)
 	}
 
 	var setBuilder netaddr.IPSetBuilder
 
-	for _, a := range resolvedAddrs {
-		ipa, err := netaddr.ParseIP(a)
+	for _, a := range allResolvedAddrs {
+		ipaddr, err := netaddr.ParseIP(a)
 		if err != nil {
-			return false, fmt.Sprintf("Error while parsing resolved IP address %s, denying the CSR", ipa), nil
+			return false, fmt.Sprintf("Error while parsing resolved IP address %s, denying the CSR", ipaddr), nil
 		}
 
-		setBuilder.Add(ipa)
+		setBuilder.Add(ipaddr)
 
-		if !r.ProviderIPSet.Contains(ipa) {
+		if !r.ProviderIPSet.Contains(ipaddr) {
 			return false, fmt.Sprintf("One of the resolved IP addresses, %s,"+
 				"isn't part of the provider-specified set of whitelisted IP. denying the certificate",
-				ipa), nil
+				ipaddr), nil
 		}
 	}
 
