@@ -101,15 +101,6 @@ func CreateControllerManager(config *controller.Config) (
 		return nil, nil, 10
 	}
 
-	if config.MaxSec < 0 || config.MaxSec > 367*24*3600 {
-		err := fmt.Errorf("the maximum expiration seconds env variable cannot be lower than 0 nor greater than 367 days")
-		z.Error(err, "reduce the maxExpirationSec value")
-
-		return nil, nil, 10
-	}
-
-	csrController.MaxExpirationSeconds = int32(config.MaxSec)
-
 	ctrl.SetLogger(z)
 	mgr, err = ctrl.NewManager(config.K8sConfig, ctrl.Options{
 		MetricsBindAddress:     config.MetricsAddr,
@@ -152,6 +143,7 @@ func prepareCmdlineConfig() *controller.Config {
 		maxSec                 = fs.Int("max-expiration-sec", 367*24*3600, "maximum seconds a CSR can request a cerficate for. defaults to 367 days")
 		bypassDNSResolution    = fs.Bool("bypass-dns-resolution", false, "set this parameter to true to bypass DNS resolution checks")
 		ignoreNonSystemNodeCsr = fs.Bool("ignore-non-system-node", false, "set this parameter to true to ignore CSR for subjects different than system:node")
+		allowedDNSNames        = fs.Int("allowed-dns-names", 1, "number of DNS SAN names allowed in a certificate request. defaults to 1")
 		ipPrefixesStr          = fs.String("provider-ip-prefixes", "0.0.0.0/0,::/0",
 			`provider-specified, comma separated ip prefixes that CSR IP addresses shall fall into.
 			left unspecified, all IPv4/v6 are allowed. example prefix definition:
@@ -166,6 +158,16 @@ func prepareCmdlineConfig() *controller.Config {
 		os.Exit(2)
 	}
 
+	if *maxSec < 0 || *maxSec > 367*24*3600 {
+		fmt.Print("the maximum expiration seconds cannot be lower than 0 nor greater than 367 days")
+
+		os.Exit(2)
+	}
+
+	if *allowedDNSNames < 1 || *allowedDNSNames > 1000 {
+		fmt.Print("the number of allowed DNS names must be at least 1 and no more than 1000")
+	}
+
 	config := controller.Config{
 		LogLevel:               *logLevel,
 		MetricsAddr:            *metricsAddr,
@@ -174,7 +176,8 @@ func prepareCmdlineConfig() *controller.Config {
 		IPPrefixesStr:          *ipPrefixesStr,
 		BypassDNSResolution:    *bypassDNSResolution,
 		IgnoreNonSystemNodeCsr: *ignoreNonSystemNodeCsr,
-		MaxSec:                 *maxSec,
+		MaxExpirationSeconds:   int32(*maxSec),
+		AllowedDNSNames:        *allowedDNSNames,
 	}
 
 	config.DNSResolver = net.DefaultResolver
