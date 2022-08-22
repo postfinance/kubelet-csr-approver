@@ -64,28 +64,6 @@ func TestWrongSignerCsr(t *testing.T) {
 	assert.False(t, approved)
 }
 
-// following test is commented out while the config management for the
-// controller hasn't been uniformized func
-// TestNonSystemNodeCsrIgnoredWhenBypassed(t *testing.T) {
-// 	csrParams := CsrParams{
-// 		csrName:     "csr-non-systemnode",
-// 		ipAddresses: testNodeIpAddresses,
-// 		nodeName:    testNodeName,
-// 		dnsName:     testNodeName + ".test.ch",
-// 		username:    "system:serviceaccount:default:stackgres-operator-init", // https://github.com/postfinance/kubelet-csr-approver/issues/61#issuecomment-1160725935
-// 	}
-// 	csr := createCsr(t, csrParams)
-// 	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
-
-// 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
-// 	require.Nil(t, err, "Could not create the CSR.")
-
-// 	approved, denied, err := waitCsrApprovalStatus(csr.Name)
-// 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
-// 	assert.False(t, denied)
-// 	assert.False(t, approved)
-// }
-
 func TestNonMatchingCommonNameUsername(t *testing.T) {
 	csrParams := CsrParams{
 		csrName:     "csr-non-matching",
