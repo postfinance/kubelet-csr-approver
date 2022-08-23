@@ -15,6 +15,7 @@ import (
 // DNSCheck is a function checking that the DNS name:
 // complies with the provider-specific regex
 // is resolvable (this check can be opted out with a parameter)
+// nolint: gocyclo
 func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr *certificatesv1.CertificateSigningRequest, x509cr *x509.CertificateRequest) (valid bool, reason string, err error) {
 	if valid = (len(x509cr.DNSNames) <= r.AllowedDNSNames); !valid {
 		reason = "The x509 Cert Request contains more DNS names than allowed through the config flag"
@@ -41,7 +42,7 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 	for _, sanDNSName := range x509cr.DNSNames {
 		hostname := strings.TrimPrefix(csr.Spec.Username, "system:node:")
 
-		if valid = strings.HasPrefix(sanDNSName, hostname); !valid {
+		if valid = strings.HasPrefix(sanDNSName, hostname); !valid && !r.BypassHostnameCheck {
 			reason = "The SAN DNS Name in the x509 CSR is not prefixed by the node name (hostname)"
 			return
 		}
