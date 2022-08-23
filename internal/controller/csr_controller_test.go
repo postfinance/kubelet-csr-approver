@@ -38,7 +38,8 @@ func TestValidCsrApproved(t *testing.T) {
 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &validCsr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(validCsr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(validCsr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.False(t, denied)
 	assert.True(t, approved)
@@ -58,7 +59,8 @@ func TestWrongSignerCsr(t *testing.T) {
 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.False(t, denied)
 	assert.False(t, approved)
@@ -78,12 +80,38 @@ func TestNonMatchingCommonNameUsername(t *testing.T) {
 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.True(t, denied)
 	assert.False(t, approved)
 }
 
+func TestHostnameSANNameMismatchWithBypass(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:  "csr-mismatch-SAN-hostname-with-bypass",
+		nodeName: testNodeName,
+		dnsName:  "hostname-000.test.ch",
+	}
+	dnsResolver.Zones[csrParams.dnsName+"."] = mockdns.Zone{
+		A: []string{"192.168.0.14"},
+	} // we mock the dns zone of this test, as we really only want the invalid dns name to make it fail
+
+	csrController.BypassHostnameCheck = true
+	defer func() { csrController.BypassHostnameCheck = false }()
+
+	csr := createCsr(t, csrParams)
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log("CSR rejected with the following reason:" + reason)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.True(t, approved)
+	assert.False(t, denied)
+}
 func TestInvalidDNSName(t *testing.T) {
 	csrParams := CsrParams{
 		csrName:  "csr-invalid-dnsName",
@@ -99,7 +127,8 @@ func TestInvalidDNSName(t *testing.T) {
 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.True(t, denied)
 	assert.False(t, approved)
@@ -120,7 +149,8 @@ func TestInvalidRegexName(t *testing.T) {
 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.True(t, denied)
 	assert.False(t, approved)
@@ -137,7 +167,8 @@ func TestUnresolvedDNSName(t *testing.T) {
 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.True(t, denied)
 	assert.False(t, approved)
@@ -156,7 +187,8 @@ func TestMismatchedResolvedIpsSANIps(t *testing.T) {
 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.True(t, denied)
 	assert.False(t, approved)
@@ -176,7 +208,8 @@ func TestExpirationSecondsTooLarge(t *testing.T) {
 	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.True(t, denied)
 	assert.False(t, approved)
@@ -198,7 +231,8 @@ func TestBypassDNSResolution(t *testing.T) {
 		testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.True(t, approved)
 	assert.False(t, denied)
@@ -222,7 +256,8 @@ func TestIPv4NotWhitelisted(t *testing.T) {
 		testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.False(t, approved)
 	assert.True(t, denied)
@@ -246,7 +281,8 @@ func TestIPv6NotWhitelisted(t *testing.T) {
 		testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.False(t, approved)
 	assert.True(t, denied)
@@ -269,7 +305,8 @@ func TestIPv6WithoutDNSNotWhitelisted(t *testing.T) {
 		testContext, &csr, metav1.CreateOptions{})
 	require.Nil(t, err, "Could not create the CSR.")
 
-	approved, denied, err := waitCsrApprovalStatus(csr.Name)
+	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.False(t, approved)
 	assert.True(t, denied)
