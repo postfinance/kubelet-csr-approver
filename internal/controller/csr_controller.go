@@ -74,7 +74,8 @@ type CertificateSigningRequestReconciler struct {
 // Reconcile will perform a series of checks before deciding whether the CSR should be approved or denied
 // cyclomatic complexity is high (over 15), but this improves
 // readibility for the programmer, therefore we ignore the linting error
-// nolint: gocyclo
+//
+//nolint:gocyclo
 func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (res ctrl.Result, returnErr error) {
 	l := log.FromContext(ctx)
 
