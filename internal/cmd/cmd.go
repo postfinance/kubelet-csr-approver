@@ -142,6 +142,7 @@ func prepareCmdlineConfig() *controller.Config {
 		regexStr               = fs.String("provider-regex", ".*", "provider-specified regex to validate CSR SAN names against. accepts everything unless specified")
 		maxSec                 = fs.Int("max-expiration-sec", 367*24*3600, "maximum seconds a CSR can request a cerficate for. defaults to 367 days")
 		bypassDNSResolution    = fs.Bool("bypass-dns-resolution", false, "set this parameter to true to bypass DNS resolution checks")
+		bypassHostnameCheck    = fs.Bool("bypass-hostname-check", false, "set this parameter to true to ignore mismatching DNS name and hostname")
 		ignoreNonSystemNodeCsr = fs.Bool("ignore-non-system-node", false, "set this parameter to true to ignore CSR for subjects different than system:node")
 		allowedDNSNames        = fs.Int("allowed-dns-names", 1, "number of DNS SAN names allowed in a certificate request. defaults to 1")
 		ipPrefixesStr          = fs.String("provider-ip-prefixes", "0.0.0.0/0,::/0",
@@ -175,6 +176,7 @@ func prepareCmdlineConfig() *controller.Config {
 		RegexStr:               *regexStr,
 		IPPrefixesStr:          *ipPrefixesStr,
 		BypassDNSResolution:    *bypassDNSResolution,
+		BypassHostnameCheck:    *bypassHostnameCheck,
 		IgnoreNonSystemNodeCsr: *ignoreNonSystemNodeCsr,
 		MaxExpirationSeconds:   int32(*maxSec),
 		AllowedDNSNames:        *allowedDNSNames,
