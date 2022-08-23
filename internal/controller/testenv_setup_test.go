@@ -35,6 +35,7 @@ import (
 	"github.com/postfinance/kubelet-csr-approver/internal/controller"
 
 	"github.com/thanhpk/randstr"
+	capiv1 "k8s.io/api/certificates/v1"
 	certificates_v1 "k8s.io/api/certificates/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientset "k8s.io/client-go/kubernetes"
@@ -54,7 +55,7 @@ var csrController *controller.CertificateSigningRequestReconciler
 var testContext context.Context
 var testContextCancel context.CancelFunc
 
-func waitCsrApprovalStatus(csrName string) (approved, denied bool, err error) {
+func waitCsrApprovalStatus(csrName string) (approved, denied bool, reason string, err error) {
 	for i := 0; i < 3; i++ {
 		time.Sleep(250 * time.Millisecond)
 		csr, err := adminClientset.CertificatesV1().CertificateSigningRequests().
@@ -63,7 +64,18 @@ func waitCsrApprovalStatus(csrName string) (approved, denied bool, err error) {
 			continue
 		}
 
-		approved, denied = controller.GetCertApprovalCondition(&csr.Status)
+		for _, c := range csr.Status.Conditions {
+			if c.Type == capiv1.CertificateApproved {
+				approved = true
+				reason = c.Message
+			}
+
+			if c.Type == capiv1.CertificateDenied {
+				denied = true
+				reason = c.Message
+
+			}
+		}
 		if approved || denied {
 			break
 		}
