@@ -30,20 +30,22 @@ The most important parameters (configurable through either flags or environment
 variables) are:
 
 * `--provider-regex` or `PROVIDER_REGEX` lets you decide which hostnames can be
-  approved or not\
-  e.g. if all your nodes follow a naming convention (say
-  `node-randomstr1234.int.company.ch`), your regex could look like
-  `^node-\w*\.int\.company\.ch$`
-* `--max-expiration-sec` or `MAX_EXPIRATION_SEC` permits to specify the maximum
-  `expirationSeconds` the kubelet can ask for.\
-  Per default it is hardcoded to a maximum of 367 days, and can be reduced with
-  this parameter.
-* `--bypass-dns-resolution` or `BYPASS_DNS_RESOLUTION` permits to bypass DNS resolution
-  check. \
-  the default value of the boolean is false, and you can enable it by
-  setting it to `true` (or any other option listed in GoLang's
-  [`ParseBool`](https://github.com/golang/go/blob/master/src/strconv/atob.go#L10)
-  function)
+approved or not\
+e.g. if all your nodes follow a naming convention (say
+`node-randomstr1234.int.company.ch`), your regex could look like
+`^node-\w*\.int\.company\.ch$`
+* `--max-expiration-sec` or `MAX_EXPIRATION_SEC` lets you specify the maximum
+`expirationSeconds` the kubelet can ask for.\
+Per default it is hardcoded to a maximum of 367 days, and can be reduced with
+this parameter.
+* `--bypass-dns-resolution` or `BYPASS_DNS_RESOLUTION` -> permits to bypass DNS resolution
+check. \
+the default value of the boolean is false, and you can enable it by
+setting it to `true` (or any other option listed in GoLang's
+[`ParseBool`](https://github.com/golang/go/blob/master/src/strconv/atob.go#L10)
+function)
+* `--bypass-hostname-check` or `BYPASS_HOSTNAME_CHECK`: when set to true,
+it permits having a DNS name that differs (i.e. isn't prefixed) by the hostname
 * `--provider-ip-prefixes`  or `PROVIDER_IP_PREFIXES` permits to specify a
   comma-separated list of IP (v4 or/and v6) subnets/prefixes, that CSR IP
   addresses shall fall into. left unspecified, all IP addresses are allowed. \
