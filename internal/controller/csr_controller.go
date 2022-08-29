@@ -80,7 +80,7 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 	l := log.FromContext(ctx)
 
 	var csr certificatesv1.CertificateSigningRequest
-	if err := r.Get(ctx, req.NamespacedName, &csr); err != nil {
+	if err := r.Client.Get(ctx, req.NamespacedName, &csr); err != nil {
 		if apierrors.IsNotFound(err) {
 			// we'll ignore not-found errors, since we can get them on deleted requests.
 			return
