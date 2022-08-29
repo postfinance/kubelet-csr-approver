@@ -17,26 +17,26 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-go@v2
+    - uses: actions/checkout@v3
+    - uses: actions/setup-go@v3
       with:
-        go-version: 1.17
+        go-version: 1.18
         stable: true
 
     - name: install and run golangci-lint
-      uses: golangci/golangci-lint-action@v2.5.2
+      uses: golangci/golangci-lint-action@v3.2.0
       with:
-        version: v1.43.0
+        version: v1.48.0
         skip-go-installation: true
         args: --timeout=3m
 
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: 1.18
           stable: true
 
       - name: Download K8s envtest - local K8s cluster control plane
@@ -61,7 +61,7 @@ jobs:
   test-helm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Set up Helm
@@ -73,9 +73,9 @@ jobs:
           python-version: 3.7
       - name: Set up chart-testing
         uses: helm/chart-testing-action@v2.0.1
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: 1.18
           stable: true
       - uses: imjasonh/setup-ko@v0.4
         name: Setup ko
@@ -120,10 +120,10 @@ jobs:
       needs.check-gh-token.outputs.gh-token == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: 1.18
           stable: true
       - name: Login to DockerHub
         uses: docker/login-action@v1
@@ -153,10 +153,10 @@ jobs:
       needs.check-gh-token.outputs.gh-token == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: 1.18
           stable: true
 
       - name: Install Helm
@@ -180,10 +180,10 @@ jobs:
       needs.check-gh-token.outputs.gh-token == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: 1.18
           stable: true
 
       - name: Login to DockerHub
@@ -212,10 +212,10 @@ jobs:
       needs.check-gh-token.outputs.gh-token == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
         with:
-          go-version: 1.17
+          go-version: 1.18
           stable: true
 
       - name: Login to DockerHub
