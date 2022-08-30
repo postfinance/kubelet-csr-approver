@@ -64,6 +64,14 @@ spec:
             - name: IGNORE_NON_SYSTEM_NODE
               value: {{ .Values.ignoreNonSystemNode | quote }}
           {{- end }}
+          {{- if .Values.allowedDnsNames}}
+            - name: ALLOWED_DNS_NAMES
+              value: {{ .Values.allowedDnsNames | quote }}
+          {{- end }}
+          {{- if .Values.bypassHostnameCheck}}
+            - name: BYPASS_HOSTNAME_CHECK
+              value: {{ .Values.bypassHostnameCheck | quote }}
+          {{- end }}
           {{- with .Values.env }}
             {{ toYaml . | nindent 12 }}
           {{- end }}
