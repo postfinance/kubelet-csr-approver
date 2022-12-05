@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/foxcpp/go-mockdns v1.0.0
 	github.com/go-logr/zapr v1.2.3
-	github.com/postfinance/flash v0.4.0
+	github.com/postfinance/flash v0.5.0
 	github.com/stretchr/testify v1.8.1
 	github.com/thanhpk/randstr v1.0.4
 	github.com/tj/assert v0.0.3
@@ -30,6 +30,7 @@ require (
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
+	github.com/sykesm/zap-logfmt v0.0.4 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
@@ -62,8 +63,8 @@ require (
 	github.com/peterbourgon/ff/v3 v3.3.0
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/prometheus/client_golang v1.13.0 // indirect
-	github.com/prometheus/client_model v0.2.0 // indirect
+	github.com/prometheus/client_golang v1.14.0 // indirect
+	github.com/prometheus/client_model v0.3.0 // indirect
 	github.com/prometheus/common v0.37.0 // indirect
 	github.com/prometheus/procfs v0.8.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
