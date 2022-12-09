@@ -23,7 +23,6 @@ linters-settings:
       - performance
       - style
     disabled-checks:
-      - whyNoLint
       - hugeParam
   gocyclo:
     min-complexity: 15
@@ -47,7 +46,6 @@ linters:
   disable-all: true
   enable:
     - bodyclose
-    - deadcode
     - depguard
     - dogsled
     - dupl
@@ -74,13 +72,11 @@ linters:
     - rowserrcheck
     - exportloopref
     - staticcheck
-    - structcheck
     - stylecheck
     - typecheck
     - unconvert
     - unparam
     - unused
-    - varcheck
     - whitespace
     - wsl
 

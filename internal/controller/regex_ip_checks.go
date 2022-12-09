@@ -16,7 +16,7 @@ import (
 // complies with the provider-specific regex
 // is resolvable (this check can be opted out with a parameter)
 //
-//nolint:gocyclo
+//nolint:gocyclo // see above
 func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr *certificatesv1.CertificateSigningRequest, x509cr *x509.CertificateRequest) (valid bool, reason string, err error) {
 	if valid = (len(x509cr.DNSNames) <= r.AllowedDNSNames); !valid {
 		reason = "The x509 Cert Request contains more DNS names than allowed through the config flag"

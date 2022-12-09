@@ -152,7 +152,7 @@ func prepareCmdlineConfig() *controller.Config {
 		)
 	)
 
-	err := ff.Parse(fs, os.Args[1:], ff.WithEnvVarNoPrefix())
+	err := ff.Parse(fs, os.Args[1:], ff.WithEnvVars())
 	if err != nil {
 		fmt.Printf("unable to parse args/envs, exiting. error message: %v", err)
 

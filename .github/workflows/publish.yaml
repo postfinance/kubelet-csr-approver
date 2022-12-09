@@ -21,7 +21,6 @@ jobs:
     - uses: actions/setup-go@v3
       with:
         go-version: 1.18
-        stable: true
 
     - name: install and run golangci-lint
       uses: golangci/golangci-lint-action@v3.2.0
@@ -37,7 +36,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.18
-          stable: true
 
       - name: Download K8s envtest - local K8s cluster control plane
         run: |

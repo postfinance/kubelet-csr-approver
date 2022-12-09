@@ -75,7 +75,7 @@ type CertificateSigningRequestReconciler struct {
 // cyclomatic complexity is high (over 15), but this improves
 // readibility for the programmer, therefore we ignore the linting error
 //
-//nolint:gocyclo
+//nolint:gocyclo // see above
 func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req ctrl.Request) (res ctrl.Result, returnErr error) {
 	l := log.FromContext(ctx)
 
