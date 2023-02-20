@@ -20,6 +20,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 
 	"github.com/postfinance/kubelet-csr-approver/internal/controller"
+	ctrlconfig "sigs.k8s.io/controller-runtime/pkg/client/config"
+	"github.com/go-logr/logr"
 )
 
 //nolint:gochecknoglobals //this vars are set on build by goreleaser
@@ -31,7 +33,8 @@ var (
 // Run will start the controller with the default settings
 func Run() int {
 	config := prepareCmdlineConfig()
-	_, mgr, errorCode := CreateControllerManager(config)
+	logger := controller.InitLogger(config)
+	_, mgr, errorCode := CreateControllerManager(config, logger)
 
 	if errorCode != 0 {
 		return errorCode
@@ -49,33 +52,22 @@ func Run() int {
 }
 
 // CreateControllerManager permits creation/customization of the controller-manager
-func CreateControllerManager(config *controller.Config) (
+func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	csrController *controller.CertificateSigningRequestReconciler,
 	mgr ctrl.Manager,
 	code int,
 ) {
-	// logger initialization
-	flashLogger := flash.New()
-	if config.LogLevel < -5 || config.LogLevel > 10 {
-		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
-	}
+	logger.V(0).Info("Kubelet-CSR-Approver controller starting.", "commit", commit, "ref", ref)
 
+	config.K8sConfig = ctrl.GetConfigOrDie()
+
+	if config.RegexStr == "" {
+		logger.V(-5).Info("the provider-spefic regex must be specified, exiting")
+		return nil, nil, 10
+	}
 	csrController = &controller.CertificateSigningRequestReconciler{
 		Config: *config,
 	}
-
-	config.LogLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
-	flashLogger.SetLevel(zapcore.Level(config.LogLevel))
-	z := zapr.NewLogger(flashLogger.Desugar())
-
-	z.V(0).Info("Kubelet-CSR-Approver controller starting.", "commit", commit, "ref", ref)
-
-	if config.RegexStr == "" {
-		z.V(-5).Info("the provider-spefic regex must be specified, exiting")
-
-		return nil, nil, 10
-	}
-
 	csrController.ProviderRegexp = regexp.MustCompile(config.RegexStr).MatchString
 
 	// IP Prefixes parsing and IPSet construction
@@ -84,7 +76,7 @@ func CreateControllerManager(config *controller.Config) (
 	for _, ipPrefix := range strings.Split(config.IPPrefixesStr, ",") {
 		ipPref, err := netaddr.ParseIPPrefix(ipPrefix)
 		if err != nil {
-			z.V(-5).Info(fmt.Sprintf("Unable to parse IP prefix: %s, exiting", ipPrefix))
+			logger.V(-5).Info(fmt.Sprintf("Unable to parse IP prefix: %s, exiting", ipPrefix))
 
 			return nil, nil, 10
 		}
@@ -96,19 +88,19 @@ func CreateControllerManager(config *controller.Config) (
 	csrController.ProviderIPSet, err = setBuilder.IPSet()
 
 	if err != nil {
-		z.V(-5).Info("Unable to build the Set of valid IP addresses, exiting")
+		logger.V(-5).Info("Unable to build the Set of valid IP addresses, exiting")
 
 		return nil, nil, 10
 	}
 
-	ctrl.SetLogger(z)
+	ctrl.SetLogger(logger)
 	mgr, err = ctrl.NewManager(config.K8sConfig, ctrl.Options{
 		MetricsBindAddress:     config.MetricsAddr,
 		HealthProbeBindAddress: config.ProbeAddr,
 	})
 
 	if err != nil {
-		z.Error(err, "unable to start manager")
+		logger.Error(err, "unable to start manager")
 
 		return nil, nil, 10
 	}
@@ -118,13 +110,13 @@ func CreateControllerManager(config *controller.Config) (
 	csrController.Scheme = mgr.GetScheme()
 
 	if err = csrController.SetupWithManager(mgr); err != nil {
-		z.Error(err, "unable to create controller", "controller", "CertificateSigningRequest")
+		logger.Error(err, "unable to create controller", "controller", "CertificateSigningRequest")
 
 		return nil, nil, 10
 	}
 
 	if err := mgr.AddHealthzCheck("healthz", healthz.Ping); err != nil {
-		z.Error(err, "unable to set up health check")
+		logger.Error(err, "unable to set up health check")
 
 		return nil, nil, 10
 	}
@@ -132,9 +124,24 @@ func CreateControllerManager(config *controller.Config) (
 	return csrController, mgr, 0
 }
 
+//
+func initLogger(config *controller.Config) logr.Logger {
+	// logger initialization
+	flashLogger := flash.New()
+	if config.LogLevel < -5 || config.LogLevel > 10 {
+		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
+	}
+	config.LogLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
+	flashLogger.SetLevel(zapcore.Level(config.LogLevel))
+	logger := zapr.NewLogger(flashLogger.Desugar())
+	ctrl.SetLogger(logger)
+
+	return logger
+}
+
 func prepareCmdlineConfig() *controller.Config {
 	fs := flag.NewFlagSet("kubelet-csr-approver", flag.ExitOnError)
-
+	ctrlconfig.RegisterFlags(fs)
 	var (
 		logLevel               = fs.Int("level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
 		metricsAddr            = fs.String("metrics-bind-address", ":8080", "address the metric endpoint binds to.")
@@ -183,7 +190,6 @@ func prepareCmdlineConfig() *controller.Config {
 	}
 
 	config.DNSResolver = net.DefaultResolver
-	config.K8sConfig = ctrl.GetConfigOrDie()
 
 	return &config
 }
