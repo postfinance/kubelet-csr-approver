@@ -63,7 +63,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
         with:
           version: v3.5.0
       - uses: actions/setup-python@v2
@@ -158,7 +158,7 @@ jobs:
           stable: true
 
       - name: Install Helm
-        uses: azure/setup-helm@v1
+        uses: azure/setup-helm@v3
         with:
           version: v3.5.0
 
