@@ -124,7 +124,7 @@ jobs:
           go-version: 1.19
           stable: true
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -185,7 +185,7 @@ jobs:
           stable: true
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -217,7 +217,7 @@ jobs:
           stable: true
 
       - name: Login to DockerHub
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
