@@ -74,7 +74,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
-          stable: true
       - uses: ko-build/setup-ko@v0.6
         name: Setup ko
         env:
@@ -122,7 +121,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
-          stable: true
       - name: Login to DockerHub
         uses: docker/login-action@v2
         with:
@@ -155,7 +153,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
-          stable: true
 
       - name: Install Helm
         uses: azure/setup-helm@v3
@@ -182,7 +179,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
-          stable: true
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
@@ -214,7 +210,6 @@ jobs:
       - uses: actions/setup-go@v3
         with:
           go-version: 1.19
-          stable: true
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
