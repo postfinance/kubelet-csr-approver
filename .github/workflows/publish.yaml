@@ -1,18 +1,19 @@
-name: Test and publish
+name: Publish
 
-on: [push, pull_request]
+on: [push]
 
 jobs:
   check-gh-token:
     runs-on: ubuntu-latest
     outputs:
-        gh-token: ${{ steps.gh-token.outputs.defined }}
+        HAS_DOCKERHUB_TOKEN: ${{ steps.gh-token.outputs.HAS_DOCKERHUB_TOKEN }}
     steps:
         - id: gh-token
           env:
-              MY_KEY: ${{ secrets.GITHUB_TOKEN }}
-          if: "${{ env.MY_KEY != '' }}"
-          run: echo "::set-output name=defined::true"
+              HAS_DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN != '' }}
+          run: |
+           echo "HAS_DOCKERHUB_TOKEN=$HAS_DOCKERHUB_TOKEN" >> $GITHUB_OUTPUT
+           echo "HAS_DOCKERHUB_TOKEN=$HAS_DOCKERHUB_TOKEN" >> $GITHUB_STEP_SUMMARY
 
   lint:
     runs-on: ubuntu-latest
@@ -20,13 +21,12 @@ jobs:
     - uses: actions/checkout@v3
     - uses: actions/setup-go@v3
       with:
-        go-version: 1.18
+        go-version: 1.19
 
     - name: install and run golangci-lint
-      uses: golangci/golangci-lint-action@v3.2.0
+      uses: golangci/golangci-lint-action@v3.4.0
       with:
-        version: v1.48.0
-        skip-go-installation: true
+        version: v1.51.2
         args: --timeout=3m
 
   test:
@@ -35,7 +35,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
 
       - name: Download K8s envtest - local K8s cluster control plane
         run: |
@@ -43,7 +43,7 @@ jobs:
           mkdir -p local/envtest-bin/
           setup-envtest use -p env 1.24.x --bin-dir local/envtest-bin > local/envtest-bin/env
 
-      - name: Run Unit tests
+      - name: Run Unit tests @
         run: |
           source local/envtest-bin/env
           export KUBEBUILDER_ASSETS=$(pwd)/$KUBEBUILDER_ASSETS
@@ -73,9 +73,9 @@ jobs:
         uses: helm/chart-testing-action@v2.0.1
       - uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
           stable: true
-      - uses: imjasonh/setup-ko@v0.6
+      - uses: ko-build/setup-ko@v0.6
         name: Setup ko
         env:
           KO_DOCKER_REPO: docker.io/postfinance
@@ -115,20 +115,20 @@ jobs:
     if: |
       startsWith(github.ref, 'refs/tags/v') &&
       !github.event.pull_request.head.repo.fork &&
-      needs.check-gh-token.outputs.gh-token == 'true'
+      needs.check-gh-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
           stable: true
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: imjasonh/setup-ko@v0.6
+      - uses: ko-build/setup-ko@v0.6
         name: Setup ko
         env:
           KO_DOCKER_REPO: docker.io/postfinance
@@ -148,13 +148,13 @@ jobs:
     if: |
       startsWith(github.ref, 'refs/tags/v') &&
       !github.event.pull_request.head.repo.fork &&
-      needs.check-gh-token.outputs.gh-token == 'true'
+      needs.check-gh-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
           stable: true
 
       - name: Install Helm
@@ -163,7 +163,7 @@ jobs:
           version: v3.5.0
 
       - name: Run chart-releaser
-        uses: stefanprodan/helm-gh-pages@b43a8719cc63fdb3aa943cc57359ab19118eab3f #v1.5.0
+        uses: stefanprodan/helm-gh-pages@v1.7.0
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -175,13 +175,13 @@ jobs:
     if: |
       github.ref == 'refs/heads/main' &&
       !github.event.pull_request.head.repo.fork &&
-      needs.check-gh-token.outputs.gh-token == 'true'
+      needs.check-gh-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
           stable: true
 
       - name: Login to DockerHub
@@ -189,7 +189,7 @@ jobs:
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: imjasonh/setup-ko@v0.6
+      - uses: ko-build/setup-ko@v0.6
         name: Setup ko
         env:
           KO_DOCKER_REPO: docker.io/postfinance
@@ -207,13 +207,13 @@ jobs:
     if: |
       startsWith(github.ref, 'refs/heads/feat') &&
       !github.event.pull_request.head.repo.fork &&
-      needs.check-gh-token.outputs.gh-token == 'true'
+      needs.check-gh-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
           stable: true
 
       - name: Login to DockerHub
@@ -221,7 +221,7 @@ jobs:
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - uses: imjasonh/setup-ko@v0.6
+      - uses: ko-build/setup-ko@v0.6
         name: Setup ko
         env:
           KO_DOCKER_REPO: docker.io/postfinance

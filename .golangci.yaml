@@ -69,7 +69,6 @@ linters:
     - misspell
     - nakedret
     - prealloc
-    - rowserrcheck
     - exportloopref
     - staticcheck
     - stylecheck
