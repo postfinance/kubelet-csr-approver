@@ -42,3 +42,4 @@ test.log
 
 .env
 .secrets
+profile.cov
