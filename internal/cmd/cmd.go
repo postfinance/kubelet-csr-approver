@@ -56,7 +56,9 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 ) {
 	logger.V(0).Info("Kubelet-CSR-Approver controller starting.", "commit", commit, "ref", ref)
 
-	config.K8sConfig = ctrl.GetConfigOrDie()
+	if config.K8sConfig == nil { // when testing, this variable is already set
+		config.K8sConfig = ctrl.GetConfigOrDie()
+	}
 
 	if config.RegexStr == "" {
 		logger.V(-5).Info("the provider-spefic regex must be specified, exiting")
