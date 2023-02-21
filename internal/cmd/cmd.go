@@ -9,13 +9,10 @@ import (
 	"regexp"
 	"strings"
 
-	"go.uber.org/zap/zapcore"
 	"inet.af/netaddr"
 	clientset "k8s.io/client-go/kubernetes"
 
-	"github.com/go-logr/zapr"
 	"github.com/peterbourgon/ff/v3"
-	"github.com/postfinance/flash"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 
@@ -122,21 +119,6 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	}
 
 	return csrController, mgr, 0
-}
-
-//
-func initLogger(config *controller.Config) logr.Logger {
-	// logger initialization
-	flashLogger := flash.New()
-	if config.LogLevel < -5 || config.LogLevel > 10 {
-		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
-	}
-	config.LogLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
-	flashLogger.SetLevel(zapcore.Level(config.LogLevel))
-	logger := zapr.NewLogger(flashLogger.Desugar())
-	ctrl.SetLogger(logger)
-
-	return logger
 }
 
 func prepareCmdlineConfig() *controller.Config {
