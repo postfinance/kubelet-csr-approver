@@ -9,19 +9,16 @@ import (
 	"regexp"
 	"strings"
 
-	"go.uber.org/zap/zapcore"
 	"inet.af/netaddr"
 	clientset "k8s.io/client-go/kubernetes"
 
-	"github.com/go-logr/zapr"
 	"github.com/peterbourgon/ff/v3"
-	"github.com/postfinance/flash"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 
+	"github.com/go-logr/logr"
 	"github.com/postfinance/kubelet-csr-approver/internal/controller"
 	ctrlconfig "sigs.k8s.io/controller-runtime/pkg/client/config"
-	"github.com/go-logr/logr"
 )
 
 //nolint:gochecknoglobals //this vars are set on build by goreleaser
@@ -65,6 +62,7 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 		logger.V(-5).Info("the provider-spefic regex must be specified, exiting")
 		return nil, nil, 10
 	}
+
 	csrController = &controller.CertificateSigningRequestReconciler{
 		Config: *config,
 	}
@@ -124,24 +122,10 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	return csrController, mgr, 0
 }
 
-//
-func initLogger(config *controller.Config) logr.Logger {
-	// logger initialization
-	flashLogger := flash.New()
-	if config.LogLevel < -5 || config.LogLevel > 10 {
-		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
-	}
-	config.LogLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
-	flashLogger.SetLevel(zapcore.Level(config.LogLevel))
-	logger := zapr.NewLogger(flashLogger.Desugar())
-	ctrl.SetLogger(logger)
-
-	return logger
-}
-
 func prepareCmdlineConfig() *controller.Config {
 	fs := flag.NewFlagSet("kubelet-csr-approver", flag.ExitOnError)
 	ctrlconfig.RegisterFlags(fs)
+
 	var (
 		logLevel               = fs.Int("level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
 		metricsAddr            = fs.String("metrics-bind-address", ":8080", "address the metric endpoint binds to.")
