@@ -1,11 +1,11 @@
 builds:
-- id: kubelet-csr-approver 
-  dir: .  
+- id: kubelet-csr-approver
+  dir: .
   main: ./cmd/kubelet-csr-approver/
   env:
   - CGO_ENABLED=0
   ldflags:
-  - -X main.commit={{.Env.COMMIT}}
-  - -X main.ref={{.Env.REF}}
-  
+  - -X github.com/postfinance/kubelet-csr-approver/internal/cmd.commit={{.Env.COMMIT}}
+  - -X github.com/postfinance/kubelet-csr-approver/internal/cmd.ref={{.Env.REF}}
+
 
