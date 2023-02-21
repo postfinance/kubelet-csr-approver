@@ -21,7 +21,14 @@ import (
 	"encoding/pem"
 	"errors"
 
+	"fmt"
+
+	"github.com/go-logr/logr"
+	"github.com/go-logr/zapr"
+	"github.com/postfinance/flash"
+	"go.uber.org/zap/zapcore"
 	capiv1 "k8s.io/api/certificates/v1"
+	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 // Source(10/2021): https://github.com/kubernetes/kubernetes/blob/master/pkg/controller/certificates/certificate_controller_utils.go
@@ -57,4 +64,20 @@ func ParseCSR(pemBytes []byte) (*x509.CertificateRequest, error) {
 	}
 
 	return csr, nil
+}
+
+// InitLogger logger initialization
+func InitLogger(config *Config) logr.Logger {
+	// logger initialization
+	flashLogger := flash.New()
+	if config.LogLevel < -5 || config.LogLevel > 10 {
+		flashLogger.Fatal(fmt.Errorf("log level should be between -5 and 10 (included)"))
+	}
+
+	config.LogLevel *= -1 // we inverse the level for the logging behavior between zap and logr.Logger to match
+	flashLogger.SetLevel(zapcore.Level(config.LogLevel))
+	logger := zapr.NewLogger(flashLogger.Desugar())
+	ctrl.SetLogger(logger)
+
+	return logger
 }

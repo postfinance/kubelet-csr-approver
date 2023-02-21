@@ -212,7 +212,7 @@ func packageSetup() {
 		IPPrefixesStr:          "192.168.0.0/16,fc00::/7",
 	}
 
-	csrCtrl, mgr, errorCode := cmd.CreateControllerManager(&testingConfig)
+	csrCtrl, mgr, errorCode := cmd.CreateControllerManager(&testingConfig, controller.InitLogger(&testingConfig))
 	csrController = csrCtrl
 	if errorCode != 0 {
 		log.Fatalf("unable to create controller-runtime manager. Error:\n%v", errorCode)
