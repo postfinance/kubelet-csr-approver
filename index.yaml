@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   kubelet-csr-approver:
   - apiVersion: v2
+    appVersion: v0.2.7
+    created: "2023-03-07T06:33:48.527106401Z"
+    description: Kubelet CSR Approver
+    digest: 6d852e5cada8d2081ee7d9546f1c9db4570c99197026311be37dc9b3dd770256
+    maintainers:
+    - name: clementnuss
+    - name: treydock
+    name: kubelet-csr-approver
+    type: application
+    urls:
+    - https://postfinance.github.io/kubelet-csr-approver/kubelet-csr-approver-0.2.7.tgz
+    version: 0.2.7
+  - apiVersion: v2
     appVersion: v0.2.4
     created: "2022-08-30T04:58:30.61173684Z"
     description: Kubelet CSR Approver
@@ -92,4 +105,4 @@ entries:
     urls:
     - https://postfinance.github.io/kubelet-csr-approver/kubelet-csr-approver-v0.1.1.tgz
     version: v0.1.1
-generated: "2022-08-30T04:58:30.611005638Z"
+generated: "2023-03-07T06:33:48.526407591Z"
