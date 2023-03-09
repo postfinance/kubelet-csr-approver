@@ -88,3 +88,4 @@ env: []
 #     value: bar
 
 dnsPolicy: ""
+dnsConfig: {}
