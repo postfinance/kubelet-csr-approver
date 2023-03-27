@@ -77,7 +77,7 @@ jobs:
       - uses: ko-build/setup-ko@v0.6
         name: Setup ko
         env:
-          KO_DOCKER_REPO: docker.io/postfinance
+          KO_DOCKER_REPO: ko.local
       - name: Run ko publish
         run: |
           export REF=${{ github.ref}}
