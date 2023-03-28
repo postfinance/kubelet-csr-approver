@@ -226,3 +226,14 @@ jobs:
           export COMMIT=${{ github.sha}}
           export FEAT=$(echo $REF  | awk -F 'feat/' '{print $2}')
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm -t $FEAT
+
+      - uses: ko-build/setup-ko@v0.6
+        name: Setup ko
+        env:
+          KO_DOCKER_REPO: ghcr.io/postfinance
+      - name: Run ko publish
+        run: |
+          export REF=${{ github.ref}}
+          export COMMIT=${{ github.sha}}
+          export FEAT=$(echo $REF  | awk -F 'feat/' '{print $2}')
+          ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm -t $FEAT
