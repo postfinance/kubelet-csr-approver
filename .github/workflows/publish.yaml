@@ -3,7 +3,7 @@ name: Publish
 on: [push]
 
 jobs:
-  check-gh-token:
+  check-dockerhub-token:
     runs-on: ubuntu-latest
     outputs:
         HAS_DOCKERHUB_TOKEN: ${{ steps.gh-token.outputs.HAS_DOCKERHUB_TOKEN }}
@@ -110,11 +110,11 @@ jobs:
     needs:
     - lint
     - test
-    - check-gh-token
+    - check-dockerhub-token
     if: |
       startsWith(github.ref, 'refs/tags/v') &&
       !github.event.pull_request.head.repo.fork &&
-      needs.check-gh-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
+      needs.check-dockerhub-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -142,11 +142,11 @@ jobs:
     needs:
     - lint
     - test-helm
-    - check-gh-token
+    - check-dockerhub-token
     if: |
       startsWith(github.ref, 'refs/tags/v') &&
       !github.event.pull_request.head.repo.fork &&
-      needs.check-gh-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
+      needs.check-dockerhub-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -168,11 +168,11 @@ jobs:
     needs:
     - lint
     - test
-    - check-gh-token
+    - check-dockerhub-token
     if: |
       github.ref == 'refs/heads/main' &&
       !github.event.pull_request.head.repo.fork &&
-      needs.check-gh-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
+      needs.check-dockerhub-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -199,11 +199,11 @@ jobs:
     needs:
     - lint
     - test
-    - check-gh-token
+    - check-dockerhub-token
     if: |
       startsWith(github.ref, 'refs/heads/feat') &&
       !github.event.pull_request.head.repo.fork &&
-      needs.check-gh-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
+      needs.check-dockerhub-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
