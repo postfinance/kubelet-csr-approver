@@ -7,5 +7,5 @@ builds:
   ldflags:
   - -X github.com/postfinance/kubelet-csr-approver/internal/cmd.commit={{.Env.COMMIT}}
   - -X github.com/postfinance/kubelet-csr-approver/internal/cmd.ref={{.Env.REF}}
-
+defaultBaseImage: ghcr.io/chainguard-images/static:latest
 
