@@ -21,6 +21,7 @@ import (
 	"encoding/pem"
 	"net"
 	"os"
+	"strings"
 	"testing"
 	"time"
 
@@ -141,7 +142,7 @@ func createCsr(t *testing.T, params CsrParams) certificates_v1.CertificateSignin
 		IPAddresses: params.ipAddresses,
 	}
 	if len(params.dnsName) > 0 {
-		x509RequestTemplate.DNSNames = []string{params.dnsName}
+		x509RequestTemplate.DNSNames = strings.Split(params.dnsName, ",")
 	}
 
 	x509Request, _ := x509.CreateCertificateRequest(rand.Reader, &x509RequestTemplate, priv)
