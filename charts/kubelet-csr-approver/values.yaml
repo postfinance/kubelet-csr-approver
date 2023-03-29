@@ -21,7 +21,7 @@ loggingLevel: 0
 namespace: ""
 
 image:
-  repository: postfinance/kubelet-csr-approver
+  repository: ghcr.io/postfinance/kubelet-csr-approver
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
