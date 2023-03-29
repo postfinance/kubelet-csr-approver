@@ -4,11 +4,11 @@ import (
 	"context"
 	"crypto/x509"
 	"fmt"
+	"net/netip"
 	"strings"
 	"time"
 
-	"inet.af/netaddr"
-
+	"go4.org/netipx"
 	certificatesv1 "k8s.io/api/certificates/v1"
 )
 
@@ -62,10 +62,10 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 		allResolvedAddrs = append(allResolvedAddrs, resolvedAddrs...)
 	}
 
-	var setBuilder netaddr.IPSetBuilder
+	var setBuilder netipx.IPSetBuilder
 
 	for _, a := range allResolvedAddrs {
-		ipaddr, err := netaddr.ParseIP(a)
+		ipaddr, err := netip.ParseAddr(a)
 		if err != nil {
 			return false, fmt.Sprintf("Error while parsing resolved IP address %s, denying the CSR", ipaddr), nil
 		}
@@ -83,7 +83,7 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 
 	sanIPAddrs := x509cr.IPAddresses
 	for _, ip := range sanIPAddrs {
-		ipa, ok := netaddr.FromStdIP(ip)
+		ipa, ok := netipx.FromStdIP(ip)
 		if !ok {
 			return false, fmt.Sprintf("Error while parsing x509 CR IP address %s, denying the CSR", ip), nil
 		}
@@ -99,10 +99,10 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 
 // WhitelistedIPCheck verifies that the x509cr SAN IP Addresses are contained in the
 // set of ProviderSpecified IP addresses
-func (r *CertificateSigningRequestReconciler) WhitelistedIPCheck(csr *certificatesv1.CertificateSigningRequest, x509cr *x509.CertificateRequest) (valid bool, reason string, err error) {
+func (r *CertificateSigningRequestReconciler) WhitelistedIPCheck(_ *certificatesv1.CertificateSigningRequest, x509cr *x509.CertificateRequest) (valid bool, reason string, err error) {
 	sanIPAddrs := x509cr.IPAddresses
 	for _, ip := range sanIPAddrs {
-		ipa, ok := netaddr.FromStdIP(ip)
+		ipa, ok := netipx.FromStdIP(ip)
 		if !ok {
 			return false, fmt.Sprintf("Error while parsing x509 CR IP address %s, denying the CSR", ip), nil
 		}

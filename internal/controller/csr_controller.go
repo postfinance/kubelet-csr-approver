@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"strings"
 
-	"inet.af/netaddr"
+	"go4.org/netipx"
 	certificatesv1 "k8s.io/api/certificates/v1"
 	corev1 "k8s.io/api/core/v1"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
@@ -49,7 +49,7 @@ type Config struct {
 	RegexStr               string
 	ProviderRegexp         func(string) bool
 	IPPrefixesStr          string
-	ProviderIPSet          *netaddr.IPSet
+	ProviderIPSet          *netipx.IPSet
 	MaxExpirationSeconds   int32
 	K8sConfig              *rest.Config
 	DNSResolver            HostResolver

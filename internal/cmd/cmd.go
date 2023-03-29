@@ -9,7 +9,10 @@ import (
 	"regexp"
 	"strings"
 
-	"inet.af/netaddr"
+	"net/netip"
+
+	"go4.org/netipx"
+
 	clientset "k8s.io/client-go/kubernetes"
 
 	"github.com/peterbourgon/ff/v3"
@@ -71,10 +74,11 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	csrController.ProviderRegexp = regexp.MustCompile(config.RegexStr).MatchString
 
 	// IP Prefixes parsing and IPSet construction
-	var setBuilder netaddr.IPSetBuilder
+
+	var setBuilder netipx.IPSetBuilder
 
 	for _, ipPrefix := range strings.Split(config.IPPrefixesStr, ",") {
-		ipPref, err := netaddr.ParseIPPrefix(ipPrefix)
+		ipPref, err := netip.ParsePrefix(ipPrefix)
 		if err != nil {
 			logger.V(-5).Info(fmt.Sprintf("Unable to parse IP prefix: %s, exiting", ipPrefix))
 
