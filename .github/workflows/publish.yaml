@@ -1,6 +1,8 @@
 name: Publish
 
-on: [push]
+on:
+- push
+- workflow_dispatch
 
 jobs:
   check-dockerhub-token:
@@ -172,10 +174,21 @@ jobs:
         with:
           version: v3.5.0
 
+      - name: Prepare version
+        run: |
+          export TAG=$(echo ${{ github.ref }} | cut -d '/' -f 3 - )
+          export VERSION=${TAG#v}
+          echo TAG=${TAG} >> $GITHUB_ENV
+          echo VERSION=${VERSION} >> $GITHUB_ENV
+          echo "TAG: ${TAG}"
+          echo "VERSION: ${VERSION}"
+
       - name: Run chart-releaser
         uses: stefanprodan/helm-gh-pages@v1.7.0
         with:
           token: "${{ secrets.GITHUB_TOKEN }}"
+          app_version: "${{env.TAG}}"
+          chart_version: "${{env.VERSION}}"
 
   publish-untagged:
     needs:
