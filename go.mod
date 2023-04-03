@@ -7,7 +7,7 @@ require (
 	github.com/go-logr/zapr v1.2.3
 	github.com/postfinance/flash v0.5.0
 	github.com/stretchr/testify v1.8.2
-	github.com/thanhpk/randstr v1.0.4
+	github.com/thanhpk/randstr v1.0.5
 	github.com/tj/assert v0.0.3
 	go.uber.org/zap v1.24.0
 	go4.org/netipx v0.0.0-20230303233057-f1b76eb4bb35
