@@ -43,7 +43,7 @@ jobs:
         run: |
           go install sigs.k8s.io/controller-runtime/tools/setup-envtest@latest
           mkdir -p local/envtest-bin/
-          setup-envtest use -p env 1.26.x --bin-dir local/envtest-bin > local/envtest-bin/env
+          setup-envtest use -p env 1.27.x --bin-dir local/envtest-bin > local/envtest-bin/env
 
       - name: Run Unit tests @
         run: |
