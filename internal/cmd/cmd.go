@@ -101,6 +101,8 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	mgr, err = ctrl.NewManager(config.K8sConfig, ctrl.Options{
 		MetricsBindAddress:     config.MetricsAddr,
 		HealthProbeBindAddress: config.ProbeAddr,
+		LeaderElection:         true,
+		LeaderElectionID:       "kubelet-csr-approver",
 	})
 
 	if err != nil {
