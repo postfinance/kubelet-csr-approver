@@ -98,12 +98,26 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	}
 
 	ctrl.SetLogger(logger)
-	mgr, err = ctrl.NewManager(config.K8sConfig, ctrl.Options{
+
+	mgrOptions := ctrl.Options{
 		MetricsBindAddress:     config.MetricsAddr,
 		HealthProbeBindAddress: config.ProbeAddr,
 		LeaderElection:         true,
 		LeaderElectionID:       "kubelet-csr-approver",
-	})
+	}
+
+	// we need to test whether we are running in-cluster or not. if we are not, we will
+	// set a default LeaderElectionNamespace to permit our tests to correctly run.
+	// the detection is done as defined in controller-runtime/pkg/leaderelection:
+	// https://github.com/kubernetes-sigs/controller-runtime/blob/v0.15.0/pkg/leaderelection/leader_election.go
+	// TODO: with https://github.com/golang/go/issues/52600 and Go 1.21, we will be able to use
+	// testing.Testing() function to know whether running in test mode or not. adapt the next block accordingly
+	const inClusterNamespacePath = "/var/run/secrets/kubernetes.io/serviceaccount/namespace"
+	if _, err := os.Stat(inClusterNamespacePath); os.IsNotExist(err) {
+		mgrOptions.LeaderElectionNamespace = "kube-system"
+	}
+
+	mgr, err = ctrl.NewManager(config.K8sConfig, mgrOptions)
 
 	if err != nil {
 		logger.Error(err, "unable to start manager")
