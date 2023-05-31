@@ -6,6 +6,10 @@ metadata:
   labels:
     {{- include "kubelet-csr-approver.labels" . | nindent 4 }}
 spec:
+{{- if and (gt .Values.replicas 1.0) (not .Values.leaderElection) }}
+{{- fail "leaderElection needs to be enabled in order to use more than 1 replica" }}
+{{- end }}
+  replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
       {{- include "kubelet-csr-approver.selectorLabels" . | nindent 6 }}
@@ -43,6 +47,9 @@ spec:
             - ":{{ .Values.metrics.port }}"
             - -health-probe-bind-address
             - ":8081"
+          {{- if .Values.leaderElection }}
+            - -leader-election
+          {{- end }}
           {{- if .Values.loggingLevel }}
             - -level
             - {{ .Values.loggingLevel | quote }}
