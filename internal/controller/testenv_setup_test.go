@@ -204,6 +204,7 @@ func packageSetup() {
 	}
 
 	testingConfig := controller.Config{
+		LeaderElection:         true,
 		RegexStr:               `^[\w-]*\.test\.ch$`,
 		MaxExpirationSeconds:   367 * 24 * 3600,
 		AllowedDNSNames:        3,

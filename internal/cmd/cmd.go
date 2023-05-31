@@ -102,7 +102,7 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	mgrOptions := ctrl.Options{
 		MetricsBindAddress:     config.MetricsAddr,
 		HealthProbeBindAddress: config.ProbeAddr,
-		LeaderElection:         true,
+		LeaderElection:         config.LeaderElection,
 		LeaderElectionID:       "kubelet-csr-approver",
 	}
 
@@ -152,6 +152,7 @@ func prepareCmdlineConfig() *controller.Config {
 		logLevel               = fs.Int("level", 0, "level ranges from -5 (Fatal) to 10 (Verbose)")
 		metricsAddr            = fs.String("metrics-bind-address", ":8080", "address the metric endpoint binds to.")
 		probeAddr              = fs.String("health-probe-bind-address", ":8081", "address the probe endpoint binds to.")
+		leaderElection         = fs.Bool("leader-election", false, "set this parameter to true to enable leader election")
 		regexStr               = fs.String("provider-regex", ".*", "provider-specified regex to validate CSR SAN names against. accepts everything unless specified")
 		maxSec                 = fs.Int("max-expiration-sec", 367*24*3600, "maximum seconds a CSR can request a cerficate for. defaults to 367 days")
 		bypassDNSResolution    = fs.Bool("bypass-dns-resolution", false, "set this parameter to true to bypass DNS resolution checks")
@@ -186,6 +187,7 @@ func prepareCmdlineConfig() *controller.Config {
 		LogLevel:               *logLevel,
 		MetricsAddr:            *metricsAddr,
 		ProbeAddr:              *probeAddr,
+		LeaderElection:         *leaderElection,
 		RegexStr:               *regexStr,
 		IPPrefixesStr:          *ipPrefixesStr,
 		BypassDNSResolution:    *bypassDNSResolution,
