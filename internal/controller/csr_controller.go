@@ -46,6 +46,7 @@ type Config struct {
 	LogLevel               int
 	MetricsAddr            string
 	ProbeAddr              string
+	LeaderElection         bool
 	RegexStr               string
 	ProviderRegexp         func(string) bool
 	IPPrefixesStr          string
