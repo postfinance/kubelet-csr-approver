@@ -57,6 +57,8 @@ it permits having a DNS name that differs (i.e. isn't prefixed) by the hostname
   you need to set this flag to `true`
 * `--allowed-dns-names` or `ALLOWED_DNS_NAMES` permits allowing more than one
   DNS name in the certificate request. the default value is set to 1.
+* `--leader-election` or `LEADER_ELECTION` permits enabling leader election
+  when running with multiple replicas
 
 It is important to understand that the node DNS name needs to be
 resolvable for the `kubelet-csr-approver` to work properly. If this is an issue
