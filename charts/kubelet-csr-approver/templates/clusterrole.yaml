@@ -5,6 +5,16 @@ kind: ClusterRole
 metadata:
   name: {{ include "kubelet-csr-approver.fullname" . }}
 rules:
+{{- if .Values.leaderElection }}
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - create
+  - get
+  - update
+{{- end }}
 - apiGroups:
   - certificates.k8s.io
   resources:

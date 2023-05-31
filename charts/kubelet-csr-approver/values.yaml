@@ -18,6 +18,9 @@ providerIpPrefixes: []
 # logging level ranges from -5 (Fatal) to 10 (Verbose). default level is 0
 loggingLevel: 0
 
+leaderElection: true
+replicas: 2
+
 namespace: ""
 
 image:

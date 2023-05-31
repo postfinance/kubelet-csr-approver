@@ -4,6 +4,7 @@ metadata:
   name: kubelet-csr-approver
   namespace: kube-system
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: kubelet-csr-approver
@@ -20,7 +21,7 @@ spec:
       serviceAccountName: kubelet-csr-approver
       containers:
         - name: kubelet-csr-approver
-          image: postfinance/kubelet-csr-approver:v0.2.2
+          image: postfinance/kubelet-csr-approver:v1.0.1
           resources:
             limits:
               memory: "128Mi"
@@ -31,6 +32,7 @@ spec:
             - ":8080"
             - -health-probe-bind-address
             - ":8081"
+            - -leader-election
 
           livenessProbe:
             httpGet:
