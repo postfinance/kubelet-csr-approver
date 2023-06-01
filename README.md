@@ -1,5 +1,5 @@
 [![Test and publish](https://github.com/postfinance/kubelet-csr-approver/actions/workflows/publish.yaml/badge.svg)](https://github.com/postfinance/kubelet-csr-approver/actions/workflows/publish.yaml)
-[![Coverage Status](https://coveralls.io/repos/github/postfinance/kubelet-csr-approver/badge.svg?branch=main)](https://coveralls.io/github/postfinance/kubelet-csr-approver?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/postfinance/kubelet-csr-approver/badge.svg)](https://coveralls.io/github/postfinance/kubelet-csr-approver)
 
 # kubelet-csr-approver
 
