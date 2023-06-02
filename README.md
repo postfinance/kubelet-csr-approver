@@ -14,6 +14,8 @@ Inspired by existing projects (such as
 implements additional verifications to prevent an attacker from forging
 Certificates.
 
+Kubelet CSR approver is being kept up-to-date in accordance with the [most recent three Kubernetes minor releases](https://kubernetes.io/releases/).
+
 ## Quick start
 
 1. deploy `kubelet-csr-approver` on your k8s cluster using the manifests
