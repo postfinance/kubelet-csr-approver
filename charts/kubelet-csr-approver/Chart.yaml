@@ -5,5 +5,14 @@ type: application
 appVersion: v0.0.1-dummy
 version: 0.0.1-dummy
 maintainers:
-- name: clementnuss
-- name: f1ko
+  - name: clementnuss
+  - name: f1ko
+  - name: opensourcepf
+    email: opensource@postfinance.ch
+home: https://github.com/postfinance/kubelet-csr-approver
+icon: https://avatars.githubusercontent.com/u/34368733
+keywords:
+  - kubelet-csr-approver
+  - kubelet
+sources:
+  - https://github.com/postfinance/kubelet-csr-approver
