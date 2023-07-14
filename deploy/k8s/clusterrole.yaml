@@ -34,3 +34,9 @@ rules:
   - signers
   verbs:
   - approve
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create

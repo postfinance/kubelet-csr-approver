@@ -14,6 +14,12 @@ rules:
   - create
   - get
   - update
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
 {{- end }}
 - apiGroups:
   - certificates.k8s.io
