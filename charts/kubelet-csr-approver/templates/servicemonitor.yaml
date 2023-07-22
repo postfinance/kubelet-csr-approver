@@ -9,8 +9,8 @@ metadata:
     {{- with .Values.metrics.serviceMonitor.additionalLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
-  annotations:
   {{- with .Values.metrics.annotations }}
+  annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -19,9 +19,10 @@ spec:
     matchNames:
       - {{ .Release.Namespace }}
   selector:
-    {{- include "kubelet-csr-approver.selectorLabels" . | nindent 4 }}
+    matchLabels:
+      {{- include "kubelet-csr-approver.selectorLabels" . | nindent 6 }}
   endpoints:
-    - port: {{ .Values.metrics.port }}
+    - port: metrics
       path: /metrics
       scheme: http
       {{- with .Values.metrics.serviceMonitor.interval }}
