@@ -64,7 +64,8 @@ it permits having a DNS name that differs (i.e. isn't prefixed) by the hostname
 
 It is important to understand that the node DNS name needs to be
 resolvable for the `kubelet-csr-approver` to work properly. If this is an issue
-for you, please file an issue and I'll add a flag to disable this validation.
+for you, you can use the `--bypass-dns-resolution` flag, which will disable the DNS
+check altogether.
 
 ℹ have a look below in this README to understand which other validation
 mechanisms are put in place.
