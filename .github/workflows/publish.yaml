@@ -20,7 +20,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v4
         with:
           go-version: "1.20"
@@ -34,7 +34,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v4
         with:
           go-version: "1.20"
@@ -61,7 +61,7 @@ jobs:
   test-helm:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up Helm
@@ -119,7 +119,7 @@ jobs:
       needs.check-dockerhub-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v4
         with:
           go-version: "1.20"
@@ -164,7 +164,7 @@ jobs:
       needs.check-dockerhub-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v4
         with:
           go-version: "1.20"
@@ -201,7 +201,7 @@ jobs:
       needs.check-dockerhub-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v4
         with:
           go-version: "1.20"
@@ -242,7 +242,7 @@ jobs:
       needs.check-dockerhub-token.outputs.HAS_DOCKERHUB_TOKEN == 'true'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-go@v4
         with:
           go-version: "1.20"
