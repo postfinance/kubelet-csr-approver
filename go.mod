@@ -9,7 +9,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/thanhpk/randstr v1.0.6
 	github.com/tj/assert v0.0.3
-	go.uber.org/zap v1.25.0
+	go.uber.org/zap v1.26.0
 	go4.org/netipx v0.0.0-20230303233057-f1b76eb4bb35
 	k8s.io/api v0.27.4
 	k8s.io/apimachinery v0.27.4
