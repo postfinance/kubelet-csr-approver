@@ -18,6 +18,7 @@ import (
 	"github.com/peterbourgon/ff/v3"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
+	"sigs.k8s.io/controller-runtime/pkg/metrics/server"
 
 	"github.com/go-logr/logr"
 	"github.com/postfinance/kubelet-csr-approver/internal/controller"
@@ -100,7 +101,7 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	ctrl.SetLogger(logger)
 
 	mgrOptions := ctrl.Options{
-		MetricsBindAddress:     config.MetricsAddr,
+		Metrics:                server.Options{BindAddress: config.MetricsAddr},
 		HealthProbeBindAddress: config.ProbeAddr,
 		LeaderElection:         config.LeaderElection,
 		LeaderElectionID:       "kubelet-csr-approver",

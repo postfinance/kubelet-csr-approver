@@ -84,41 +84,41 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 	if err := r.Client.Get(ctx, req.NamespacedName, &csr); err != nil {
 		if apierrors.IsNotFound(err) {
 			// we'll ignore not-found errors, since we can get them on deleted requests.
-			return
+			return res, returnErr
 		}
 
 		l.Error(err, "Unable to get CSR with name: %s", req.Name)
 
-		return
+		return res, returnErr
 	}
 
 	// baseline CSR checks - triage to ignore CSR we should process
 	if csr.Spec.SignerName != certificatesv1.KubeletServingSignerName {
 		l.V(4).Info("Ignoring non-kubelet-serving CSR.")
-		return
+		return res, returnErr
 	}
 
 	if approved, denied := GetCertApprovalCondition(&csr.Status); approved || denied {
 		l.V(3).Info("The CSR is already approved|denied. Ignoring", "approved", approved, "denied", denied)
-		return
+		return res, returnErr
 	}
 
 	if len(csr.Status.Certificate) > 0 {
 		l.V(3).Info("The CSR is already signed. No need to do anything else.")
-		return
+		return res, returnErr
 	}
 
 	// actual CSR and x509 CR checks
 	x509cr, err := ParseCSR(csr.Spec.Request)
 	if err != nil {
 		l.Error(err, fmt.Sprintf("unable to parse csr %q", csr.Name))
-		return
+		return res, returnErr
 	}
 
 	if !strings.HasPrefix(csr.Spec.Username, "system:node:") {
 		if r.IgnoreNonSystemNodeCsr {
 			l.V(0).Info("Ignoring a CSR with username different than system:node:")
-			return
+			return res, returnErr
 		}
 
 		reason := "CSR Spec.Username is not prefixed with system:node:"

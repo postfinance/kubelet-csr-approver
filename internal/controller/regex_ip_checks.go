@@ -20,7 +20,7 @@ import (
 func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr *certificatesv1.CertificateSigningRequest, x509cr *x509.CertificateRequest) (valid bool, reason string, err error) {
 	if valid = (len(x509cr.DNSNames) <= r.AllowedDNSNames); !valid {
 		reason = "The x509 Cert Request contains more DNS names than allowed through the config flag"
-		return
+		return valid, reason, err
 	}
 
 	// no DNS name to check, the DNS check is approved
@@ -45,12 +45,12 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 
 		if valid = strings.HasPrefix(sanDNSName, hostname); !valid && !r.BypassHostnameCheck {
 			reason = "The SAN DNS Name in the x509 CSR is not prefixed by the node name (hostname)"
-			return
+			return valid, reason, err
 		}
 
 		if valid = r.ProviderRegexp(sanDNSName); !valid {
 			reason = "The SAN DNS name in the x509 CR is not allowed by the Cloud provider regex"
-			return
+			return valid, reason, err
 		}
 
 		resolvedAddrs, err := r.DNSResolver.LookupHost(dnsCtx, sanDNSName)
