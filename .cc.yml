@@ -1,0 +1,23 @@
+sections:
+    - type: build
+      title: Build System
+      hidden: true
+    - type: docs
+      title: Documentation
+      hidden: false
+    - type: feat
+      title: New Features
+      hidden: false
+    - type: fix
+      title: Bug Fixes
+      hidden: false
+    - type: refactor
+      title: Code Refactoring
+      hidden: true
+    - type: test
+      title: Test
+      hidden: false
+    - type: chore
+      title: Tasks
+      hidden: false
+github_project_path: "github.com/postfinance/kubelet-csr-approver"
