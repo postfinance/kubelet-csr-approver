@@ -1,3 +1,32 @@
+## 1.0.5 (2023-09-19)
+
+
+### Bug Fixes
+
+* **k8s-deploy**: set image tag to latest ([69e9249c](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/69e9249c))
+  > closes https://github.com/postfinance/kubelet-csr-approver/issues/178
+
+
+### Documentation
+
+* **readme**: add `--bypass-dns-resolution` information ([cb4d9bb6](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/cb4d9bb6))
+  > https://github.com/postfinance/kubelet-csr-approver/issues/181
+  > 
+  > [skip ci]
+
+
+### New Features
+
+* **common**: add changelog config and CHANGELOG.md ([bfb18012](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/bfb18012))
+  > [skip ci]
+
+
+### Tasks
+
+* **common**: update controller-runtime and fix linting errors ([9abb30ed](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/9abb30ed))
+
+
+
 ## 1.0.4 (2023-07-22)
 
 
