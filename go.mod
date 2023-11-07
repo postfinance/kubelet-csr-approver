@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/foxcpp/go-mockdns v1.0.0
-	github.com/go-logr/zapr v1.2.4
+	github.com/go-logr/zapr v1.3.0
 	github.com/postfinance/flash v0.5.1
 	github.com/stretchr/testify v1.8.4
 	github.com/thanhpk/randstr v1.0.6
