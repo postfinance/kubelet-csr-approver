@@ -1,3 +1,147 @@
+## 1.0.6 (2023-12-21)
+
+
+### Build System
+
+* **deps**: bump actions/setup-go from 4 to 5 ([5089f3d8](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/5089f3d8))
+  > Bumps [actions/setup-go](https://github.com/actions/setup-go) from 4 to 5.
+  > - [Release notes](https://github.com/actions/setup-go/releases)
+  > - [Commits](https://github.com/actions/setup-go/compare/v4...v5)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: actions/setup-go
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-major
+  > ...
+* **deps**: bump actions/setup-python from 4 to 5 ([80da607f](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/80da607f))
+  > Bumps [actions/setup-python](https://github.com/actions/setup-python) from 4 to 5.
+  > - [Release notes](https://github.com/actions/setup-python/releases)
+  > - [Commits](https://github.com/actions/setup-python/compare/v4...v5)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: actions/setup-python
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-major
+  > ...
+* **deps**: bump github.com/go-logr/logr from 1.2.4 to 1.3.0 ([6e687c77](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/6e687c77))
+  > Bumps [github.com/go-logr/logr](https://github.com/go-logr/logr) from 1.2.4 to 1.3.0.
+  > - [Release notes](https://github.com/go-logr/logr/releases)
+  > - [Changelog](https://github.com/go-logr/logr/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/go-logr/logr/compare/v1.2.4...v1.3.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: github.com/go-logr/logr
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump github.com/go-logr/zapr from 1.2.4 to 1.3.0 ([dc0e5fd3](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/dc0e5fd3))
+  > Bumps [github.com/go-logr/zapr](https://github.com/go-logr/zapr) from 1.2.4 to 1.3.0.
+  > - [Release notes](https://github.com/go-logr/zapr/releases)
+  > - [Commits](https://github.com/go-logr/zapr/compare/v1.2.4...v1.3.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: github.com/go-logr/zapr
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump helm/chart-testing-action from 2.4.0 to 2.6.1 ([3f7e4def](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/3f7e4def))
+  > Bumps [helm/chart-testing-action](https://github.com/helm/chart-testing-action) from 2.4.0 to 2.6.1.
+  > - [Release notes](https://github.com/helm/chart-testing-action/releases)
+  > - [Commits](https://github.com/helm/chart-testing-action/compare/v2.4.0...v2.6.1)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: helm/chart-testing-action
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump k8s.io/api from 0.28.3 to 0.28.4 ([3084cb68](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/3084cb68))
+  > Bumps [k8s.io/api](https://github.com/kubernetes/api) from 0.28.3 to 0.28.4.
+  > - [Commits](https://github.com/kubernetes/api/compare/v0.28.3...v0.28.4)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/api
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump k8s.io/apimachinery from 0.28.2 to 0.28.3 ([e41d4b0f](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/e41d4b0f))
+  > Bumps [k8s.io/apimachinery](https://github.com/kubernetes/apimachinery) from 0.28.2 to 0.28.3.
+  > - [Commits](https://github.com/kubernetes/apimachinery/compare/v0.28.2...v0.28.3)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/apimachinery
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump k8s.io/apimachinery from 0.28.4 to 0.29.0 ([a537683d](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/a537683d))
+  > Bumps [k8s.io/apimachinery](https://github.com/kubernetes/apimachinery) from 0.28.4 to 0.29.0.
+  > - [Commits](https://github.com/kubernetes/apimachinery/compare/v0.28.4...v0.29.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/apimachinery
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump k8s.io/client-go from 0.28.2 to 0.28.3 ([b3a81673](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/b3a81673))
+  > Bumps [k8s.io/client-go](https://github.com/kubernetes/client-go) from 0.28.2 to 0.28.3.
+  > - [Changelog](https://github.com/kubernetes/client-go/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/kubernetes/client-go/compare/v0.28.2...v0.28.3)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/client-go
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump k8s.io/client-go from 0.28.3 to 0.28.4 ([a00eeed1](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/a00eeed1))
+  > Bumps [k8s.io/client-go](https://github.com/kubernetes/client-go) from 0.28.3 to 0.28.4.
+  > - [Changelog](https://github.com/kubernetes/client-go/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/kubernetes/client-go/compare/v0.28.3...v0.28.4)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/client-go
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump k8s.io/client-go from 0.28.4 to 0.29.0 ([41beabf5](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/41beabf5))
+  > Bumps [k8s.io/client-go](https://github.com/kubernetes/client-go) from 0.28.4 to 0.29.0.
+  > - [Changelog](https://github.com/kubernetes/client-go/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/kubernetes/client-go/compare/v0.28.4...v0.29.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/client-go
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump sigs.k8s.io/controller-runtime from 0.16.2 to 0.16.3 ([4abe5fce](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/4abe5fce))
+  > Bumps [sigs.k8s.io/controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) from 0.16.2 to 0.16.3.
+  > - [Release notes](https://github.com/kubernetes-sigs/controller-runtime/releases)
+  > - [Changelog](https://github.com/kubernetes-sigs/controller-runtime/blob/main/RELEASE.md)
+  > - [Commits](https://github.com/kubernetes-sigs/controller-runtime/compare/v0.16.2...v0.16.3)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: sigs.k8s.io/controller-runtime
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+
+
+### Tasks
+
+* **common**: render build commits ([f0a7d001](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/f0a7d001))
+
+
+
 ## 1.0.5 (2023-09-19)
 
 
