@@ -1,3 +1,62 @@
+## 1.0.7 (2024-01-29)
+
+
+### Build System
+
+* **deps**: bump github.com/go-logr/logr from 1.3.0 to 1.4.1 ([eb5a5fe6](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/eb5a5fe6))
+  > Bumps [github.com/go-logr/logr](https://github.com/go-logr/logr) from 1.3.0 to 1.4.1.
+  > - [Release notes](https://github.com/go-logr/logr/releases)
+  > - [Changelog](https://github.com/go-logr/logr/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/go-logr/logr/compare/v1.3.0...v1.4.1)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: github.com/go-logr/logr
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump k8s.io/api from 0.29.0 to 0.29.1 ([8de18aa3](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/8de18aa3))
+  > Bumps [k8s.io/api](https://github.com/kubernetes/api) from 0.29.0 to 0.29.1.
+  > - [Commits](https://github.com/kubernetes/api/compare/v0.29.0...v0.29.1)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/api
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump k8s.io/client-go from 0.29.0 to 0.29.1 ([fa928301](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/fa928301))
+  > Bumps [k8s.io/client-go](https://github.com/kubernetes/client-go) from 0.29.0 to 0.29.1.
+  > - [Changelog](https://github.com/kubernetes/client-go/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/kubernetes/client-go/compare/v0.29.0...v0.29.1)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/client-go
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump sigs.k8s.io/controller-runtime from 0.16.3 to 0.17.0 ([cb449bbe](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/cb449bbe))
+  > Bumps [sigs.k8s.io/controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) from 0.16.3 to 0.17.0.
+  > - [Release notes](https://github.com/kubernetes-sigs/controller-runtime/releases)
+  > - [Changelog](https://github.com/kubernetes-sigs/controller-runtime/blob/main/RELEASE.md)
+  > - [Commits](https://github.com/kubernetes-sigs/controller-runtime/compare/v0.16.3...v0.17.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: sigs.k8s.io/controller-runtime
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+
+
+### New Features
+
+* **helm**: add configuratble podLabels ([b158e440](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/b158e440))
+  > https://github.com/postfinance/kubelet-csr-approver/issues/221
+
+
+
 ## 1.0.6 (2023-12-21)
 
 
