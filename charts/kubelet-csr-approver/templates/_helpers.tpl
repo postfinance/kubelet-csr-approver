@@ -69,3 +69,12 @@ Create the name of the service account to use
   {{- .Release.Namespace -}}
 {{- end -}}
 {{- end -}}
+
+{{/* Render yaml from values */}}
+{{- define "tplvalues.render" -}}
+  {{- if typeIs "string" .value }}
+      {{- tpl .value .context }}
+  {{- else }}
+      {{- tpl (.value | toYaml) .context }}
+  {{- end }}
+{{- end }}
