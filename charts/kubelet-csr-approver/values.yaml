@@ -59,7 +59,8 @@ podAnnotations: {}
 
 podLabels: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 65532
 
 securityContext:
@@ -102,4 +103,12 @@ env: []
 dnsPolicy: ""
 dnsConfig: {}
 
+# Include additional objects within the chart
 extraDeploy: []
+# - |
+#   apiVersion: v1
+#   kind: Secret
+#   metadata:
+#     name: my-special-secret
+#   data:
+#     key: value
