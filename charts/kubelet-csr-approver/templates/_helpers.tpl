@@ -72,9 +72,10 @@ Create the name of the service account to use
 
 {{/* Render yaml from values */}}
 {{- define "tplvalues.render" -}}
-  {{- if typeIs "string" .value }}
-      {{- tpl .value .context }}
-  {{- else }}
-      {{- tpl (.value | toYaml) .context }}
-  {{- end }}
+{{- $value := typeIs "string" .value | ternary .value (.value | toYaml) }}
+{{- if contains "{{" (toJson .value) }}
+    {{- tpl $value .context }}
+{{- else }}
+    {{- $value }}
 {{- end }}
+{{- end -}}
