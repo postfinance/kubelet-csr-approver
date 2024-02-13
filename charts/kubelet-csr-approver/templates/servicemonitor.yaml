@@ -15,9 +15,6 @@ metadata:
   {{- end }}
 spec:
   jobLabel: {{ .Release.Name }}
-  namespaceSelector:
-    matchNames:
-      - {{ .Release.Namespace }}
   selector:
     matchLabels:
       {{- include "kubelet-csr-approver.selectorLabels" . | nindent 6 }}
