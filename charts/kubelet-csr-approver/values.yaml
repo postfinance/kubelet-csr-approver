@@ -103,7 +103,7 @@ dnsPolicy: ""
 dnsConfig: {}
 
 # Include additional objects within the chart
-extraDeploy: []
+extraObjects: []
 # - |
 #   apiVersion: v1
 #   kind: Secret
