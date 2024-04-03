@@ -1,6 +1,8 @@
 module github.com/postfinance/kubelet-csr-approver
 
-go 1.20
+go 1.22
+
+toolchain go1.22.1
 
 require (
 	github.com/foxcpp/go-mockdns v1.1.0

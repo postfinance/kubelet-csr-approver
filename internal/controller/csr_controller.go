@@ -36,6 +36,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log"
 )
 
+const (
+	logDenyingCSR string = "Denying kubelet-serving CSR. Reason:"
+)
+
 // HostResolver is used to resolve a Host with the LookupHost function
 type HostResolver interface {
 	LookupHost(context.Context, string) ([]string, error)
@@ -122,17 +126,17 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 		}
 
 		reason := "CSR Spec.Username is not prefixed with system:node:"
-		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
+		l.V(0).Info(logDenyingCSR + reason)
 
 		appendCondition(&csr, false, reason)
 	} else if len(x509cr.DNSNames)+len(x509cr.IPAddresses) == 0 {
 		reason := "The x509 Cert Request SAN contains neither an IP address nor a DNS name"
-		l.V(0).Info("Denying kubelet-serving CSR. Reason:" + reason)
+		l.V(0).Info(logDenyingCSR + reason)
 
 		appendCondition(&csr, false, reason)
 	} else if x509cr.Subject.CommonName != csr.Spec.Username {
 		reason := "CSR username does not match the parsed x509 certificate request commonname"
-		l.V(0).Info("Denying kubelet-serving CSR. Reason:"+reason,
+		l.V(0).Info(logDenyingCSR+reason,
 			"commonName", x509cr.Subject.CommonName, "specUsername", csr.Spec.Username)
 
 		appendCondition(&csr, false, reason)
@@ -141,6 +145,7 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 			l.V(0).Error(err, reason)
 			return res, err // returning a non-nil error to make this request be processed again in the reconcile function
 		}
+
 		l.V(0).Info("Denying kubelet-serving CSR. DNS checks failed. Reason:" + reason)
 
 		appendCondition(&csr, false, reason)
@@ -149,6 +154,7 @@ func (r *CertificateSigningRequestReconciler) Reconcile(ctx context.Context, req
 			l.V(0).Error(err, reason)
 			return res, err // returning a non-nil error to make this request be processed again in the reconcile function
 		}
+
 		l.V(0).Info("Denying kubelet-serving CSR. IP whitelist check failed. Reason:" + reason)
 		appendCondition(&csr, false, reason)
 	} else if csr.Spec.ExpirationSeconds != nil && *csr.Spec.ExpirationSeconds > r.MaxExpirationSeconds {
