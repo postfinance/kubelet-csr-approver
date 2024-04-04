@@ -1,3 +1,157 @@
+## 1.1.0 (2024-04-04)
+
+
+### Build System
+
+* **common**: update golangci-lint to v1.56.2 ([79218a5e](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/79218a5e))
+* **deps**: bump azure/setup-helm from 3 to 4 ([94f2e16a](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/94f2e16a))
+  > Bumps [azure/setup-helm](https://github.com/azure/setup-helm) from 3 to 4.
+  > - [Release notes](https://github.com/azure/setup-helm/releases)
+  > - [Changelog](https://github.com/Azure/setup-helm/blob/main/CHANGELOG.md)
+  > - [Commits](https://github.com/azure/setup-helm/compare/v3...v4)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: azure/setup-helm
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-major
+  > ...
+* **deps**: bump github.com/foxcpp/go-mockdns from 1.0.0 to 1.1.0 ([dd251c2b](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/dd251c2b))
+  > Bumps [github.com/foxcpp/go-mockdns](https://github.com/foxcpp/go-mockdns) from 1.0.0 to 1.1.0.
+  > - [Release notes](https://github.com/foxcpp/go-mockdns/releases)
+  > - [Commits](https://github.com/foxcpp/go-mockdns/compare/v1.0.0...v1.1.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: github.com/foxcpp/go-mockdns
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump github.com/stretchr/testify from 1.8.4 to 1.9.0 ([962232ac](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/962232ac))
+  > Bumps [github.com/stretchr/testify](https://github.com/stretchr/testify) from 1.8.4 to 1.9.0.
+  > - [Release notes](https://github.com/stretchr/testify/releases)
+  > - [Commits](https://github.com/stretchr/testify/compare/v1.8.4...v1.9.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: github.com/stretchr/testify
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump go.uber.org/zap from 1.26.0 to 1.27.0 ([c8c8bfcc](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/c8c8bfcc))
+  > Bumps [go.uber.org/zap](https://github.com/uber-go/zap) from 1.26.0 to 1.27.0.
+  > - [Release notes](https://github.com/uber-go/zap/releases)
+  > - [Changelog](https://github.com/uber-go/zap/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/uber-go/zap/compare/v1.26.0...v1.27.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: go.uber.org/zap
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump golangci/golangci-lint-action from 3.7.0 to 4.0.0 ([3dddd7ef](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/3dddd7ef))
+  > Bumps [golangci/golangci-lint-action](https://github.com/golangci/golangci-lint-action) from 3.7.0 to 4.0.0.
+  > - [Release notes](https://github.com/golangci/golangci-lint-action/releases)
+  > - [Commits](https://github.com/golangci/golangci-lint-action/compare/v3.7.0...v4.0.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: golangci/golangci-lint-action
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-major
+  > ...
+* **deps**: bump helm/kind-action from 1.8.0 to 1.9.0 ([72334072](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/72334072))
+  > Bumps [helm/kind-action](https://github.com/helm/kind-action) from 1.8.0 to 1.9.0.
+  > - [Release notes](https://github.com/helm/kind-action/releases)
+  > - [Commits](https://github.com/helm/kind-action/compare/v1.8.0...v1.9.0)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: helm/kind-action
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-minor
+  > ...
+* **deps**: bump k8s.io/api from 0.29.2 to 0.29.3 ([9d86e35d](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/9d86e35d))
+  > Bumps [k8s.io/api](https://github.com/kubernetes/api) from 0.29.2 to 0.29.3.
+  > - [Commits](https://github.com/kubernetes/api/compare/v0.29.2...v0.29.3)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/api
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump k8s.io/apimachinery from 0.29.2 to 0.29.3 ([9a32fe5b](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/9a32fe5b))
+  > Bumps [k8s.io/apimachinery](https://github.com/kubernetes/apimachinery) from 0.29.2 to 0.29.3.
+  > - [Commits](https://github.com/kubernetes/apimachinery/compare/v0.29.2...v0.29.3)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/apimachinery
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump k8s.io/client-go from 0.29.1 to 0.29.2 ([4a477423](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/4a477423))
+  > Bumps [k8s.io/client-go](https://github.com/kubernetes/client-go) from 0.29.1 to 0.29.2.
+  > - [Changelog](https://github.com/kubernetes/client-go/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/kubernetes/client-go/compare/v0.29.1...v0.29.2)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/client-go
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump k8s.io/client-go from 0.29.2 to 0.29.3 ([00d958d2](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/00d958d2))
+  > Bumps [k8s.io/client-go](https://github.com/kubernetes/client-go) from 0.29.2 to 0.29.3.
+  > - [Changelog](https://github.com/kubernetes/client-go/blob/master/CHANGELOG.md)
+  > - [Commits](https://github.com/kubernetes/client-go/compare/v0.29.2...v0.29.3)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: k8s.io/client-go
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump sigs.k8s.io/controller-runtime from 0.17.0 to 0.17.1 ([bc67d62a](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/bc67d62a))
+  > Bumps [sigs.k8s.io/controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) from 0.17.0 to 0.17.1.
+  > - [Release notes](https://github.com/kubernetes-sigs/controller-runtime/releases)
+  > - [Changelog](https://github.com/kubernetes-sigs/controller-runtime/blob/main/RELEASE.md)
+  > - [Commits](https://github.com/kubernetes-sigs/controller-runtime/compare/v0.17.0...v0.17.1)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: sigs.k8s.io/controller-runtime
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+* **deps**: bump sigs.k8s.io/controller-runtime from 0.17.1 to 0.17.2 ([0c168555](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/0c168555))
+  > Bumps [sigs.k8s.io/controller-runtime](https://github.com/kubernetes-sigs/controller-runtime) from 0.17.1 to 0.17.2.
+  > - [Release notes](https://github.com/kubernetes-sigs/controller-runtime/releases)
+  > - [Changelog](https://github.com/kubernetes-sigs/controller-runtime/blob/main/RELEASE.md)
+  > - [Commits](https://github.com/kubernetes-sigs/controller-runtime/compare/v0.17.1...v0.17.2)
+  > 
+  > ---
+  > updated-dependencies:
+  > - dependency-name: sigs.k8s.io/controller-runtime
+  >   dependency-type: direct:production
+  >   update-type: version-update:semver-patch
+  > ...
+
+
+### New Features
+
+* **common**: allow adding extra objects to helm chart ([302ad582](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/302ad582))
+
+
+### Tasks
+
+* **common**: rename values.extraObjects field ([b443620f](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/b443620f))
+* **common**: update to go 1.22 and envtest with k8s 1.29 ([f525ea61](https://github.com/github.com/postfinance/kubelet-csr-approver/commit/f525ea61))
+
+
+
 ## 1.0.7 (2024-01-29)
 
 
