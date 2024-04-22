@@ -1,8 +1,7 @@
 module github.com/postfinance/kubelet-csr-approver
 
 go 1.22
-
-toolchain go1.22.1
+toolchain go1.22.2
 
 require (
 	github.com/foxcpp/go-mockdns v1.1.0
@@ -13,9 +12,9 @@ require (
 	github.com/tj/assert v0.0.3
 	go.uber.org/zap v1.27.0
 	go4.org/netipx v0.0.0-20230824141953-6213f710f925
-	k8s.io/api v0.29.3
-	k8s.io/apimachinery v0.29.3
-	k8s.io/client-go v0.29.3
+	k8s.io/api v0.30.0
+	k8s.io/apimachinery v0.30.0
+	k8s.io/client-go v0.30.0
 	sigs.k8s.io/controller-runtime v0.17.3
 )
 
@@ -33,8 +32,8 @@ require (
 	github.com/munnerz/goautoneg v0.0.0-20191010083416-a7dc8b61c822 // indirect
 	github.com/sykesm/zap-logfmt v0.0.4 // indirect
 	golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
-	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/tools v0.16.1 // indirect
+	golang.org/x/mod v0.15.0 // indirect
+	golang.org/x/tools v0.18.0 // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
@@ -65,10 +64,10 @@ require (
 	github.com/prometheus/procfs v0.12.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/net v0.19.0 // indirect
+	golang.org/x/net v0.23.0 // indirect
 	golang.org/x/oauth2 v0.12.0 // indirect
-	golang.org/x/sys v0.16.0 // indirect
-	golang.org/x/term v0.15.0 // indirect
+	golang.org/x/sys v0.18.0 // indirect
+	golang.org/x/term v0.18.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
@@ -78,8 +77,8 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/apiextensions-apiserver v0.29.2 // indirect
 	k8s.io/component-base v0.29.2 // indirect
-	k8s.io/klog/v2 v2.110.1 // indirect
-	k8s.io/kube-openapi v0.0.0-20231010175941-2dd684a91f00 // indirect
+	k8s.io/klog/v2 v2.120.1 // indirect
+	k8s.io/kube-openapi v0.0.0-20240228011516-70dd3763d340 // indirect
 	k8s.io/utils v0.0.0-20230726121419-3b25d923346b // indirect
 	sigs.k8s.io/json v0.0.0-20221116044647-bc3834ca7abd // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.4.1 // indirect
