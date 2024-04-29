@@ -90,7 +90,6 @@ jobs:
       - name: Create kind cluster
         uses: helm/kind-action@v1.10.0
         with:
-          version: v0.11.1
           cluster_name: kind
       - name: Load image
         run: kind load docker-image ko.local/kubelet-csr-approver:latest
