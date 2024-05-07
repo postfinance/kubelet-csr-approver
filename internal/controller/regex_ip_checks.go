@@ -29,12 +29,6 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 		return valid, reason, nil
 	}
 
-	// bypassing DNS reslution - DNS check is approved
-	if r.BypassDNSResolution {
-		valid = true
-		return valid, reason, nil
-	}
-
 	dnsCtx, dnsCtxCancel := context.WithDeadline(ctx, time.Now().Add(time.Second)) // 1 second timeout for the dns request
 	defer dnsCtxCancel()
 
@@ -53,13 +47,15 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 			return valid, reason, err
 		}
 
-		resolvedAddrs, err := r.DNSResolver.LookupHost(dnsCtx, sanDNSName)
+		if !r.BypassDNSResolution {
+			resolvedAddrs, err := r.DNSResolver.LookupHost(dnsCtx, sanDNSName)
 
-		if err != nil || len(resolvedAddrs) == 0 {
-			return false, "The SAN DNS Name could not be resolved, denying the CSR", nil
+			if err != nil || len(resolvedAddrs) == 0 {
+				return false, "The SAN DNS Name could not be resolved, denying the CSR", nil
+			}
+
+			allResolvedAddrs = append(allResolvedAddrs, resolvedAddrs...)
 		}
-
-		allResolvedAddrs = append(allResolvedAddrs, resolvedAddrs...)
 	}
 
 	var setBuilder netipx.IPSetBuilder

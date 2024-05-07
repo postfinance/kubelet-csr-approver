@@ -90,8 +90,8 @@ func TestNonMatchingCommonNameUsername(t *testing.T) {
 func TestRegexCheckActiveWithBypass(t *testing.T) {
 	csrParams := CsrParams{
 		csrName:  "csr-mismatch-SAN-hostname-with-bypass",
-		nodeName: testNodeName,
-		dnsName:  "hostname-000.test.ch,auth.evil.io",
+		nodeName: "a",
+		dnsName:  "a" + ".test.ch,auth.evil.io",
 	}
 
 	csrController.BypassDNSResolution = true
@@ -104,7 +104,7 @@ func TestRegexCheckActiveWithBypass(t *testing.T) {
 	require.Nil(t, err, "Could not create the CSR.")
 
 	approved, denied, reason, err := waitCsrApprovalStatus(csr.Name)
-	t.Log("CSR rejected with the following reason:" + reason)
+	t.Log(reason)
 	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
 	assert.False(t, approved)
 	assert.True(t, denied)
