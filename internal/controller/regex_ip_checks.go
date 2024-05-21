@@ -34,6 +34,7 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 
 	var allResolvedAddrs []string
 
+	// regexp checks
 	for _, sanDNSName := range x509cr.DNSNames {
 		hostname := strings.TrimPrefix(csr.Spec.Username, "system:node:")
 
@@ -46,16 +47,21 @@ func (r *CertificateSigningRequestReconciler) DNSCheck(ctx context.Context, csr 
 			reason = "The SAN DNS name in the x509 CR is not allowed by the Cloud provider regex"
 			return valid, reason, err
 		}
+	}
 
-		if !r.BypassDNSResolution {
-			resolvedAddrs, err := r.DNSResolver.LookupHost(dnsCtx, sanDNSName)
+	if r.BypassDNSResolution { // early exit when DNS resolution checks are bypassed
+		return true, reason, nil
+	}
 
-			if err != nil || len(resolvedAddrs) == 0 {
-				return false, "The SAN DNS Name could not be resolved, denying the CSR", nil
-			}
+	// DNS resolution checks
+	for _, sanDNSName := range x509cr.DNSNames {
+		resolvedAddrs, err := r.DNSResolver.LookupHost(dnsCtx, sanDNSName)
 
-			allResolvedAddrs = append(allResolvedAddrs, resolvedAddrs...)
+		if err != nil || len(resolvedAddrs) == 0 {
+			return false, "The SAN DNS Name could not be resolved, denying the CSR", nil
 		}
+
+		allResolvedAddrs = append(allResolvedAddrs, resolvedAddrs...)
 	}
 
 	var setBuilder netipx.IPSetBuilder
