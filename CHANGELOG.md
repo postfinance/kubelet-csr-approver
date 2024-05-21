@@ -1,3 +1,25 @@
+## [1.2.1] - 2024-05-21
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.0...1.2.1
+
+### 🐛 Bug Fixes
+
+- X509 CR SAN IPs properly ignored when bypassing DNS Resolution - ([4a53481](https://github.com/postfinance/kubelet-csr-approver/commit/4a5348140bbac00716bbc9b6e47c2a01edeef6a2))
+
+### 🧪 Testing
+
+- Add testcase covering issue #253 - ([4118bc0](https://github.com/postfinance/kubelet-csr-approver/commit/4118bc045fca8e491c50ef694cd3908e63156817))
+
+### ⚙️ Miscellaneous Tasks
+
+- Add (cliff) changelog for v1.2.0 - ([fb0ae32](https://github.com/postfinance/kubelet-csr-approver/commit/fb0ae32e3e2d70f3633ea6def59f113df9bca808))
+- Add changelog for v1.2.1 - ([4622254](https://github.com/postfinance/kubelet-csr-approver/commit/46222547cca9ffc597a5236225e28ef7ccc49b7b))
+
+### Build
+
+- *(deps)* Bump k8s.io/api from 0.30.0 to 0.30.1 - ([c2effac](https://github.com/postfinance/kubelet-csr-approver/commit/c2effac08baeaf542e7e132b9f043d8ab5ba9484))
+
+
 ## [1.2.0] - 2024-05-13
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.1.0...v1.2.0
