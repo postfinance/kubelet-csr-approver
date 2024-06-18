@@ -59,6 +59,9 @@ podAnnotations: {}
 
 podLabels: {}
 
+# PriorityClass indicates the importance of a Pod relative to other Pods.
+priorityClassName: ""
+
 podSecurityContext: {}
   # fsGroup: 65532
 
