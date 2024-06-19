@@ -1,3 +1,22 @@
+## [1.2.2] - 2024-06-19
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.1...v1.2.2
+
+### 🚀 Features
+
+- Allow specifying (optional) priorityClass - ([44e2c43](https://github.com/postfinance/kubelet-csr-approver/commit/44e2c43d2db00ff5a56e3634760bed6105150b47))
+
+### Build
+
+- *(deps)* Bump github.com/go-logr/logr from 1.4.1 to 1.4.2 - ([c33c45d](https://github.com/postfinance/kubelet-csr-approver/commit/c33c45d70cf96fa8bdb3abc799a1d1adc3934bbf))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.18.2 to 0.18.3 - ([3b56613](https://github.com/postfinance/kubelet-csr-approver/commit/3b566133d5ec28c93463d7931a12c5a3bc71af6b))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.18.3 to 0.18.4 - ([846d113](https://github.com/postfinance/kubelet-csr-approver/commit/846d1138ebf0e0e835854f173f29cd46afc9afdb))
+- *(deps)* Bump k8s.io/client-go from 0.30.1 to 0.30.2 - ([f91bfba](https://github.com/postfinance/kubelet-csr-approver/commit/f91bfbaf0bc3bc9e4237aa146f0b29b85c806ece))
+
+
+## New Contributors
+* @jaccolo made their first contribution in PR #263
+
 ## [1.2.1] - 2024-05-21
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.0...1.2.1
