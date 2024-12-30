@@ -159,6 +159,7 @@ func prepareCmdlineConfig() *controller.Config {
 		bypassDNSResolution    = fs.Bool("bypass-dns-resolution", false, "set this parameter to true to bypass DNS resolution checks")
 		bypassHostnameCheck    = fs.Bool("bypass-hostname-check", false, "set this parameter to true to ignore mismatching DNS name and hostname")
 		ignoreNonSystemNodeCsr = fs.Bool("ignore-non-system-node", false, "set this parameter to true to ignore CSR for subjects different than system:node")
+		skipDenyCSR            = fs.Bool("skip-deny-step", false, "set this parameter to skip denying non-compliant csr")
 		allowedDNSNames        = fs.Int("allowed-dns-names", 1, "number of DNS SAN names allowed in a certificate request. defaults to 1")
 		ipPrefixesStr          = fs.String("provider-ip-prefixes", "0.0.0.0/0,::/0",
 			`provider-specified, comma separated ip prefixes that CSR IP addresses shall fall into.
@@ -185,7 +186,7 @@ func prepareCmdlineConfig() *controller.Config {
 	}
 
 	config := controller.Config{
-		LogLevel:               *logLevel,
+		LogLevel:               int8(*logLevel),
 		MetricsAddr:            *metricsAddr,
 		ProbeAddr:              *probeAddr,
 		LeaderElection:         *leaderElection,
@@ -194,6 +195,7 @@ func prepareCmdlineConfig() *controller.Config {
 		BypassDNSResolution:    *bypassDNSResolution,
 		BypassHostnameCheck:    *bypassHostnameCheck,
 		IgnoreNonSystemNodeCsr: *ignoreNonSystemNodeCsr,
+		SkipDenyCSR:            *skipDenyCSR,
 		MaxExpirationSeconds:   int32(*maxSec),
 		AllowedDNSNames:        *allowedDNSNames,
 	}
