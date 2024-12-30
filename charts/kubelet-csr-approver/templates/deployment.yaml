@@ -78,6 +78,10 @@ spec:
             - name: IGNORE_NON_SYSTEM_NODE
               value: {{ .Values.ignoreNonSystemNode | quote }}
           {{- end }}
+          {{- if .Values.skipDenyStep }}
+            - name: SKIP_DENY_STEP
+              value: {{ .Values.skipDenyStep | quote }}
+          {{- end }}
           {{- if .Values.allowedDnsNames}}
             - name: ALLOWED_DNS_NAMES
               value: {{ .Values.allowedDnsNames | quote }}

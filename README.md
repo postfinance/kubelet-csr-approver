@@ -57,6 +57,9 @@ it permits having a DNS name that differs (i.e. isn't prefixed) by the hostname
   with a _Username_ different than `system:node:......`. \
   the default value of the boolean is false, and if you want to use this feature
   you need to set this flag to `true`
+* `--skip-deny-step` or `SKIP_DENY_STEP` permits skipping denial of CSRs. when
+  set to true, kubelet-csr-approver will only ever approve a CSR, never deny
+  it.
 * `--allowed-dns-names` or `ALLOWED_DNS_NAMES` permits allowing more than one
   DNS name in the certificate request. the default value is set to 1.
 * `--leader-election` or `LEADER_ELECTION` permits enabling leader election

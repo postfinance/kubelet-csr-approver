@@ -8,6 +8,8 @@ bypassDnsResolution: false
 allowedDnsNames: 1
 # optional, permits ignoring CSRs with another Username than `system:node:...`
 ignoreNonSystemNode: false
+# optional, prevents csr denial, i.e. only lets kubelet-csr-approver approve valid CSRs but ignore other CSRs
+skipDenyStep: false
 # set this parameter to true to ignore mismatching DNS name and hostname
 bypassHostnameCheck: false
 # optional, list of IP (IPv4, IPv6) subnets that are allowed to submit CSRs
