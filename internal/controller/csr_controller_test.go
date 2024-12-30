@@ -66,6 +66,28 @@ func TestWrongSignerCsr(t *testing.T) {
 	assert.False(t, approved)
 }
 
+func TestSkipDenyFlag(t *testing.T) {
+	csrParams := CsrParams{
+		csrName:     "csr-skip-deny-test",
+		ipAddresses: testNodeIpAddresses,
+		nodeName:    testNodeName,
+		dnsName:     "fishing-test.google.com",
+	}
+	csr := createCsr(t, csrParams)
+
+	csrController.SkipDenyCSR = true
+	defer func() { csrController.SkipDenyCSR = false }()
+
+	_, nodeClientSet, _ := createControlPlaneUser(t, csr.Spec.Username, []string{"system:masters"})
+	_, err := nodeClientSet.CertificatesV1().CertificateSigningRequests().Create(testContext, &csr, metav1.CreateOptions{})
+	require.Nil(t, err, "Could not create the CSR.")
+
+	approved, denied, _, err := waitCsrApprovalStatus(csr.Name)
+	require.Nil(t, err, "Could not retrieve the CSR to check its approval status")
+	assert.False(t, denied)
+	assert.False(t, approved)
+}
+
 func TestNonMatchingCommonNameUsername(t *testing.T) {
 	csrParams := CsrParams{
 		csrName:     "csr-non-matching",
