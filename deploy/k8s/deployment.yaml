@@ -44,7 +44,7 @@ spec:
               value: ^[abcdef]\.test\.ch$
             - name: PROVIDER_IP_PREFIXES
               value: "0.0.0.0/0,::/0"
-            - name: MAX_EXPIRATION_SECONDS
+            - name: MAX_EXPIRATION_SEC
               value: "31622400" # 366 days
 
       tolerations:
