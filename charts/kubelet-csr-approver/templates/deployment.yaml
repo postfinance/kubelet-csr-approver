@@ -67,7 +67,7 @@ spec:
               value: "{{ join "," .Values.providerIpPrefixes }}"
           {{- end }}
           {{- if .Values.maxExpirationSeconds}}
-            - name: MAX_EXPIRATION_SECONDS
+            - name: MAX_EXPIRATION_SEC
               value: {{ .Values.maxExpirationSeconds | quote }}
           {{- end }}
           {{- if .Values.bypassDnsResolution}}
