@@ -5,11 +5,10 @@ import (
 	"flag"
 	"fmt"
 	"net"
+	"net/netip"
 	"os"
 	"regexp"
 	"strings"
-
-	"net/netip"
 
 	"go4.org/netipx"
 
@@ -91,7 +90,6 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 
 	var err error
 	csrController.ProviderIPSet, err = setBuilder.IPSet()
-
 	if err != nil {
 		logger.V(-5).Info("Unable to build the Set of valid IP addresses, exiting")
 
@@ -119,7 +117,6 @@ func CreateControllerManager(config *controller.Config, logger logr.Logger) (
 	}
 
 	mgr, err = ctrl.NewManager(config.K8sConfig, mgrOptions)
-
 	if err != nil {
 		logger.Error(err, "unable to start manager")
 
@@ -186,7 +183,7 @@ func prepareCmdlineConfig() *controller.Config {
 	}
 
 	config := controller.Config{
-		LogLevel:               int8(*logLevel),
+		LogLevel:               int8(*logLevel), //nolint:gosec // disable G115
 		MetricsAddr:            *metricsAddr,
 		ProbeAddr:              *probeAddr,
 		LeaderElection:         *leaderElection,
@@ -196,7 +193,7 @@ func prepareCmdlineConfig() *controller.Config {
 		BypassHostnameCheck:    *bypassHostnameCheck,
 		IgnoreNonSystemNodeCsr: *ignoreNonSystemNodeCsr,
 		SkipDenyCSR:            *skipDenyCSR,
-		MaxExpirationSeconds:   int32(*maxSec),
+		MaxExpirationSeconds:   int32(*maxSec), //nolint:gosec // disable G115
 		AllowedDNSNames:        *allowedDNSNames,
 	}
 
