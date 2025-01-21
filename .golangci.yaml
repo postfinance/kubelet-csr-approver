@@ -1,11 +1,6 @@
 ---
 run:
   tests: false
-  skip-dirs:
-    - .github
-    - build
-    - web
-    - .go
 linters-settings:
   dupl:
     threshold: 100
@@ -27,15 +22,12 @@ linters-settings:
   gocyclo:
     min-complexity: 15
   revive:
-    min-confidence: 0.8
-  govet:
-    check-shadowing: true
+    confidence: 0.8
   lll:
     line-length: 140
   misspell:
     locale: US
   nolintlint:
-    allow-leading-space: false
     require-explanation: true
     allow-no-explanation:
       - gocognit
@@ -54,7 +46,7 @@ linters:
     - gochecknoglobals
     - gochecknoinits
     - gocognit
-    - goconst
+    # - goconst
     - gocritic
     - gocyclo
     - gofmt
@@ -68,22 +60,31 @@ linters:
     - misspell
     - nakedret
     - prealloc
-    - exportloopref
+    - protogetter
+    - rowserrcheck
+    - copyloopvar
     - staticcheck
     - stylecheck
+    - sqlclosecheck
     - typecheck
     - unconvert
     - unparam
     - unused
     - whitespace
-    - wsl
+    # - wsl
 
 issues:
   exclude:
     # Very commonly not checked.
-    - 'Error return value of .(l.Sync|.*Close|.*.Write|.*Flush|os\.Remove(All)?|os\.(Un)?Setenv). is not checked'
+    - 'Error return value of .((os\.)?std(out|err)\..*|.*Close|.*Flush|os\.Remove(All)?|.*print(f|ln)?|os\.(Un)?Setenv). is not checked'
     - 'G104:.*'
-    - 'exported method (.*\.MarshalJSON|.*\.UnmarshalJSON) should have comment or be unexported'
+    - 'exported method (.*\.MarshalJSON|.*\.UnmarshalJSON|.*\.MarshalText|.*\.UnmarshalText|.*\.LogValue|.*\.MarshalLogObject) should have comment or be unexported'
     - 'shadow: declaration of "err" shadows declaration.*'
   max-same-issues: 0
   exclude-use-default: false
+  exclude-dirs:
+    - .github
+    - build
+    - web
+    - .go
+    - vendor
