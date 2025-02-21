@@ -1,4 +1,30 @@
 
+## [1.2.6] - 2025-02-21
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.5...v1.2.6
+
+### ⚙️ Miscellaneous Tasks
+
+- Fix linting - ([53560bb](https://github.com/postfinance/kubelet-csr-approver/commit/53560bb9b8cf37b6a0a826f3eda182d3b9467cb0))
+- Add v1.2.5 changelog - ([db4eca0](https://github.com/postfinance/kubelet-csr-approver/commit/db4eca0446d5109c7c31e5c01bf4aa682d95fe35))
+
+### Build
+
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.19.3 to 0.20.0 - ([09071b0](https://github.com/postfinance/kubelet-csr-approver/commit/09071b0cea7c39facd83baed8ece243f91f9050a))
+- *(deps)* Bump k8s.io/client-go from 0.31.3 to 0.32.1 - ([a4c9e78](https://github.com/postfinance/kubelet-csr-approver/commit/a4c9e7860e3cb38c5e2dcdb4807ac3ca11d07c2d))
+- *(deps)* Bump ko-build/setup-ko from 0.7 to 0.8 - ([8dad3a8](https://github.com/postfinance/kubelet-csr-approver/commit/8dad3a8eecd2bd0ca76b121daeb9b1088730f26a))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.20.0 to 0.20.1 - ([8627618](https://github.com/postfinance/kubelet-csr-approver/commit/8627618c32a19f621c73e112d64ddf93431f1a17))
+- *(deps)* Bump helm/chart-testing-action from 2.6.1 to 2.7.0 - ([6ddbb98](https://github.com/postfinance/kubelet-csr-approver/commit/6ddbb98f4cec1bf433d2ded7a0382a9c8b2f2495))
+- *(deps)* Bump golangci/golangci-lint-action from 6.2.0 to 6.5.0 - ([2672200](https://github.com/postfinance/kubelet-csr-approver/commit/2672200085f3240dd15bd0406c7287463572d448))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.20.1 to 0.20.2 - ([17487b5](https://github.com/postfinance/kubelet-csr-approver/commit/17487b5c070219babf0efbf98c3f20645deb4b9b))
+- *(deps)* Bump k8s.io/client-go from 0.32.1 to 0.32.2 - ([eb87a76](https://github.com/postfinance/kubelet-csr-approver/commit/eb87a7656dcbca9c294e8912e43a10337a0daea2))
+- Bump to go 1.23 - ([2ae3b98](https://github.com/postfinance/kubelet-csr-approver/commit/2ae3b9855bba4178be85283cc7f60ed7ee5a20e6))
+
+
+
+
+## New Contributors
+* @florentinadolf made their first contribution
 ## [1.2.5] - 2025-01-08
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.4...v1.2.5
