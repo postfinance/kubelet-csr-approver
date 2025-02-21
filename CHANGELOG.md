@@ -1,3 +1,67 @@
+
+## [1.2.5] - 2025-01-08
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.4...v1.2.5
+
+### 🐛 Bug Fixes
+
+- Typo in env var name in helm chart (MAX_EXPIRATION_SEC) - ([ce86095](https://github.com/postfinance/kubelet-csr-approver/commit/ce86095408801fb5521ae28bde3ad1c009f89f37))
+
+### Build
+
+- *(helm-action)* Update helm-test dependencies - ([a8521d3](https://github.com/postfinance/kubelet-csr-approver/commit/a8521d33cca0afdbb07cdad9ef9fa8c78351d993))
+
+
+
+
+## New Contributors
+* @NotWearingPants made their first contribution in [#296](https://github.com/postfinance/kubelet-csr-approver/pull/296)## [1.2.4] - 2024-12-30
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.3...v1.2.4
+
+### 🚀 Features
+
+- Add flag to disable CSR denial - ([f440f6f](https://github.com/postfinance/kubelet-csr-approver/commit/f440f6f1f6934cd861a3e4ba19d879d96e8309ad))
+
+### 🧪 Testing
+
+- *(skip-deny)* Add test covering 'skip-deny-csr' flag - ([68e4d8a](https://github.com/postfinance/kubelet-csr-approver/commit/68e4d8ae0ac5da02ab2f08f2404fadc23096779a))
+
+### ⚙️ Miscellaneous Tasks
+
+- Document skip-deny-step and add helm parameter - ([2bcaf1e](https://github.com/postfinance/kubelet-csr-approver/commit/2bcaf1eeb6f04801c88a2ff968195d87f31fe3e0))
+
+### Build
+
+- *(deps)* Bump k8s.io/client-go from 0.31.1 to 0.31.2 - ([d696824](https://github.com/postfinance/kubelet-csr-approver/commit/d696824ac52b4419d7e6d55d7424eb738ff3ca32))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.19.0 to 0.19.1 - ([cbb12e6](https://github.com/postfinance/kubelet-csr-approver/commit/cbb12e6fd50c0203bfd83807f723788e7484fe4a))
+- *(deps)* Bump k8s.io/api from 0.31.2 to 0.31.3 - ([987c539](https://github.com/postfinance/kubelet-csr-approver/commit/987c539d79730ac090d5fa799a37e62377e08aab))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.19.1 to 0.19.2 - ([5c535df](https://github.com/postfinance/kubelet-csr-approver/commit/5c535df4e23e58fa36ef756bd793e68b061a6536))
+- *(deps)* Bump k8s.io/client-go from 0.31.2 to 0.31.3 - ([bf5dc76](https://github.com/postfinance/kubelet-csr-approver/commit/bf5dc76983697fefb98b3f9d8448b835a821510f))
+- *(deps)* Bump github.com/stretchr/testify from 1.9.0 to 1.10.0 - ([d0c6f5e](https://github.com/postfinance/kubelet-csr-approver/commit/d0c6f5e43c3d5e81ad94c48976dc910db95264fc))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.19.2 to 0.19.3 - ([ad010d1](https://github.com/postfinance/kubelet-csr-approver/commit/ad010d13ddbd7596049f34e9d0d5ec1ac515c818))
+- *(deps)* Bump helm/kind-action from 1.10.0 to 1.11.0 - ([ce657a6](https://github.com/postfinance/kubelet-csr-approver/commit/ce657a6fba4dc9c3fd8847d4da34e1e4f15a1728))
+- *(deps)* Bump helm/kind-action from 1.11.0 to 1.12.0 - ([9edf2c6](https://github.com/postfinance/kubelet-csr-approver/commit/9edf2c6d9dde6a6072f82ca96df0f474768ff108))
+
+
+## [1.2.3] - 2024-10-07
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.2...v1.2.3
+
+### ⚙️ Miscellaneous Tasks
+
+- Add v1.2.2 changelog - ([c5ca70d](https://github.com/postfinance/kubelet-csr-approver/commit/c5ca70db40ca5002e9d7c047eb7126049b97dbf6))
+
+### Build
+
+- *(deps)* Bump ko-build/setup-ko from 0.6 to 0.7 - ([f5b863f](https://github.com/postfinance/kubelet-csr-approver/commit/f5b863f77e0b71a8030323b0ed1d6df0601b1df0))
+- *(deps)* Bump k8s.io/client-go from 0.30.2 to 0.30.3 - ([584183f](https://github.com/postfinance/kubelet-csr-approver/commit/584183f5329e82d10c392efc5cff3c8819f5a032))
+- *(deps)* Bump golangci/golangci-lint-action from 6.0.1 to 6.1.0 - ([47f3776](https://github.com/postfinance/kubelet-csr-approver/commit/47f37761384d627cd20c5df75064bf7d682cadc1))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.18.4 to 0.19.0 - ([501df7f](https://github.com/postfinance/kubelet-csr-approver/commit/501df7ffe3b8ee6aaf9eeb478a4bd18e7faa4fd6))
+- *(deps)* Bump k8s.io/client-go from 0.31.0 to 0.31.1 - ([bf8d08b](https://github.com/postfinance/kubelet-csr-approver/commit/bf8d08ba3e4b5e231d988442a8d0bb788a3ac2e5))
+- *(deps)* Bump golangci/golangci-lint-action from 6.1.0 to 6.1.1 - ([4a0096c](https://github.com/postfinance/kubelet-csr-approver/commit/4a0096c41c08751ef4b6b660fa79565d61693251))
+
+
 ## [1.2.2] - 2024-06-19
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.1...v1.2.2
