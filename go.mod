@@ -1,8 +1,6 @@
 module github.com/postfinance/kubelet-csr-approver
 
-go 1.23.0
-
-toolchain go1.23.5
+go 1.24
 
 require (
 	github.com/foxcpp/go-mockdns v1.1.0
@@ -12,11 +10,11 @@ require (
 	github.com/thanhpk/randstr v1.0.6
 	github.com/tj/assert v0.0.3
 	go.uber.org/zap v1.27.0
-	go4.org/netipx v0.0.0-20230824141953-6213f710f925
-	k8s.io/api v0.32.2
-	k8s.io/apimachinery v0.32.2
-	k8s.io/client-go v0.32.2
-	sigs.k8s.io/controller-runtime v0.20.3
+	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba
+	k8s.io/api v0.32.3
+	k8s.io/apimachinery v0.32.3
+	k8s.io/client-go v0.32.3
+	sigs.k8s.io/controller-runtime v0.20.4
 )
 
 require (
