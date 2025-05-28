@@ -19,7 +19,7 @@ spec:
             - /bin/sh
             - -c
             - |
-              sleep 10 ; wget -O- -S {{ include "kubelet-csr-approver.fullname" . }}.{{ .Release.Namespace}}.svc:{{ .Values.metrics.port }}/metrics
+              sleep 10 ; wget -O- -S {{ include "kubelet-csr-approver.fullname" . }}.{{ .Release.Namespace}}.svc.{{ .Values.global.clusterDomain }}:{{ .Values.metrics.port }}/metrics
       restartPolicy: Never
   backoffLimit: 1
   ttlSecondsAfterFinished: 300
