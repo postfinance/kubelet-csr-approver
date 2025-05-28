@@ -148,6 +148,8 @@ jobs:
           export TAG=$(echo ${{ github.ref }} | cut -d "/" -f 3 - )
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm --tags $TAG
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm
+      - name: Create Github release
+        uses: softprops/action-gh-release@v2
 
   publish-helm-charts:
     needs:
