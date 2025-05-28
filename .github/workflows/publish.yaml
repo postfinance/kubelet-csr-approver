@@ -148,6 +148,26 @@ jobs:
           export TAG=$(echo ${{ github.ref }} | cut -d "/" -f 3 - )
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm --tags $TAG
           ko publish ./cmd/kubelet-csr-approver/ --base-import-paths --platform=linux/amd64,linux/arm64,linux/arm
+
+      - name: Generate changelog
+        uses: orhun/git-cliff-action@v4
+        with:
+          config: cliff.toml
+          args: --verbose
+        env:
+          OUTPUT: CHANGELOG.md
+          GITHUB_REPO: ${{ github.repository }}
+
+      - name: Commit
+        run: |
+          git checkout main
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          set +e
+          git add CHANGELOG.md
+          git commit -m "chore: Update changelog"
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git main
+
       - name: Create Github release
         uses: softprops/action-gh-release@v2
 
