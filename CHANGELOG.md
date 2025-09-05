@@ -1,5 +1,29 @@
 
-## [1.2.10] - 2025-05-28
+## [1.2.11] - 2025-09-05
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.10...v1.2.11
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog - ([ee1579f](https://github.com/postfinance/kubelet-csr-approver/commit/ee1579f17a74446bc791cf46d5bb01695b30eda1))
+
+### Build
+
+- *(deps)* Bump github.com/go-logr/logr from 1.4.2 to 1.4.3 - ([64207e3](https://github.com/postfinance/kubelet-csr-approver/commit/64207e3ced5587dc0182b420c7feda619e5870c4))
+- *(deps)* Bump k8s.io/client-go from 0.33.1 to 0.33.2 - ([59f678e](https://github.com/postfinance/kubelet-csr-approver/commit/59f678e3a30dd40a59bb11d6906014f18cce2861))
+- *(deps)* Bump k8s.io/client-go from 0.33.2 to 0.33.3 - ([ee24747](https://github.com/postfinance/kubelet-csr-approver/commit/ee24747240c90d47c42ff6908467e369e2a134d8))
+- *(deps)* Bump k8s.io/client-go from 0.33.3 to 0.33.4 - ([b705453](https://github.com/postfinance/kubelet-csr-approver/commit/b7054535061241c3ed0129ff7f95c600ec04c86d))
+- *(deps)* Bump actions/checkout from 4 to 5 - ([19da641](https://github.com/postfinance/kubelet-csr-approver/commit/19da641c54418585d7603045260a9ad68784e6e2))
+- *(deps)* Bump github.com/stretchr/testify from 1.10.0 to 1.11.0 - ([c2c545c](https://github.com/postfinance/kubelet-csr-approver/commit/c2c545c78dfd5e369f8ca09d00733a8b0eb26d64))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.21.0 to 0.22.0 - ([dd0dd32](https://github.com/postfinance/kubelet-csr-approver/commit/dd0dd327dd5c79b66c66268e04036c83e83d5841))
+- *(deps)* Bump github.com/stretchr/testify from 1.11.0 to 1.11.1 - ([9683ba4](https://github.com/postfinance/kubelet-csr-approver/commit/9683ba4b8c6e7cd176088307c844a819879300c3))
+
+
+
+
+## New Contributors
+* @Fankhauserli made their first contribution in [#349](https://github.com/postfinance/kubelet-csr-approver/pull/349)
+* @github-actions[bot] made their first contribution## [1.2.10] - 2025-05-28
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.9...v1.2.10
 
