@@ -12,8 +12,12 @@ spec:
       labels:
         {{- include "kubelet-csr-approver.labels" . | nindent 8 }}
     spec:
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: wget
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           image: busybox
           command:
             - /bin/sh
