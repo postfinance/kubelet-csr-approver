@@ -82,7 +82,7 @@ helm repo add kubelet-csr-approver https://postfinance.github.io/kubelet-csr-app
 helm install kubelet-csr-approver kubelet-csr-approver/kubelet-csr-approver -n kube-system \
   --set providerRegex='^node-\w*\.int\.company\.ch$' \
   --set providerIpPrefixes='192.168.8.0/22' \
-  --set maxExpirationSeconds='86400'
+  --set maxExpirationSeconds='86400' \
   --set bypassDnsResolution='false'
 ```
 
