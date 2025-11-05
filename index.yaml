@@ -3,9 +3,9 @@ entries:
   kubelet-csr-approver:
   - apiVersion: v2
     appVersion: v1.2.12
-    created: "2025-11-05T13:23:05.875496282Z"
+    created: "2025-11-05T13:31:39.653286452Z"
     description: Kubelet CSR Approver
-    digest: 13b919d7d5c256e05c34bb99d58aa93c042c4f862ebccc8d3b658d1afe920c8b
+    digest: cb754e5b7f81862a25310e2dea83315b2c551515eefd60107d90c98a2dce295c
     home: https://github.com/postfinance/kubelet-csr-approver
     icon: https://avatars.githubusercontent.com/u/34368733
     keywords:
@@ -510,4 +510,4 @@ entries:
     urls:
     - https://postfinance.github.io/kubelet-csr-approver/kubelet-csr-approver-0.2.2.tgz
     version: 0.2.2
-generated: "2025-11-05T13:23:05.874630745Z"
+generated: "2025-11-05T13:31:39.652543381Z"
