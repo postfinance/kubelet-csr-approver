@@ -1,5 +1,30 @@
 
-## [1.2.11] - 2025-09-05
+## [1.2.12] - 2025-11-05
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.11...v1.2.12
+
+### 🐛 Bug Fixes
+
+- Update Go version in publish workflow - ([ee6d86d](https://github.com/postfinance/kubelet-csr-approver/commit/ee6d86d755a8bbe8508b67645b591708674bf16e))
+- Upgrade Go version from 1.24 to 1.25 in workflows - ([6b9467a](https://github.com/postfinance/kubelet-csr-approver/commit/6b9467a46c725861b5d8a787941f7eb2316e2608))
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog - ([2037fcc](https://github.com/postfinance/kubelet-csr-approver/commit/2037fcc49ed344cb8c09c516dbbeff67eec06bb8))
+
+### Build
+
+- *(deps)* Bump actions/setup-go from 5 to 6 - ([f181281](https://github.com/postfinance/kubelet-csr-approver/commit/f18128166586ea203f6df794b1441d05a5bf9faf))
+- *(deps)* Bump actions/setup-python from 5 to 6 - ([941f1b9](https://github.com/postfinance/kubelet-csr-approver/commit/941f1b9dd794df660c835dd10f3d80bf4764d76b))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.22.0 to 0.22.3 - ([0bd131b](https://github.com/postfinance/kubelet-csr-approver/commit/0bd131baeb8680e986e4d1622dd861feb9ac1a95))
+
+
+
+
+## New Contributors
+* @sempex made their first contribution
+* @zenhighzer made their first contribution
+* @psychomantys made their first contribution## [1.2.11] - 2025-09-05
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.10...v1.2.11
 
@@ -123,7 +148,7 @@
 
 
 ## New Contributors
-* @NotWearingPants made their first contribution in [#296](https://github.com/postfinance/kubelet-csr-approver/pull/296)## [1.2.4] - 2024-12-30
+* @SnirBroshi made their first contribution in [#296](https://github.com/postfinance/kubelet-csr-approver/pull/296)## [1.2.4] - 2024-12-30
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.3...v1.2.4
 
