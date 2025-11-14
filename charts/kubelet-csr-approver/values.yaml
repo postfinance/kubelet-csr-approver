@@ -80,7 +80,7 @@ securityContext:
   seccompProfile:
     type: RuntimeDefault
   capabilities:
-    drop: ["all"]
+    drop: ["ALL"]
 
 resources:
   requests:
