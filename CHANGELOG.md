@@ -1,5 +1,22 @@
 
-## [1.2.12] - 2025-11-05
+## [1.2.13] - 2026-02-04
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.12...v1.2.13
+
+### 🚀 Features
+
+- Add API capability check for ServiceMonitor - ([1bc29bc](https://github.com/postfinance/kubelet-csr-approver/commit/1bc29bcbc7e43e94f0bb57518da69afb822cda78))
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog - ([fbe13a2](https://github.com/postfinance/kubelet-csr-approver/commit/fbe13a2f48b0c69b4e6bf1f57ea78b7e40be17c8))
+- Change default capabilities to upper case ALL - ([6939f7b](https://github.com/postfinance/kubelet-csr-approver/commit/6939f7bead74c2ba51a6b68b4e1af0f7619bcc40))
+
+
+
+
+## New Contributors
+* @afarbos made their first contribution## [1.2.12] - 2025-11-05
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.11...v1.2.12
 
