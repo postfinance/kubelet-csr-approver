@@ -1,5 +1,30 @@
 
-## [1.2.13] - 2026-02-04
+## [1.2.14] - 2026-04-09
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.13...v1.2.14
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog - ([e59efe4](https://github.com/postfinance/kubelet-csr-approver/commit/e59efe48f4a0dcda920b963b67e8adca3bf5e024))
+- Update deps and go - ([5aa00bc](https://github.com/postfinance/kubelet-csr-approver/commit/5aa00bc457082d25b3118eba59ab437d59a3ac05))
+
+### Build
+
+- *(deps)* Bump golangci/golangci-lint-action from 8.0.0 to 9.2.0 - ([fed1328](https://github.com/postfinance/kubelet-csr-approver/commit/fed132845f7aa9d43f233009014428d775be3e50))
+- *(deps)* Bump actions/checkout from 5 to 6 - ([0b797dc](https://github.com/postfinance/kubelet-csr-approver/commit/0b797dc9b41576bf2370d62e6abe30119c3e47b4))
+- *(deps)* Bump go.uber.org/zap from 1.27.0 to 1.27.1 - ([c653d33](https://github.com/postfinance/kubelet-csr-approver/commit/c653d33a05d0fd2238ab33d5689d26bf74a12122))
+- *(deps)* Bump helm/chart-testing-action from 2.7.0 to 2.8.0 - ([c4a0ba6](https://github.com/postfinance/kubelet-csr-approver/commit/c4a0ba68301ff967eda3bbfd372f52bf47718cf1))
+- *(deps)* Bump helm/kind-action from 1.12.0 to 1.13.0 - ([2c0ca48](https://github.com/postfinance/kubelet-csr-approver/commit/2c0ca48a1f170558cd7d7a138b67d24ac9e269af))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.22.3 to 0.22.4 - ([45419fd](https://github.com/postfinance/kubelet-csr-approver/commit/45419fd8d6e7de8780d5e9ccf05c3d47eb68ff5c))
+- *(deps)* Bump docker/login-action from 3 to 4 - ([911dc5a](https://github.com/postfinance/kubelet-csr-approver/commit/911dc5a3d385b1d219faeaf778d3c161d9109eac))
+- *(deps)* Bump azure/setup-helm from 4 to 5 - ([5ecab26](https://github.com/postfinance/kubelet-csr-approver/commit/5ecab261765f91678a531b9d9da8d5d3422ce942))
+- *(deps)* Bump helm/kind-action from 1.13.0 to 1.14.0 - ([f9aa70c](https://github.com/postfinance/kubelet-csr-approver/commit/f9aa70c94936b2540691b6f84e5a101150408afb))
+
+
+
+
+## New Contributors
+* @luanaBanana made their first contribution in [#380](https://github.com/postfinance/kubelet-csr-approver/pull/380)## [1.2.13] - 2026-02-04
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.12...v1.2.13
 
@@ -39,7 +64,7 @@
 
 
 ## New Contributors
-* @sempex made their first contribution
+* @rebertim made their first contribution
 * @zenhighzer made their first contribution
 * @psychomantys made their first contribution## [1.2.11] - 2025-09-05
 
