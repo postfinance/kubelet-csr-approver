@@ -5,7 +5,7 @@ go 1.24.0
 toolchain go1.24.2
 
 require (
-	github.com/foxcpp/go-mockdns v1.1.0
+	github.com/foxcpp/go-mockdns v1.2.0
 	github.com/go-logr/zapr v1.3.0
 	github.com/postfinance/flash v0.5.1
 	github.com/stretchr/testify v1.11.1
