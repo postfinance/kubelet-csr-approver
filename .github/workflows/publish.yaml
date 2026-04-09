@@ -65,7 +65,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
       - uses: actions/setup-python@v6
         with:
           python-version: 3.13
@@ -191,7 +191,7 @@ jobs:
           go-version: "1.26"
 
       - name: Install Helm
-        uses: azure/setup-helm@v4
+        uses: azure/setup-helm@v5
 
       - name: Prepare version
         run: |
