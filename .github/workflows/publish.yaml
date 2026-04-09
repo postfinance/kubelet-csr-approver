@@ -126,7 +126,7 @@ jobs:
         name: Setup ko
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -246,7 +246,7 @@ jobs:
         name: Setup ko
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -285,7 +285,7 @@ jobs:
           go-version: "1.26"
 
       - name: Login to DockerHub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: postfinance
           password: ${{ secrets.DOCKERHUB_TOKEN }}
