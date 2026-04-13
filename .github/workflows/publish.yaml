@@ -172,7 +172,7 @@ jobs:
           git push https://${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git main
 
       - name: Create Github release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
 
   publish-helm-charts:
     needs:
