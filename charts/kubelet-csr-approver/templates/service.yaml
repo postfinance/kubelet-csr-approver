@@ -14,20 +14,14 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.metrics.serviceType | default "ClusterIP" }}
-  {{- if and (eq .Values.metrics.serviceType "NodePort") .Values.metrics.nodePort }}
   ports:
     - port: {{ .Values.metrics.port }}
       targetPort: metrics
       protocol: TCP
       name: metrics
-      nodePort: {{ .Values.metrics.nodePort }}
-  {{- else }}
-  ports:
-    - port: {{ .Values.metrics.port }}
-      targetPort: metrics
-      protocol: TCP
-      name: metrics
-  {{- end }}
+      {{- with .Values.metrics.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
   selector:
     {{- include "kubelet-csr-approver.selectorLabels" . | nindent 4 }}
 {{- end }}
