@@ -13,12 +13,15 @@ metadata:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  type: {{ .Values.metrics.serviceType }}
+  type: {{ .Values.metrics.serviceType | default "ClusterIP" }}
   ports:
     - port: {{ .Values.metrics.port }}
       targetPort: metrics
       protocol: TCP
       name: metrics
+      {{- with .Values.metrics.nodePort }}
+      nodePort: {{ . }}
+      {{- end }}
   selector:
     {{- include "kubelet-csr-approver.selectorLabels" . | nindent 4 }}
 {{- end }}
