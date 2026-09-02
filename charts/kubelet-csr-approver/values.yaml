@@ -42,6 +42,7 @@ metrics:
   enable: true
   serviceType: ClusterIP
   port: 8080
+  nodePort: ""
   annotations: {}
   serviceMonitor:
     enabled: false
