@@ -1,5 +1,36 @@
 
-## [1.2.14] - 2026-04-09
+## [1.2.15] - 2026-09-02
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.14...v1.2.15
+
+### 🚀 Features
+
+- *(chart)* Add support nodeport - ([31f43cb](https://github.com/postfinance/kubelet-csr-approver/commit/31f43cb8716af1af6a5c5be0175e467642188a88))
+
+### 🐛 Bug Fixes
+
+- *(chart)* Remove namespace from CRB metadata - ([8ad474d](https://github.com/postfinance/kubelet-csr-approver/commit/8ad474dbae4d3ce5a01ebdaa9569b292e8948cac))
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog - ([993754f](https://github.com/postfinance/kubelet-csr-approver/commit/993754fb9c443bf7f51a2d035e43a08b394ca3d3))
+- Simplify svc template for node port - ([35dc098](https://github.com/postfinance/kubelet-csr-approver/commit/35dc09841acecf1c07e1097ee3347966e899df95))
+
+### Build
+
+- *(deps)* Bump go.uber.org/zap from 1.27.1 to 1.28.0 - ([3c2b66c](https://github.com/postfinance/kubelet-csr-approver/commit/3c2b66c107347c5a2862a327cc5e3d12b117ec57))
+- *(deps)* Bump softprops/action-gh-release from 2 to 3 - ([4f98688](https://github.com/postfinance/kubelet-csr-approver/commit/4f9868893226db6fe20ac5a06ffb208449ff3805))
+- *(deps)* Bump k8s.io/apimachinery from 0.35.3 to 0.36.0 - ([28b3b78](https://github.com/postfinance/kubelet-csr-approver/commit/28b3b7822d4a059a0f9d548ec05c116209b1fdc3))
+- *(deps)* Bump golangci/golangci-lint-action from 9.2.0 to 9.3.0 - ([e8dccd4](https://github.com/postfinance/kubelet-csr-approver/commit/e8dccd400a40fe564c4b5b393a4f6c29e50745fc))
+- *(deps)* Bump ko-build/setup-ko from 0.9 to 0.10 - ([ba11864](https://github.com/postfinance/kubelet-csr-approver/commit/ba11864d2210ca5ea4c4f5dd318152d55b58be48))
+- *(deps)* Bump actions/checkout from 6 to 7 - ([9697158](https://github.com/postfinance/kubelet-csr-approver/commit/96971589f5d7d1693123783c12bd8a30e82ca65a))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.23.3 to 0.24.1 - ([b3fdf3d](https://github.com/postfinance/kubelet-csr-approver/commit/b3fdf3d17388da8b04b5268935510cea2a8d6a84))
+
+
+
+
+## New Contributors
+* @Alja9 made their first contribution## [1.2.14] - 2026-04-09
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.13...v1.2.14
 
@@ -336,7 +367,6 @@
 
 
 ## New Contributors
-* @LeTT00r made their first contribution
 * @rajan123456 made their first contribution## [1.0.7] - 2024-01-29
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.0.6...v1.0.7
