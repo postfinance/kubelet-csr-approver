@@ -6,7 +6,7 @@ require (
 	github.com/foxcpp/go-mockdns v1.2.0
 	github.com/go-logr/zapr v1.3.0
 	github.com/postfinance/flash v0.5.1
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.1
 	github.com/thanhpk/randstr v1.0.6
 	github.com/tj/assert v0.0.3
 	go.uber.org/zap v1.28.0
@@ -33,7 +33,7 @@ require (
 	github.com/sykesm/zap-logfmt v0.0.4 // indirect
 	github.com/x448/float16 v0.8.4 // indirect
 	go.yaml.in/yaml/v2 v2.4.3 // indirect
-	go.yaml.in/yaml/v3 v3.0.4 // indirect
+	go.yaml.in/yaml/v3 v3.0.5 // indirect
 	golang.org/x/mod v0.32.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/tools v0.41.0 // indirect
