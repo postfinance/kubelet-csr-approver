@@ -3,7 +3,7 @@ module github.com/postfinance/kubelet-csr-approver
 go 1.26.0
 
 require (
-	github.com/foxcpp/go-mockdns v1.2.0
+	github.com/foxcpp/go-mockdns v1.3.0
 	github.com/go-logr/zapr v1.3.0
 	github.com/postfinance/flash v0.5.1
 	github.com/stretchr/testify v1.12.1
