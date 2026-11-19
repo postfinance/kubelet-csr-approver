@@ -1,5 +1,35 @@
 
-## [1.2.15] - 2026-09-02
+## [1.2.16] - 2026-11-19
+
+**Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.15...v1.2.16
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog - ([3422dc8](https://github.com/postfinance/kubelet-csr-approver/commit/3422dc83e7af86d5e3c6ec17aba7c57ee8431922))
+- Add marsom as codeowner - ([bb677b4](https://github.com/postfinance/kubelet-csr-approver/commit/bb677b44918c1afae8f5891cb689b39c4a1fea20))
+
+### Build
+
+- *(deps)* Bump helm/kind-action from 1.14.0 to 1.15.1 - ([fff9ba6](https://github.com/postfinance/kubelet-csr-approver/commit/fff9ba609b77452007dcc732798f00c14f0a4059))
+- *(deps)* Bump helm/chart-testing-action from 2.8.0 to 2.9.0 - ([0168ba9](https://github.com/postfinance/kubelet-csr-approver/commit/0168ba91dcc8c045dd61bcac07075bb1e8f9cd14))
+- *(deps)* Bump actions/setup-python from 6 to 7 - ([f93a821](https://github.com/postfinance/kubelet-csr-approver/commit/f93a8211d70ccfd8101893c6c573a4f2a485f706))
+- *(deps)* Bump github.com/go-logr/logr from 1.4.3 to 1.4.4 - ([b08dc3e](https://github.com/postfinance/kubelet-csr-approver/commit/b08dc3e455d643eb0e32b69900fef26f3a559802))
+- *(deps)* Bump k8s.io/client-go from 0.36.0 to 0.37.0 - ([4f98496](https://github.com/postfinance/kubelet-csr-approver/commit/4f98496d018a0a7f6e2237a29e38fc54d0093010))
+- *(deps)* Bump k8s.io/apimachinery from 0.37.0 to 0.37.2 - ([972e9c8](https://github.com/postfinance/kubelet-csr-approver/commit/972e9c8191ba0ba12f513c8999ea11953e643b4b))
+- *(deps)* Bump helm/kind-action from 1.15.1 to 1.15.2 - ([337f4fd](https://github.com/postfinance/kubelet-csr-approver/commit/337f4fdce3f9e9f1ead7854253cc286bcf621b2b))
+- *(deps)* Bump sigs.k8s.io/controller-runtime from 0.24.1 to 0.25.2 - ([8c4a1c2](https://github.com/postfinance/kubelet-csr-approver/commit/8c4a1c2880796dbe50e11939f93e45dfb2dcab7f))
+- *(deps)* Bump k8s.io/api from 0.37.0 to 0.37.2 - ([b362f40](https://github.com/postfinance/kubelet-csr-approver/commit/b362f402dab4cd9a68a9b66a575b1123aac5a3a3))
+- *(deps)* Bump actions/setup-go from 6 to 7 - ([8bcede1](https://github.com/postfinance/kubelet-csr-approver/commit/8bcede12a7d34de17861eec90d815d669e43d5a8))
+- *(deps)* Bump github.com/stretchr/testify from 1.11.1 to 1.12.1 - ([3b0ac20](https://github.com/postfinance/kubelet-csr-approver/commit/3b0ac2026d6b8bc86d23e622833eadbaed380c77))
+- *(deps)* Bump github.com/thanhpk/randstr from 1.0.6 to 1.0.7 - ([c4dc328](https://github.com/postfinance/kubelet-csr-approver/commit/c4dc328ddfd19ff36a1a0ae264866e8b8dbed6bc))
+- *(deps)* Bump github.com/foxcpp/go-mockdns from 1.2.0 to 1.3.0 - ([802bf3f](https://github.com/postfinance/kubelet-csr-approver/commit/802bf3f91a6ce4b9d1bb53a636485ea0123a47b6))
+- *(deps)* Bump k8s.io/client-go from 0.37.0 to 0.37.2 - ([ef164af](https://github.com/postfinance/kubelet-csr-approver/commit/ef164aff4e7c934aa04e2209df50ce03a5a84d7f))
+
+
+
+
+## New Contributors
+* @marsom made their first contribution in [#400](https://github.com/postfinance/kubelet-csr-approver/pull/400)## [1.2.15] - 2026-09-02
 
 **Full Changelog**: https://github.com/postfinance/kubelet-csr-approver/compare/v1.2.14...v1.2.15
 
@@ -857,8 +887,7 @@
 
 
 ## New Contributors
-* @dependabot[bot] made their first contribution
-* @ made their first contribution## [0.1.1] - 2021-12-01
+* @dependabot[bot] made their first contribution## [0.1.1] - 2021-12-01
 
 
 
@@ -901,3 +930,4 @@
 ## New Contributors
 * @clementnuss made their first contribution in [#3](https://github.com/postfinance/kubelet-csr-approver/pull/3)
 * @treydock made their first contribution
+* @ made their first contribution
