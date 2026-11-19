@@ -13,7 +13,7 @@ require (
 	go4.org/netipx v0.0.0-20231129151722-fdeea329fbba
 	k8s.io/api v0.37.2
 	k8s.io/apimachinery v0.37.2
-	k8s.io/client-go v0.37.0
+	k8s.io/client-go v0.37.2
 	sigs.k8s.io/controller-runtime v0.25.2
 )
 
